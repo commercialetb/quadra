@@ -5,14 +5,20 @@ import { useMemo, useState } from 'react'
 import { createCompany, deleteCompany, updateCompanyStatus } from '@/app/(app)/actions'
 import { ActionBar, Field, FormCard, FormGrid, InlineDangerButton, PrimaryButton, inputStyle, selectStyle, textareaStyle } from '@/components/forms/form-primitives'
 import { SearchInput } from '@/components/ui/search-input'
+import { CompanyAvatar } from '@/components/ui/company-avatar'
 
 const companyStatuses = ['lead', 'prospect', 'client', 'partner', 'inactive']
 
 function companyBadge(status: string) {
-  if (status === 'client' || status === 'partner') return 'badge-success'
+  if (status === 'client') return 'badge-success'
+  if (status === 'partner') return 'badge-violet'
   if (status === 'inactive') return 'badge-danger'
   if (status === 'prospect') return 'badge-warning'
   return 'badge-dark'
+}
+
+function statusLabel(status: string) {
+  return status.replace('_', ' ')
 }
 
 export function CompaniesCrud({ companies }: { companies: any[] }) {
@@ -29,20 +35,20 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
   }, [companies, query, filter])
 
   return (
-    <div className="dual-panel">
+    <div className="dual-panel dual-panel-elevated">
       <div className="sticky-panel">
         <form id="new-company" action={createCompany}>
-          <FormCard title="Nuova azienda" subtitle="Scheda essenziale, pronta per crescere senza rumore visivo.">
+          <FormCard title="Nuova azienda" subtitle="Scheda essenziale, più bella da compilare e pronta a mostrare un logo automatico dal sito web.">
             <FormGrid>
               <Field label="Nome azienda"><input name="name" required style={inputStyle()} /></Field>
-              <Field label="Sito web"><input name="website" placeholder="https://" style={inputStyle()} /></Field>
+              <Field label="Sito web"><input name="website" placeholder="https://azienda.it" style={inputStyle()} /></Field>
               <Field label="Email"><input name="email" type="email" style={inputStyle()} /></Field>
               <Field label="Telefono"><input name="phone" style={inputStyle()} /></Field>
               <Field label="Città"><input name="city" style={inputStyle()} /></Field>
               <Field label="Provincia"><input name="province" style={inputStyle()} /></Field>
               <Field label="Stato">
                 <select name="status" defaultValue="lead" style={selectStyle()}>
-                  {companyStatuses.map((item) => <option key={item} value={item}>{item}</option>)}
+                  {companyStatuses.map((item) => <option key={item} value={item}>{statusLabel(item)}</option>)}
                 </select>
               </Field>
             </FormGrid>
@@ -52,52 +58,68 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
         </form>
       </div>
 
-      <section className="frost-card">
+      <section className="frost-card crm-surface">
         <div className="section-heading">
           <div>
             <h2>Aziende</h2>
-            <p>Una vista più calda e operativa: meno tabella, più contesto.</p>
+            <p>Più contesto, più gerarchia visiva, meno effetto gestionale grezzo.</p>
           </div>
           <div className="section-utility">{items.length} risultati</div>
         </div>
 
-        <div className="search-row" style={{ marginBottom: 18 }}>
+        <div className="search-row search-row-stacked" style={{ marginBottom: 18 }}>
           <SearchInput value={query} onChange={setQuery} placeholder="Cerca per nome, città o stato" />
-          <div className="segmented">
-            {['all', 'lead', 'prospect', 'client'].map((item) => (
+          <div className="segmented segmented-wrap">
+            {['all', 'lead', 'prospect', 'client', 'partner'].map((item) => (
               <button key={item} type="button" data-active={filter === item} onClick={() => setFilter(item)}>
-                {item === 'all' ? 'Tutte' : item}
+                {item === 'all' ? 'Tutte' : statusLabel(item)}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="crm-list-grid">
+        <div className="crm-list-grid crm-list-grid-spacious">
           {items.map((company) => (
-            <article key={company.id} className="crm-card">
-              <div className="crm-card-header">
-                <div>
-                  <div className="crm-title">{company.name}</div>
-                  <div className="crm-meta">{[company.city, company.province].filter(Boolean).join(', ') || 'Località non indicata'}</div>
-                  <div className="crm-tags">
-                    <span className={`badge ${companyBadge(company.status)}`}>{company.status}</span>
-                    {company.website ? <span className="badge">{company.website.replace(/^https?:\/\//, '')}</span> : null}
+            <article key={company.id} className="crm-card crm-card-polished">
+              <div className="crm-card-shell">
+                <div className="crm-card-main">
+                  <div className="crm-card-identity">
+                    <CompanyAvatar name={company.name} website={company.website} size="lg" />
+                    <div>
+                      <div className="crm-title-row">
+                        <div className="crm-title">{company.name}</div>
+                        <span className={`badge ${companyBadge(company.status)}`}>{statusLabel(company.status)}</span>
+                      </div>
+                      <div className="crm-meta">{[company.city, company.province].filter(Boolean).join(', ') || 'Località non indicata'}</div>
+                      <div className="crm-submeta">{company.website ? company.website.replace(/^https?:\/\//, '') : 'Sito non indicato'}</div>
+                    </div>
+                  </div>
+
+                  <div className="crm-chip-row">
+                    {company.email ? <span className="badge">{company.email}</span> : null}
+                    {company.phone ? <span className="badge badge-soft">{company.phone}</span> : null}
                   </div>
                 </div>
-                <Link className="button-secondary" href={`/companies/${company.id}`}>Apri scheda</Link>
+
+                <div className="crm-card-side">
+                  <Link className="button-secondary button-tight" href={`/companies/${company.id}`}>Apri scheda</Link>
+                  <form action={deleteCompany}>
+                    <input type="hidden" name="id" value={company.id} />
+                    <InlineDangerButton>Elimina</InlineDangerButton>
+                  </form>
+                </div>
               </div>
 
-              <div className="crm-card-footer">
-                <form action={updateCompanyStatus} className="inline-stack">
+              <div className="crm-card-toolbar">
+                <form action={updateCompanyStatus} className="inline-stack inline-stack-polished">
                   <input type="hidden" name="id" value={company.id} />
-                  <select name="status" defaultValue={company.status} style={selectStyle()}>
-                    {companyStatuses.map((item) => <option key={item} value={item}>{item}</option>)}
-                  </select>
+                  <label className="mini-field">
+                    <span>Stato</span>
+                    <select name="status" defaultValue={company.status} style={selectStyle()}>
+                      {companyStatuses.map((item) => <option key={item} value={item}>{statusLabel(item)}</option>)}
+                    </select>
+                  </label>
                   <PrimaryButton>Aggiorna</PrimaryButton>
-                </form>
-                <form action={deleteCompany}>
-                  <input type="hidden" name="id" value={company.id} />
-                  <InlineDangerButton>Elimina</InlineDangerButton>
                 </form>
               </div>
             </article>

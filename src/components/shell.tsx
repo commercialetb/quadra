@@ -18,12 +18,10 @@ const quickAdd = [
   { href: '/companies#new-company', label: '+ Azienda' },
   { href: '/contacts#new-contact', label: '+ Contatto' },
   { href: '/opportunities#new-opportunity', label: '+ Opportunita' },
-  { href: '/import', label: 'Importa Excel' },
 ]
 
 export function Shell({ children }: { children: ReactNode }) {
   const pathname = usePathname()
-  const milestoneLabel = pathname.startsWith('/import') ? 'Milestone 3.1' : 'Milestone 3'
 
   return (
     <div className="app-shell">
@@ -35,8 +33,8 @@ export function Shell({ children }: { children: ReactNode }) {
         </div>
 
         <div className="status-cluster">
-          <div className="status-pill status-pill-accent"><span className="status-dot" /> {milestoneLabel}</div>
-          <div className="status-pill"><span className="status-dot status-dot-warning" /> Focus + chiarezza</div>
+          <div className="status-pill status-pill-accent"><span className="status-dot" /> Milestone 3.1</div>
+          <div className="status-pill"><span className="status-dot status-dot-warning" /> UX polish in corso</div>
         </div>
 
         <nav className="nav-stack">
@@ -74,12 +72,12 @@ export function Shell({ children }: { children: ReactNode }) {
             <div style={{ fontSize: 13, color: 'var(--soft)', textTransform: 'uppercase', letterSpacing: '.18em', fontWeight: 700 }}>Quadra</div>
             <div style={{ marginTop: 4, fontSize: 24, fontWeight: 700, letterSpacing: '-0.05em' }}>Simply is better</div>
           </div>
-          <div className="status-pill status-pill-accent"><span className="status-dot" /> {milestoneLabel}</div>
+          <div className="status-pill status-pill-accent"><span className="status-dot" /> Milestone 3.1</div>
         </div>
 
         {children}
 
-        <nav className="mobile-tabbar">
+        <nav className="mobile-tabbar mobile-tabbar-six">
           {navItems.map((item) => {
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`)
             return (
