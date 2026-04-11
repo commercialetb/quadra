@@ -3,78 +3,48 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-from typing import Any
 
 import pandas as pd
 
 
-def norm(value: Any) -> str:
-    if value is None:
-        return ""
-    text = str(value).strip()
-    if text.lower() == "nan":
-        return ""
-    return text
+def clean_value(value):
+    if pd.isna(value):
+        return None
+    if isinstance(value, str):
+        value = value.strip()
+        return value or None
+    return value
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(description="Prepare CRM Excel import for Supabase staging")
-    parser.add_argument("xlsx", help="Path to source Excel file")
-    parser.add_argument("--outdir", default="import_out", help="Output directory")
+def sheet_to_records(path: Path, sheet_name: str):
+    df = pd.read_excel(path, sheet_name=sheet_name)
+    df = df.dropna(how='all')
+    df.columns = [str(c).strip() for c in df.columns]
+    return [{k: clean_value(v) for k, v in row.items()} for row in df.to_dict(orient='records')]
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('input_file')
+    parser.add_argument('--companies-sheet', default='Companies')
+    parser.add_argument('--contacts-sheet', default='Contacts')
+    parser.add_argument('--out-dir', default='import_out')
     args = parser.parse_args()
 
-    xlsx_path = Path(args.xlsx)
-    outdir = Path(args.outdir)
-    outdir.mkdir(parents=True, exist_ok=True)
+    input_path = Path(args.input_file)
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
 
-    companies = pd.read_excel(xlsx_path, sheet_name="Companies")
-    contacts = pd.read_excel(xlsx_path, sheet_name="Contacts")
+    companies = sheet_to_records(input_path, args.companies_sheet)
+    contacts = sheet_to_records(input_path, args.contacts_sheet)
 
-    companies = companies.rename(
-        columns={
-            "ID": "external_id",
-            "Name": "name",
-            "URL": "website",
-            "Address": "address",
-            "Tipologia": "source",
-            "Settore": "industry",
-            "Author": "raw_author",
-        }
-    )
-    companies = companies[[c for c in ["external_id", "name", "website", "address", "source", "industry", "raw_author"] if c in companies.columns]]
-    companies = companies.applymap(norm)
-    companies = companies[companies["name"] != ""].drop_duplicates(subset=["name"])
+    (out_dir / 'companies.cleaned.json').write_text(json.dumps(companies, ensure_ascii=False, indent=2), encoding='utf-8')
+    (out_dir / 'contacts.cleaned.json').write_text(json.dumps(contacts, ensure_ascii=False, indent=2), encoding='utf-8')
 
-    contacts = contacts.rename(
-        columns={
-            "ID": "external_id",
-            "First Name": "first_name",
-            "Last Name": "last_name",
-            "Title": "role",
-            "Email": "email",
-            "Phone": "phone",
-            "Mobile Phone": "mobile_phone",
-            "Company": "company_name",
-            "Status": "status",
-            "Author": "raw_author",
-        }
-    )
-    contacts = contacts[[c for c in ["external_id", "first_name", "last_name", "role", "email", "phone", "mobile_phone", "company_name", "status", "raw_author"] if c in contacts.columns]]
-    contacts = contacts.applymap(norm)
-    contacts = contacts[(contacts["first_name"] != "") | (contacts["last_name"] != "")]
-
-    companies.to_csv(outdir / "companies_clean.csv", index=False)
-    contacts.to_csv(outdir / "contacts_clean.csv", index=False)
-
-    unmatched = sorted({name for name in contacts["company_name"].unique() if name and name not in set(companies["name"].unique())})
-    report = {
-        "companies": len(companies),
-        "contacts": len(contacts),
-        "unmatched_company_names": unmatched,
-    }
-    (outdir / "import_report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(json.dumps(report, indent=2, ensure_ascii=False))
+    print(f'Companies: {len(companies)}')
+    print(f'Contacts: {len(contacts)}')
+    print(f'Output directory: {out_dir}')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
