@@ -1,47 +1,34 @@
-# Quadra CRM
+# Quadra auth password patch
 
-CRM personale in stile semplice e operativo, costruito con:
-- Supabase per database e auth
-- Next.js per frontend
-- Vercel per deploy
+Questa patch sostituisce il login magic-link come flusso principale con:
+- login email + password
+- signup
+- forgot password
+- reset password
+- logout
+- magic link mantenuto come fallback dal login
 
-## Struttura progetto
+## File inclusi
+- src/app/login/page.tsx
+- src/app/signup/page.tsx
+- src/app/forgot-password/page.tsx
+- src/app/reset-password/page.tsx
+- src/app/auth/callback/route.ts
+- src/components/auth/logout-button.tsx
 
-```text
-quadra-crm/
-  src/
-  public/
-  supabase/
-    schema.sql
-    seed.sql
-    views.sql
-    policies.sql
-    functions.sql
-  docs/
-    notes.md
-    roadmap.md
-  .env.example
-  package.json
-  README.md
-```
+## Configurazione Supabase
+In Authentication > URL Configuration:
 
-## Ordine di setup
+Site URL:
+- https://tuo-dominio.vercel.app
 
-1. Crea il progetto Supabase.
-2. Esegui in ordine:
-   - `supabase/schema.sql`
-   - `supabase/functions.sql`
-   - `supabase/views.sql`
-   - `supabase/policies.sql`
-3. Avvia almeno un login per creare `profiles`.
-4. Esegui `supabase/seed.sql` e poi la funzione `seed_quadra_demo('<OWNER_UUID>')`.
-5. Crea `.env.local` partendo da `.env.example`.
-6. Installa dipendenze con `npm install`.
-7. Avvia con `npm run dev`.
-8. Quando funziona tutto, collega il repo a Vercel.
+Redirect URLs:
+- https://tuo-dominio.vercel.app/auth/callback
+- https://tuo-dominio.vercel.app/reset-password
+- http://localhost:3000/auth/callback
+- http://localhost:3000/reset-password
 
 ## Note
-
-- Questo repo è pensato come base solida v1.
-- Prima consolidiamo UX, CRUD e dashboard.
-- AI e Siri arrivano dopo, sopra una base affidabile.
+- Il reset usa `redirectTo=/auth/callback?next=/reset-password`
+- La pagina reset-password richiede che il link di email sia aperto nello stesso browser
+- Assicurati che il middleware escluda almeno `/login`, `/signup`, `/forgot-password`, `/reset-password`, `/auth/callback`

@@ -1,0 +1,7 @@
+Aggiungi il componente LogoutButton nel tuo header o sidebar del layout autenticato.
+
+Import:
+import { LogoutButton } from '@/components/auth/logout-button'
+
+Poi renderizza ad esempio:
+<LogoutButton />
