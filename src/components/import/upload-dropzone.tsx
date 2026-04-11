@@ -1,10 +1,15 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 
-export function UploadDropzone() {
+type UploadDropzoneProps = {
+  fileName: string
+  onFileSelected: (fileName: string) => void
+  onAnalyze: () => void
+}
+
+export function UploadDropzone({ fileName, onFileSelected, onAnalyze }: UploadDropzoneProps) {
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const [fileName, setFileName] = useState<string>('')
 
   return (
     <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-8 shadow-sm">
@@ -16,21 +21,38 @@ export function UploadDropzone() {
             Il sistema analizzerà i fogli, proporrà il tipo di entità e suggerirà il mapping delle colonne.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white transition hover:opacity-90"
-        >
-          Seleziona file
-        </button>
+
+        <div className="flex flex-wrap justify-center gap-3">
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            className="rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-900 transition hover:bg-slate-50"
+          >
+            Seleziona file
+          </button>
+          <button
+            type="button"
+            onClick={onAnalyze}
+            disabled={!fileName}
+            className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Analizza file
+          </button>
+        </div>
+
         <input
           ref={inputRef}
           type="file"
           accept=".xlsx,.xls,.csv"
           className="hidden"
-          onChange={(event) => setFileName(event.target.files?.[0]?.name ?? '')}
+          onChange={(event) => onFileSelected(event.target.files?.[0]?.name ?? '')}
         />
-        {fileName ? <p className="text-sm text-slate-600">File selezionato: {fileName}</p> : null}
+
+        {fileName ? (
+          <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
+            File selezionato: <span className="font-medium text-slate-950">{fileName}</span>
+          </div>
+        ) : null}
       </div>
     </div>
   )

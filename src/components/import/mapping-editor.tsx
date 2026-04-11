@@ -3,7 +3,12 @@
 import { IMPORT_TARGET_FIELDS } from '@/lib/import/field-catalog'
 import type { ImportSheetPreview } from '@/types/import'
 
-export function MappingEditor({ sheet }: { sheet: ImportSheetPreview }) {
+type MappingEditorProps = {
+  sheet: ImportSheetPreview
+  onConfirm: () => void
+}
+
+export function MappingEditor({ sheet, onConfirm }: MappingEditorProps) {
   const availableFields = IMPORT_TARGET_FIELDS[sheet.suggestedType] ?? []
 
   return (
@@ -35,6 +40,16 @@ export function MappingEditor({ sheet }: { sheet: ImportSheetPreview }) {
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="mt-5 flex justify-end">
+        <button
+          type="button"
+          onClick={onConfirm}
+          className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white transition hover:opacity-90"
+        >
+          Conferma mapping
+        </button>
       </div>
     </div>
   )
