@@ -10,21 +10,34 @@ function formatDate(value: string) {
   }).format(new Date(value))
 }
 
-function FollowupGroup({ title, subtitle, items }: { title: string; subtitle: string; items: Array<any> }) {
+function toneFromPriority(priority?: string) {
+  switch ((priority || '').toLowerCase()) {
+    case 'urgent':
+      return 'red'
+    case 'high':
+      return 'amber'
+    case 'medium':
+      return 'blue'
+    default:
+      return 'slate'
+  }
+}
+
+function FollowupGroup({ title, subtitle, items, tone }: { title: string; subtitle: string; items: Array<any>; tone: string }) {
   return (
-    <SectionCard title={title} subtitle={subtitle}>
+    <SectionCard title={title} subtitle={subtitle} tone={tone}>
       <div style={{ display: 'grid', gap: 12 }}>
         {items.length === 0 ? (
-          <div style={{ border: '1px dashed var(--line-strong)', borderRadius: 18, padding: 16, color: 'var(--muted)' }}>Nessun elemento.</div>
+          <div className="empty-inline">Nessun elemento.</div>
         ) : (
           items.map((item) => (
-            <Link key={item.id} href="/followups" className="page-card" style={{ padding: 16 }}>
+            <Link key={item.id} href="/followups" prefetch className="page-card followup-item-card" data-tone={toneFromPriority(item.priority)}>
               <div style={{ display: 'flex', gap: 14, justifyContent: 'space-between', flexWrap: 'wrap' }}>
                 <div>
                   <div style={{ fontWeight: 700 }}>{item.title}</div>
                   <div style={{ marginTop: 6, color: 'var(--muted)', fontSize: 14 }}>{formatDate(item.due_at)}</div>
                 </div>
-                <div style={{ minHeight: 32, padding: '0 12px', borderRadius: 999, border: '1px solid var(--line)', display: 'inline-flex', alignItems: 'center', color: 'var(--muted)', fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.08em' }}>{item.priority}</div>
+                <div className="priority-pill" data-tone={toneFromPriority(item.priority)}>{item.priority}</div>
               </div>
             </Link>
           ))
@@ -37,9 +50,9 @@ function FollowupGroup({ title, subtitle, items }: { title: string; subtitle: st
 export function FollowupPanels({ overdue, today, upcoming }: { overdue: Array<any>; today: Array<any>; upcoming: Array<any> }) {
   return (
     <div style={{ display: 'grid', gap: 18, gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
-      <FollowupGroup title="Scaduti" subtitle="Da sistemare subito." items={overdue} />
-      <FollowupGroup title="Oggi" subtitle="Le cose da chiudere in giornata." items={today} />
-      <FollowupGroup title="In arrivo" subtitle="I prossimi follow-up pianificati." items={upcoming} />
+      <FollowupGroup title="Scaduti" subtitle="Da sistemare subito." items={overdue} tone="red" />
+      <FollowupGroup title="Oggi" subtitle="Le cose da chiudere in giornata." items={today} tone="amber" />
+      <FollowupGroup title="In arrivo" subtitle="I prossimi follow-up pianificati." items={upcoming} tone="blue" />
     </div>
   )
 }
