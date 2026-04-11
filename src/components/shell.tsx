@@ -1,24 +1,21 @@
 'use client'
 
 import Link from 'next/link'
-import { ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
-import { LogoutButton } from './logout-button'
+import type { ReactNode } from 'react'
 
-const navItems = [
-  { href: '/dashboard', label: 'Dashboard', short: 'Home', badge: '01' },
-  { href: '/companies', label: 'Aziende', short: 'Aziende', badge: '02' },
-  { href: '/contacts', label: 'Contatti', short: 'Contatti', badge: '03' },
-  { href: '/opportunities', label: 'Opportunità', short: 'Deal', badge: '04' },
-  { href: '/followups', label: 'Follow-up', short: 'Follow-up', badge: '05' },
-  { href: '/import', label: 'Import', short: 'Import', badge: '06' },
+const nav = [
+  { href: '/dashboard', label: 'Dashboard', short: '01' },
+  { href: '/companies', label: 'Aziende', short: '02' },
+  { href: '/contacts', label: 'Contatti', short: '03' },
+  { href: '/opportunities', label: 'Opportunità', short: '04' },
+  { href: '/followups', label: 'Follow-up', short: '05' },
+  { href: '/import', label: 'Import', short: '06' },
 ]
 
-const quickAdd = [
-  { href: '/companies#new-company', label: '+ Azienda' },
-  { href: '/contacts#new-contact', label: '+ Contatto' },
-  { href: '/opportunities#new-opportunity', label: '+ Opportunità' },
-]
+function isActive(pathname: string, href: string) {
+  return pathname === href || pathname.startsWith(`${href}/`)
+}
 
 export function Shell({ children }: { children: ReactNode }) {
   const pathname = usePathname()
@@ -26,68 +23,66 @@ export function Shell({ children }: { children: ReactNode }) {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <div>
+        <div className="sidebar-card">
           <div className="brand-mark">Q</div>
-          <div className="brand-title">Quadra</div>
+          <h1 className="brand-title">Quadra</h1>
           <p className="brand-copy">CRM personale, chiaro e operativo. Meno attrito, più controllo.</p>
-        </div>
 
-        <div className="status-cluster">
-          <div className="status-pill status-pill-accent"><span className="status-dot" /> Milestone 3.2</div>
-          <div className="status-pill"><span className="status-dot status-dot-warning" /> Visual polish</div>
-        </div>
+          <div className="pill-row">
+            <span className="pill"><span className="pill-dot" /> Milestone 3.2</span>
+            <span className="pill">Focus + chiarezza</span>
+          </div>
 
-        <nav className="nav-stack">
-          {navItems.map((item) => {
-            const active = pathname === item.href || pathname.startsWith(`${item.href}/`)
-            return (
-              <Link key={item.href} href={item.href} prefetch className="nav-link" data-active={active}>
-                <span className="nav-pill">{item.badge}</span>
+          <nav className="nav-list">
+            {nav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                prefetch
+                className={`nav-link ${isActive(pathname, item.href) ? 'active' : ''}`}
+              >
+                <span className="nav-index">{item.short}</span>
                 <span>{item.label}</span>
               </Link>
-            )
-          })}
-        </nav>
-
-        <div className="quick-add-panel">
-          <p className="mini-label">Azioni rapide</p>
-          <div className="quick-actions quick-actions-column">
-            {quickAdd.map((item) => (
-              <Link key={item.href} href={item.href} prefetch className="button-secondary button-full">
-                {item.label}
-              </Link>
             ))}
-          </div>
-        </div>
+          </nav>
 
-        <div style={{ marginTop: 'auto', display: 'grid', gap: 12 }}>
-          <div className="status-pill"><span className="status-dot" /> Core CRM online</div>
-          <LogoutButton />
+          <div className="quick-title">Azioni rapide</div>
+          <div className="quick-grid">
+            <button className="quick-btn">+ Azienda</button>
+            <button className="quick-btn">+ Contatto</button>
+            <button className="quick-btn">+ Opportunità</button>
+          </div>
+
+          <div className="status-chip"><span className="pill-dot" /> Core CRM online</div>
         </div>
       </aside>
 
-      <main className="shell-main">
-        <div className="mobile-topbar">
+      <main className="main-area">
+        <div className="topbar">
           <div>
-            <div style={{ fontSize: 13, color: 'var(--soft)', textTransform: 'uppercase', letterSpacing: '.18em', fontWeight: 700 }}>Quadra</div>
-            <div style={{ marginTop: 4, fontSize: 24, fontWeight: 700, letterSpacing: '-0.05em' }}>Simply is better</div>
+            <div className="topbar-title">QUADRA</div>
+            <strong>Simply is better</strong>
           </div>
-          <div className="status-pill status-pill-accent"><span className="status-dot" /> M3.2</div>
+          <div className="topbar-actions">
+            <button className="btn btn-secondary">Esci</button>
+          </div>
         </div>
-
         {children}
-
-        <nav className="mobile-tabbar mobile-tabbar-v2">
-          {navItems.map((item) => {
-            const active = pathname === item.href || pathname.startsWith(`${item.href}/`)
-            return (
-              <Link key={item.href} href={item.href} prefetch data-active={active}>
-                <span>{item.short}</span>
-              </Link>
-            )
-          })}
-        </nav>
       </main>
+
+      <nav className="bottom-nav">
+        {nav.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            prefetch
+            className={`bottom-link ${isActive(pathname, item.href) ? 'active' : ''}`}
+          >
+            {item.label}
+          </Link>
+        ))}
+      </nav>
     </div>
   )
 }
