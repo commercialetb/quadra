@@ -5,11 +5,7 @@ import { useMemo, useState } from 'react'
 import { createContact, deleteContact, updateContact } from '@/app/(app)/actions'
 import { ActionBar, Field, FormCard, FormGrid, InlineDangerButton, PrimaryButton, inputStyle, selectStyle, textareaStyle } from '@/components/forms/form-primitives'
 import { SearchInput } from '@/components/ui/search-input'
-import { CompanyAvatar } from '@/components/ui/company-avatar'
-
-function initials(first: string, last: string) {
-  return `${first?.[0] ?? ''}${last?.[0] ?? ''}`.toUpperCase()
-}
+import { ContactAvatar } from '@/components/ui/contact-avatar'
 
 export function ContactsCrud({ contacts, companies }: { contacts: any[]; companies: any[] }) {
   const [query, setQuery] = useState('')
@@ -22,10 +18,10 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
   }, [contacts, query])
 
   return (
-    <div className="dual-panel dual-panel-elevated">
+    <div className="dual-panel polished-dual-panel">
       <div className="sticky-panel">
         <form id="new-contact" action={createContact}>
-          <FormCard title="Nuovo contatto" subtitle="Una scheda più pulita, leggibile e comoda anche da iPad.">
+          <FormCard title="Nuovo contatto" subtitle="Persone, ruoli e relazione con l’azienda in una scheda più pulita.">
             <FormGrid>
               <Field label="Nome"><input name="first_name" required style={inputStyle()} /></Field>
               <Field label="Cognome"><input name="last_name" required style={inputStyle()} /></Field>
@@ -47,84 +43,73 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
         </form>
       </div>
 
-      <section className="frost-card crm-surface">
+      <section className="frost-card polished-list-shell">
         <div className="section-heading">
           <div>
             <h2>Contatti</h2>
-            <p>Meno campi appiccicati, più identità, più contesto azienda-persona.</p>
+            <p>Più identità visiva, meno rumore, più contesto utile a colpo d’occhio.</p>
           </div>
           <div className="section-utility">{items.length} risultati</div>
         </div>
         <div className="search-row" style={{ marginBottom: 18 }}>
           <SearchInput value={query} onChange={setQuery} placeholder="Cerca per nome, azienda, email o ruolo" />
         </div>
-        <div className="crm-list-grid crm-list-grid-spacious">
+        <div className="contact-list-v2">
           {items.map((contact) => (
-            <article key={contact.id} className="crm-card crm-card-polished">
-              <div className="crm-card-shell">
-                <div className="crm-card-main">
-                  <div className="crm-card-identity">
-                    <div className="contact-avatar">{initials(contact.first_name, contact.last_name)}</div>
-                    <div>
-                      <div className="crm-title">{contact.first_name} {contact.last_name}</div>
-                      <div className="crm-meta">{contact.role || 'Ruolo non indicato'}</div>
-                      <div className="crm-company-row">
-                        {contact.companies?.name ? (
-                          <>
-                            <CompanyAvatar name={contact.companies.name} size="sm" />
-                            <span>{contact.companies.name}</span>
-                          </>
-                        ) : (
-                          <span>Nessuna azienda</span>
-                        )}
+            <article key={contact.id} className="entity-card-v2 contact-card-v2">
+              <div className="entity-main-row">
+                <div className="entity-identity">
+                  <ContactAvatar firstName={contact.first_name} lastName={contact.last_name} />
+                  <div className="entity-copy">
+                    <div className="entity-title-row">
+                      <div className="entity-title-block">
+                        <div className="entity-title">{contact.first_name} {contact.last_name}</div>
+                        <div className="entity-subtitle">{contact.role || 'Ruolo non indicato'} {contact.companies?.name ? `· ${contact.companies.name}` : '· Nessuna azienda'}</div>
                       </div>
                     </div>
-                  </div>
-
-                  <div className="crm-chip-row">
-                    {contact.email ? <span className="badge">{contact.email}</span> : null}
-                    {contact.whatsapp ? <span className="badge badge-success">WhatsApp</span> : null}
-                    {contact.preferred_contact_method ? <span className="badge badge-dark">{contact.preferred_contact_method}</span> : null}
+                    <div className="entity-meta-row wrap">
+                      {contact.email ? <span className="entity-chip">{contact.email}</span> : null}
+                      {contact.whatsapp ? <span className="entity-chip">WhatsApp</span> : null}
+                      {contact.preferred_contact_method ? <span className="entity-chip entity-chip-dark">{contact.preferred_contact_method}</span> : null}
+                    </div>
                   </div>
                 </div>
-
-                <div className="crm-card-side">
-                  <Link className="button-secondary button-tight" href={`/contacts/${contact.id}`}>Apri scheda</Link>
-                  <form action={deleteContact}>
-                    <input type="hidden" name="id" value={contact.id} />
-                    <InlineDangerButton>Elimina</InlineDangerButton>
-                  </form>
+                <div className="entity-actions-top">
+                  <Link className="button-secondary" href={`/contacts/${contact.id}`}>Apri scheda</Link>
                 </div>
               </div>
-
-              <div className="crm-card-toolbar">
-                <form action={updateContact} className="inline-stack inline-stack-polished contact-edit-grid">
+              <div className="entity-bottom-row">
+                <form action={updateContact} className="contact-inline-edit">
                   <input type="hidden" name="id" value={contact.id} />
-                  <label className="mini-field">
-                    <span>Azienda</span>
+                  <div className="compact-field-block">
+                    <div className="compact-label">Azienda</div>
                     <select name="company_id" defaultValue={contact.company_id ?? ''} style={selectStyle()}>
                       <option value="">Nessuna</option>
                       {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
                     </select>
-                  </label>
-                  <label className="mini-field">
-                    <span>Ruolo</span>
+                  </div>
+                  <div className="compact-field-block">
+                    <div className="compact-label">Ruolo</div>
                     <input name="role" defaultValue={contact.role ?? ''} placeholder="Ruolo" style={inputStyle()} />
-                  </label>
-                  <label className="mini-field">
-                    <span>Email</span>
+                  </div>
+                  <div className="compact-field-block">
+                    <div className="compact-label">Email</div>
                     <input name="email" defaultValue={contact.email ?? ''} placeholder="Email" style={inputStyle()} />
-                  </label>
-                  <label className="mini-field">
-                    <span>WhatsApp</span>
+                  </div>
+                  <div className="compact-field-block">
+                    <div className="compact-label">WhatsApp</div>
                     <input name="whatsapp" defaultValue={contact.whatsapp ?? ''} placeholder="WhatsApp" style={inputStyle()} />
-                  </label>
+                  </div>
                   <PrimaryButton>Aggiorna</PrimaryButton>
+                </form>
+                <form action={deleteContact}>
+                  <input type="hidden" name="id" value={contact.id} />
+                  <InlineDangerButton>Elimina</InlineDangerButton>
                 </form>
               </div>
             </article>
           ))}
-          {!items.length ? <div className="empty-copy">Nessun contatto trovato per questa ricerca.</div> : null}
+          {!items.length ? <div className="empty-copy">Nessun contatto trovato.</div> : null}
         </div>
       </section>
     </div>

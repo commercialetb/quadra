@@ -9,7 +9,7 @@ const navItems = [
   { href: '/dashboard', label: 'Dashboard', short: 'Home', badge: '01' },
   { href: '/companies', label: 'Aziende', short: 'Aziende', badge: '02' },
   { href: '/contacts', label: 'Contatti', short: 'Contatti', badge: '03' },
-  { href: '/opportunities', label: 'Opportunita', short: 'Deal', badge: '04' },
+  { href: '/opportunities', label: 'Opportunità', short: 'Deal', badge: '04' },
   { href: '/followups', label: 'Follow-up', short: 'Follow-up', badge: '05' },
   { href: '/import', label: 'Import', short: 'Import', badge: '06' },
 ]
@@ -17,7 +17,7 @@ const navItems = [
 const quickAdd = [
   { href: '/companies#new-company', label: '+ Azienda' },
   { href: '/contacts#new-contact', label: '+ Contatto' },
-  { href: '/opportunities#new-opportunity', label: '+ Opportunita' },
+  { href: '/opportunities#new-opportunity', label: '+ Opportunità' },
 ]
 
 export function Shell({ children }: { children: ReactNode }) {
@@ -33,8 +33,8 @@ export function Shell({ children }: { children: ReactNode }) {
         </div>
 
         <div className="status-cluster">
-          <div className="status-pill status-pill-accent"><span className="status-dot" /> Milestone 3.1</div>
-          <div className="status-pill"><span className="status-dot status-dot-warning" /> UX polish in corso</div>
+          <div className="status-pill status-pill-accent"><span className="status-dot" /> Milestone 3.2</div>
+          <div className="status-pill"><span className="status-dot status-dot-warning" /> Visual polish</div>
         </div>
 
         <nav className="nav-stack">
@@ -72,17 +72,17 @@ export function Shell({ children }: { children: ReactNode }) {
             <div style={{ fontSize: 13, color: 'var(--soft)', textTransform: 'uppercase', letterSpacing: '.18em', fontWeight: 700 }}>Quadra</div>
             <div style={{ marginTop: 4, fontSize: 24, fontWeight: 700, letterSpacing: '-0.05em' }}>Simply is better</div>
           </div>
-          <div className="status-pill status-pill-accent"><span className="status-dot" /> Milestone 3.1</div>
+          <div className="status-pill status-pill-accent"><span className="status-dot" /> M3.2</div>
         </div>
 
         {children}
 
-        <nav className="mobile-tabbar mobile-tabbar-six">
+        <nav className="mobile-tabbar mobile-tabbar-v2">
           {navItems.map((item) => {
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`)
             return (
               <Link key={item.href} href={item.href} prefetch data-active={active}>
-                {item.short}
+                <span>{item.short}</span>
               </Link>
             )
           })}
