@@ -5,10 +5,11 @@ import { useRouter } from 'next/navigation'
 import { FormEvent, useMemo, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
+const fieldStyle: React.CSSProperties = { height: 50, borderRadius: 16, padding: '0 14px' }
+
 export default function LoginPage() {
   const router = useRouter()
   const supabase = useMemo(() => createClient(), [])
-
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -21,11 +22,7 @@ export default function LoginPage() {
     setError(null)
     setMessage(null)
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email.trim(),
-      password,
-    })
-
+    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
     if (error) {
       setError(error.message)
       setLoading(false)
@@ -37,6 +34,11 @@ export default function LoginPage() {
   }
 
   async function onMagicLink() {
+    if (!email.trim()) {
+      setError('Inserisci prima la tua email.')
+      return
+    }
+
     setLoading(true)
     setError(null)
     setMessage(null)
@@ -47,95 +49,76 @@ export default function LoginPage() {
       options: { emailRedirectTo: redirectTo },
     })
 
-    if (error) {
-      setError(error.message)
-    } else {
-      setMessage('Magic link inviato. Apri la mail e torna qui.')
-    }
+    if (error) setError(error.message)
+    else setMessage('Magic link inviato. Apri la mail e torna su Quadra.')
 
     setLoading(false)
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-6 py-12">
-      <div className="w-full rounded-3xl border border-black/10 bg-white p-8 shadow-sm">
-        <div className="mb-8">
-          <p className="text-sm text-black/50">Quadra CRM</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight">Accedi</h1>
-          <p className="mt-2 text-sm text-black/60">
-            Email e password come flusso principale. Magic link solo come alternativa.
+    <main className="auth-shell">
+      <div className="auth-grid">
+        <section className="auth-panel">
+          <p className="auth-kicker">Milestone 2</p>
+          <h1 className="auth-title">Quadra diventa premium.</h1>
+          <p className="auth-copy">
+            Accesso classico, meno attrito e un look più vicino a un prodotto vero. Semplice, pulito, affidabile.
           </p>
-        </div>
 
-        <form className="space-y-4" onSubmit={onSubmit}>
-          <div>
-            <label htmlFor="email" className="mb-2 block text-sm font-medium">
+          <div className="auth-list">
+            {[
+              ['01', 'Login con email e password', 'Rapido e prevedibile, perfetto per uso quotidiano.'],
+              ['02', 'Magic link come fallback', 'Resta disponibile quando vuoi entrare senza password.'],
+              ['03', 'Reset password e sessione chiara', 'Più professionale, più business-ready.'],
+            ].map(([n, t, d]) => (
+              <div key={n} className="auth-bullet">
+                <div className="auth-badge">{n}</div>
+                <div>
+                  <div style={{ fontWeight: 700 }}>{t}</div>
+                  <div style={{ marginTop: 4, color: 'var(--muted)', lineHeight: 1.6 }}>{d}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="auth-card">
+          <p className="auth-kicker">Accedi</p>
+          <h2 style={{ margin: '10px 0 0', fontSize: 34, letterSpacing: '-0.06em' }}>Bentornato</h2>
+          <p className="auth-copy" style={{ marginTop: 10 }}>Entra nel tuo CRM e riprendi esattamente da dove avevi lasciato.</p>
+
+          <form className="auth-form" onSubmit={onSubmit} style={{ marginTop: 22 }}>
+            <label className="auth-label">
               Email
+              <input style={fieldStyle} type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="nome@azienda.it" />
             </label>
-            <input
-              id="email"
-              type="email"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-2xl border border-black/10 px-4 py-3 outline-none transition focus:border-black/30"
-              placeholder="nome@azienda.it"
-            />
-          </div>
 
-          <div>
-            <div className="mb-2 flex items-center justify-between">
-              <label htmlFor="password" className="block text-sm font-medium">
-                Password
-              </label>
-              <Link href="/forgot-password" className="text-sm text-black/60 hover:text-black">
-                Password dimenticata?
-              </Link>
-            </div>
-            <input
-              id="password"
-              type="password"
-              required
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-2xl border border-black/10 px-4 py-3 outline-none transition focus:border-black/30"
-              placeholder="••••••••"
-            />
-          </div>
+            <label className="auth-label">
+              <span style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+                <span>Password</span>
+                <Link href="/forgot-password" style={{ color: 'var(--muted)', fontWeight: 500 }}>Password dimenticata?</Link>
+              </span>
+              <input style={fieldStyle} type="password" required autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
+            </label>
 
-          {error ? <p className="text-sm text-red-600">{error}</p> : null}
-          {message ? <p className="text-sm text-green-700">{message}</p> : null}
+            {error ? <div className="notice-error">{error}</div> : null}
+            {message ? <div className="notice-success">{message}</div> : null}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-2xl bg-black px-4 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {loading ? 'Accesso in corso...' : 'Accedi'}
-          </button>
-        </form>
+            <button className="button-primary" type="submit" disabled={loading} style={{ width: '100%' }}>
+              {loading ? 'Accesso in corso...' : 'Accedi'}
+            </button>
+          </form>
 
-        <div className="my-6 h-px bg-black/10" />
+          <div className="auth-divider" />
 
-        <div className="space-y-4">
-          <button
-            type="button"
-            onClick={onMagicLink}
-            disabled={loading || !email.trim()}
-            className="w-full rounded-2xl border border-black/10 px-4 py-3 text-sm font-medium transition hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-60"
-          >
+          <button className="button-secondary" type="button" disabled={loading} style={{ width: '100%' }} onClick={onMagicLink}>
             Ricevi magic link
           </button>
 
-          <p className="text-center text-sm text-black/60">
-            Non hai un account?{' '}
-            <Link href="/signup" className="font-medium text-black hover:opacity-70">
-              Crea account
-            </Link>
+          <p className="auth-foot">
+            Non hai ancora un account? <Link href="/signup" style={{ color: 'var(--text)', fontWeight: 700 }}>Crea account</Link>
           </p>
-        </div>
+        </section>
       </div>
     </main>
   )

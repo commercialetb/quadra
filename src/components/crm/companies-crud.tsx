@@ -1,41 +1,94 @@
-import { createCompany, deleteCompany, updateCompanyStatus } from '@/app/(app)/actions';
-import { ActionBar, Field, FormCard, FormGrid, InlineDangerButton, PrimaryButton, inputStyle, selectStyle, textareaStyle } from '@/components/forms/form-primitives';
+'use client'
 
-const companyStatuses = ['lead', 'prospect', 'client', 'partner', 'inactive'];
+import Link from 'next/link'
+import { useMemo, useState } from 'react'
+import { createCompany, deleteCompany, updateCompanyStatus } from '@/app/(app)/actions'
+import { ActionBar, Field, FormCard, FormGrid, InlineDangerButton, PrimaryButton, inputStyle, selectStyle, textareaStyle } from '@/components/forms/form-primitives'
+import { SearchInput } from '@/components/ui/search-input'
+
+const companyStatuses = ['lead', 'prospect', 'client', 'partner', 'inactive']
+
+function companyBadge(status: string) {
+  if (status === 'client' || status === 'partner') return 'badge-success'
+  if (status === 'inactive') return 'badge-danger'
+  if (status === 'prospect') return 'badge-warning'
+  return 'badge-dark'
+}
 
 export function CompaniesCrud({ companies }: { companies: any[] }) {
-  return (
-    <div style={{ display: 'grid', gap: 20 }}>
-      <form action={createCompany}>
-        <FormCard title="Nuova azienda" subtitle="Crea rapidamente una scheda azienda pulita.">
-          <FormGrid>
-            <Field label="Nome azienda"><input name="name" required style={inputStyle()} /></Field>
-            <Field label="Sito web"><input name="website" placeholder="https://" style={inputStyle()} /></Field>
-            <Field label="Email"><input name="email" type="email" style={inputStyle()} /></Field>
-            <Field label="Telefono"><input name="phone" style={inputStyle()} /></Field>
-            <Field label="Citta"><input name="city" style={inputStyle()} /></Field>
-            <Field label="Provincia"><input name="province" style={inputStyle()} /></Field>
-            <Field label="Stato">
-              <select name="status" defaultValue="lead" style={selectStyle()}>
-                {companyStatuses.map((item) => <option key={item} value={item}>{item}</option>)}
-              </select>
-            </Field>
-          </FormGrid>
-          <Field label="Note sintetiche"><textarea name="notes_summary" style={textareaStyle()} /></Field>
-          <ActionBar><PrimaryButton>Salva azienda</PrimaryButton></ActionBar>
-        </FormCard>
-      </form>
+  const [query, setQuery] = useState('')
+  const [filter, setFilter] = useState('all')
 
-      <FormCard title="Aziende" subtitle="Lista con update rapido di stato e cancellazione.">
-        <div style={{ display: 'grid', gap: 14 }}>
-          {companies.map((company) => (
-            <div key={company.id} style={styles.row}>
-              <div>
-                <div style={styles.title}>{company.name}</div>
-                <div style={styles.meta}>{company.city ?? '—'} · {company.website ?? '—'}</div>
+  const items = useMemo(() => {
+    return companies.filter((company) => {
+      const text = `${company.name} ${company.city ?? ''} ${company.website ?? ''} ${company.status ?? ''}`.toLowerCase()
+      const matchesQuery = text.includes(query.toLowerCase())
+      const matchesFilter = filter === 'all' ? true : company.status === filter
+      return matchesQuery && matchesFilter
+    })
+  }, [companies, query, filter])
+
+  return (
+    <div className="dual-panel">
+      <div className="sticky-panel">
+        <form id="new-company" action={createCompany}>
+          <FormCard title="Nuova azienda" subtitle="Scheda essenziale, pronta per crescere senza rumore visivo.">
+            <FormGrid>
+              <Field label="Nome azienda"><input name="name" required style={inputStyle()} /></Field>
+              <Field label="Sito web"><input name="website" placeholder="https://" style={inputStyle()} /></Field>
+              <Field label="Email"><input name="email" type="email" style={inputStyle()} /></Field>
+              <Field label="Telefono"><input name="phone" style={inputStyle()} /></Field>
+              <Field label="Città"><input name="city" style={inputStyle()} /></Field>
+              <Field label="Provincia"><input name="province" style={inputStyle()} /></Field>
+              <Field label="Stato">
+                <select name="status" defaultValue="lead" style={selectStyle()}>
+                  {companyStatuses.map((item) => <option key={item} value={item}>{item}</option>)}
+                </select>
+              </Field>
+            </FormGrid>
+            <Field label="Note sintetiche"><textarea name="notes_summary" style={textareaStyle()} /></Field>
+            <ActionBar><PrimaryButton>Salva azienda</PrimaryButton></ActionBar>
+          </FormCard>
+        </form>
+      </div>
+
+      <section className="frost-card">
+        <div className="section-heading">
+          <div>
+            <h2>Aziende</h2>
+            <p>Una vista più calda e operativa: meno tabella, più contesto.</p>
+          </div>
+          <div className="section-utility">{items.length} risultati</div>
+        </div>
+
+        <div className="search-row" style={{ marginBottom: 18 }}>
+          <SearchInput value={query} onChange={setQuery} placeholder="Cerca per nome, città o stato" />
+          <div className="segmented">
+            {['all', 'lead', 'prospect', 'client'].map((item) => (
+              <button key={item} type="button" data-active={filter === item} onClick={() => setFilter(item)}>
+                {item === 'all' ? 'Tutte' : item}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="crm-list-grid">
+          {items.map((company) => (
+            <article key={company.id} className="crm-card">
+              <div className="crm-card-header">
+                <div>
+                  <div className="crm-title">{company.name}</div>
+                  <div className="crm-meta">{[company.city, company.province].filter(Boolean).join(', ') || 'Località non indicata'}</div>
+                  <div className="crm-tags">
+                    <span className={`badge ${companyBadge(company.status)}`}>{company.status}</span>
+                    {company.website ? <span className="badge">{company.website.replace(/^https?:\/\//, '')}</span> : null}
+                  </div>
+                </div>
+                <Link className="button-secondary" href={`/companies/${company.id}`}>Apri scheda</Link>
               </div>
-              <div style={styles.right}>
-                <form action={updateCompanyStatus} style={styles.inlineForm}>
+
+              <div className="crm-card-footer">
+                <form action={updateCompanyStatus} className="inline-stack">
                   <input type="hidden" name="id" value={company.id} />
                   <select name="status" defaultValue={company.status} style={selectStyle()}>
                     {companyStatuses.map((item) => <option key={item} value={item}>{item}</option>)}
@@ -47,20 +100,11 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                   <InlineDangerButton>Elimina</InlineDangerButton>
                 </form>
               </div>
-            </div>
+            </article>
           ))}
-          {!companies.length ? <div style={styles.empty}>Nessuna azienda ancora.</div> : null}
+          {!items.length ? <div className="empty-copy">Nessuna azienda trovata per questo filtro.</div> : null}
         </div>
-      </FormCard>
+      </section>
     </div>
-  );
+  )
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  row: { display: 'flex', justifyContent: 'space-between', gap: 16, paddingBottom: 14, borderBottom: '1px solid #f3f4f6', alignItems: 'center', flexWrap: 'wrap' },
-  title: { fontWeight: 700 },
-  meta: { color: '#6b7280', marginTop: 4 },
-  right: { display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' },
-  inlineForm: { display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' },
-  empty: { color: '#6b7280' },
-};

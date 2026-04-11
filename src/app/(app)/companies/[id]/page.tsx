@@ -1,25 +1,24 @@
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { DetailShell } from '@/components/detail/detail-shell';
-import { EntityListCard } from '@/components/detail/entity-list-card';
-import { InfoCard, InfoRow } from '@/components/detail/info-card';
-import { TimelineCard } from '@/components/detail/timeline-card';
-import { getCompanyDetail, getTimelineForEntity } from '@/lib/detail-queries';
+import { notFound } from 'next/navigation'
+import { DetailShell } from '@/components/detail/detail-shell'
+import { EntityListCard } from '@/components/detail/entity-list-card'
+import { InfoCard, InfoRow } from '@/components/detail/info-card'
+import { TimelineCard } from '@/components/detail/timeline-card'
+import { getCompanyDetail, getTimelineForEntity } from '@/lib/detail-queries'
 
 export default async function CompanyDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const { company, contacts, opportunities, projects, notes } = await getCompanyDetail(id);
-  const timeline = await getTimelineForEntity({ companyId: id });
+  const { id } = await params
+  const { company, contacts, opportunities, projects, notes } = await getCompanyDetail(id)
+  const timeline = await getTimelineForEntity({ companyId: id })
 
-  if (!company) notFound();
+  if (!company) notFound()
 
   return (
     <DetailShell title={company.name} subtitle={company.legal_name} backHref="/companies" backLabel="Aziende">
-      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="space-y-6">
+      <div className="detail-grid">
+        <div className="stack-lg">
           <InfoCard title="Panoramica azienda">
             <InfoRow label="Status" value={company.status} />
-            <InfoRow label="Sito web" value={company.website ? <a href={company.website} target="_blank" className="underline">{company.website}</a> : '—'} />
+            <InfoRow label="Sito web" value={company.website ? <a href={company.website} target="_blank">{company.website}</a> : '—'} />
             <InfoRow label="Email" value={company.email} />
             <InfoRow label="Telefono" value={company.phone} />
             <InfoRow label="Indirizzo" value={[company.address_line1, company.city, company.province].filter(Boolean).join(', ')} />
@@ -36,7 +35,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           />
         </div>
 
-        <div className="space-y-6">
+        <div className="stack-lg">
           <EntityListCard
             title="Contatti"
             empty="Nessun contatto collegato."
@@ -72,5 +71,5 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
         </div>
       </div>
     </DetailShell>
-  );
+  )
 }

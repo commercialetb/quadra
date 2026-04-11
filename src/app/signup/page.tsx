@@ -5,10 +5,11 @@ import { useRouter } from 'next/navigation'
 import { FormEvent, useMemo, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
+const fieldStyle: React.CSSProperties = { height: 50, borderRadius: 16, padding: '0 14px' }
+
 export default function SignupPage() {
   const router = useRouter()
   const supabase = useMemo(() => createClient(), [])
-
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -22,25 +23,15 @@ export default function SignupPage() {
     setError(null)
     setMessage(null)
 
-    if (password.length < 8) {
-      setError('La password deve avere almeno 8 caratteri.')
-      return
-    }
-
-    if (password !== confirmPassword) {
-      setError('Le password non coincidono.')
-      return
-    }
+    if (password.length < 8) return setError('La password deve avere almeno 8 caratteri.')
+    if (password !== confirmPassword) return setError('Le password non coincidono.')
 
     setLoading(true)
-
     const { error } = await supabase.auth.signUp({
       email: email.trim(),
       password,
       options: {
-        data: {
-          full_name: fullName.trim(),
-        },
+        data: { full_name: fullName.trim() },
         emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
       },
     })
@@ -58,95 +49,30 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-6 py-12">
-      <div className="w-full rounded-3xl border border-black/10 bg-white p-8 shadow-sm">
-        <div className="mb-8">
-          <p className="text-sm text-black/50">Quadra CRM</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight">Crea account</h1>
-          <p className="mt-2 text-sm text-black/60">Accesso classico, semplice e professionale.</p>
-        </div>
+    <main className="auth-shell">
+      <div className="auth-grid">
+        <section className="auth-panel">
+          <p className="auth-kicker">Create account</p>
+          <h1 className="auth-title">Inizia pulito.</h1>
+          <p className="auth-copy">Quadra deve sembrare immediato già dal primo minuto: pochi campi, nessun rumore, solo il necessario.</p>
+        </section>
 
-        <form className="space-y-4" onSubmit={onSubmit}>
-          <div>
-            <label htmlFor="fullName" className="mb-2 block text-sm font-medium">
-              Nome completo
-            </label>
-            <input
-              id="fullName"
-              type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="w-full rounded-2xl border border-black/10 px-4 py-3 outline-none transition focus:border-black/30"
-              placeholder="Mario Rossi"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="email" className="mb-2 block text-sm font-medium">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-2xl border border-black/10 px-4 py-3 outline-none transition focus:border-black/30"
-              placeholder="nome@azienda.it"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="password" className="mb-2 block text-sm font-medium">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              required
-              autoComplete="new-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-2xl border border-black/10 px-4 py-3 outline-none transition focus:border-black/30"
-              placeholder="Minimo 8 caratteri"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="confirmPassword" className="mb-2 block text-sm font-medium">
-              Conferma password
-            </label>
-            <input
-              id="confirmPassword"
-              type="password"
-              required
-              autoComplete="new-password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full rounded-2xl border border-black/10 px-4 py-3 outline-none transition focus:border-black/30"
-              placeholder="Ripeti la password"
-            />
-          </div>
-
-          {error ? <p className="text-sm text-red-600">{error}</p> : null}
-          {message ? <p className="text-sm text-green-700">{message}</p> : null}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-2xl bg-black px-4 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {loading ? 'Creazione account...' : 'Crea account'}
-          </button>
-        </form>
-
-        <p className="mt-6 text-center text-sm text-black/60">
-          Hai già un account?{' '}
-          <Link href="/login" className="font-medium text-black hover:opacity-70">
-            Accedi
-          </Link>
-        </p>
+        <section className="auth-card">
+          <p className="auth-kicker">Nuovo account</p>
+          <h2 style={{ margin: '10px 0 0', fontSize: 34, letterSpacing: '-0.06em' }}>Crea accesso</h2>
+          <form className="auth-form" onSubmit={onSubmit} style={{ marginTop: 22 }}>
+            <label className="auth-label">Nome completo<input style={fieldStyle} value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Mario Rossi" /></label>
+            <label className="auth-label">Email<input style={fieldStyle} type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="nome@azienda.it" /></label>
+            <div className="auth-row">
+              <label className="auth-label">Password<input style={fieldStyle} type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Minimo 8 caratteri" /></label>
+              <label className="auth-label">Conferma<input style={fieldStyle} type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Ripeti la password" /></label>
+            </div>
+            {error ? <div className="notice-error">{error}</div> : null}
+            {message ? <div className="notice-success">{message}</div> : null}
+            <button className="button-primary" type="submit" disabled={loading} style={{ width: '100%' }}>{loading ? 'Creazione account...' : 'Crea account'}</button>
+          </form>
+          <p className="auth-foot">Hai già un account? <Link href="/login" style={{ color: 'var(--text)', fontWeight: 700 }}>Accedi</Link></p>
+        </section>
       </div>
     </main>
   )

@@ -4,9 +4,10 @@ import Link from 'next/link'
 import { FormEvent, useMemo, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
+const fieldStyle: React.CSSProperties = { height: 50, borderRadius: 16, padding: '0 14px' }
+
 export default function ForgotPasswordPage() {
   const supabase = useMemo(() => createClient(), [])
-
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -18,64 +19,30 @@ export default function ForgotPasswordPage() {
     setError(null)
     setMessage(null)
 
-    const redirectTo = `${window.location.origin}/auth/callback?next=/reset-password`
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo,
+      redirectTo: `${window.location.origin}/reset-password`,
     })
 
-    if (error) {
-      setError(error.message)
-    } else {
-      setMessage('Ti abbiamo inviato il link per reimpostare la password.')
-    }
+    if (error) setError(error.message)
+    else setMessage('Email inviata. Apri il link e imposta una nuova password.')
 
     setLoading(false)
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-6 py-12">
-      <div className="w-full rounded-3xl border border-black/10 bg-white p-8 shadow-sm">
-        <div className="mb-8">
-          <p className="text-sm text-black/50">Quadra CRM</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight">Recupera password</h1>
-          <p className="mt-2 text-sm text-black/60">Inserisci la tua email e ricevi il link di reset.</p>
-        </div>
-
-        <form className="space-y-4" onSubmit={onSubmit}>
-          <div>
-            <label htmlFor="email" className="mb-2 block text-sm font-medium">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-2xl border border-black/10 px-4 py-3 outline-none transition focus:border-black/30"
-              placeholder="nome@azienda.it"
-            />
-          </div>
-
-          {error ? <p className="text-sm text-red-600">{error}</p> : null}
-          {message ? <p className="text-sm text-green-700">{message}</p> : null}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-2xl bg-black px-4 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {loading ? 'Invio in corso...' : 'Invia link di reset'}
-          </button>
+    <main className="auth-shell">
+      <section className="auth-card" style={{ maxWidth: 560 }}>
+        <p className="auth-kicker">Reset password</p>
+        <h1 style={{ margin: '10px 0 0', fontSize: 36, letterSpacing: '-0.06em' }}>Recupera accesso</h1>
+        <p className="auth-copy" style={{ marginTop: 12 }}>Inserisci la tua email e riceverai un link per impostare una nuova password.</p>
+        <form className="auth-form" onSubmit={onSubmit} style={{ marginTop: 22 }}>
+          <label className="auth-label">Email<input style={fieldStyle} type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="nome@azienda.it" /></label>
+          {error ? <div className="notice-error">{error}</div> : null}
+          {message ? <div className="notice-success">{message}</div> : null}
+          <button className="button-primary" type="submit" disabled={loading} style={{ width: '100%' }}>{loading ? 'Invio in corso...' : 'Invia link di reset'}</button>
         </form>
-
-        <p className="mt-6 text-center text-sm text-black/60">
-          <Link href="/login" className="font-medium text-black hover:opacity-70">
-            Torna al login
-          </Link>
-        </p>
-      </div>
+        <p className="auth-foot"><Link href="/login" style={{ color: 'var(--text)', fontWeight: 700 }}>Torna al login</Link></p>
+      </section>
     </main>
   )
 }

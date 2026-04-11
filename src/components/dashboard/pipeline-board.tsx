@@ -1,3 +1,5 @@
+import { SectionCard } from '@/components/section-card'
+
 const labels: Record<string, string> = {
   new_lead: 'Nuovi lead',
   contacted: 'Contattati',
@@ -6,30 +8,19 @@ const labels: Record<string, string> = {
   negotiation: 'Trattativa',
   won: 'Vinte',
   lost: 'Perse',
-};
+}
 
-export function PipelineBoard({
-  pipelineCounts,
-}: {
-  pipelineCounts: Record<string, number>;
-}) {
+export function PipelineBoard({ pipelineCounts }: { pipelineCounts: Record<string, number> }) {
   return (
-    <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
-      <div>
-        <h2 className="text-lg font-semibold text-neutral-950">Pipeline</h2>
-        <p className="mt-1 text-sm text-neutral-500">Distribuzione opportunità per fase.</p>
-      </div>
-
-      <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-7">
+    <SectionCard title="Pipeline" subtitle="Distribuzione opportunità per fase, letta come un colpo d'occhio operativo.">
+      <div style={{ display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>
         {Object.entries(labels).map(([key, label]) => (
-          <div key={key} className="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
-            <div className="text-sm text-neutral-500">{label}</div>
-            <div className="mt-2 text-2xl font-semibold tracking-tight text-neutral-950">
-              {pipelineCounts[key] ?? 0}
-            </div>
+          <div key={key} className="page-card" style={{ padding: 16, background: 'rgba(255,255,255,0.62)' }}>
+            <div style={{ color: 'var(--muted)', fontSize: 14 }}>{label}</div>
+            <div style={{ marginTop: 10, fontSize: 32, fontWeight: 700, letterSpacing: '-0.06em' }}>{pipelineCounts[key] ?? 0}</div>
           </div>
         ))}
       </div>
-    </div>
-  );
+    </SectionCard>
+  )
 }

@@ -1,4 +1,5 @@
-import Link from 'next/link';
+import Link from 'next/link'
+import { SectionCard } from '@/components/section-card'
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat('it-IT', {
@@ -6,71 +7,39 @@ function formatDate(value: string) {
     month: 'short',
     hour: '2-digit',
     minute: '2-digit',
-  }).format(new Date(value));
+  }).format(new Date(value))
 }
 
-function FollowupGroup({
-  title,
-  subtitle,
-  items,
-}: {
-  title: string;
-  subtitle: string;
-  items: Array<{
-    id: string;
-    title: string;
-    due_at: string;
-    priority: string;
-    status: string;
-  }>;
-}) {
+function FollowupGroup({ title, subtitle, items }: { title: string; subtitle: string; items: Array<any> }) {
   return (
-    <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
-      <h3 className="text-base font-semibold text-neutral-950">{title}</h3>
-      <p className="mt-1 text-sm text-neutral-500">{subtitle}</p>
-      <div className="mt-4 space-y-3">
+    <SectionCard title={title} subtitle={subtitle}>
+      <div style={{ display: 'grid', gap: 12 }}>
         {items.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-neutral-200 p-4 text-sm text-neutral-500">
-            Nessun elemento.
-          </div>
+          <div style={{ border: '1px dashed var(--line-strong)', borderRadius: 18, padding: 16, color: 'var(--muted)' }}>Nessun elemento.</div>
         ) : (
           items.map((item) => (
-            <Link
-              key={item.id}
-              href="/followups"
-              className="block rounded-xl border border-neutral-200 p-4 transition hover:border-neutral-300 hover:bg-neutral-50"
-            >
-              <div className="flex items-start justify-between gap-4">
+            <Link key={item.id} href="/followups" className="page-card" style={{ padding: 16 }}>
+              <div style={{ display: 'flex', gap: 14, justifyContent: 'space-between', flexWrap: 'wrap' }}>
                 <div>
-                  <div className="font-medium text-neutral-950">{item.title}</div>
-                  <div className="mt-1 text-sm text-neutral-500">{formatDate(item.due_at)}</div>
+                  <div style={{ fontWeight: 700 }}>{item.title}</div>
+                  <div style={{ marginTop: 6, color: 'var(--muted)', fontSize: 14 }}>{formatDate(item.due_at)}</div>
                 </div>
-                <div className="rounded-full border border-neutral-200 px-3 py-1 text-xs font-medium uppercase tracking-wide text-neutral-600">
-                  {item.priority}
-                </div>
+                <div style={{ minHeight: 32, padding: '0 12px', borderRadius: 999, border: '1px solid var(--line)', display: 'inline-flex', alignItems: 'center', color: 'var(--muted)', fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.08em' }}>{item.priority}</div>
               </div>
             </Link>
           ))
         )}
       </div>
-    </div>
-  );
+    </SectionCard>
+  )
 }
 
-export function FollowupPanels({
-  overdue,
-  today,
-  upcoming,
-}: {
-  overdue: Array<{ id: string; title: string; due_at: string; priority: string; status: string }>;
-  today: Array<{ id: string; title: string; due_at: string; priority: string; status: string }>;
-  upcoming: Array<{ id: string; title: string; due_at: string; priority: string; status: string }>;
-}) {
+export function FollowupPanels({ overdue, today, upcoming }: { overdue: Array<any>; today: Array<any>; upcoming: Array<any> }) {
   return (
-    <div className="grid gap-4 xl:grid-cols-3">
+    <div style={{ display: 'grid', gap: 18, gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
       <FollowupGroup title="Scaduti" subtitle="Da sistemare subito." items={overdue} />
       <FollowupGroup title="Oggi" subtitle="Le cose da chiudere in giornata." items={today} />
       <FollowupGroup title="In arrivo" subtitle="I prossimi follow-up pianificati." items={upcoming} />
     </div>
-  );
+  )
 }

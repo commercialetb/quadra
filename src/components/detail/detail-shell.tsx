@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import type { ReactNode } from 'react';
+import Link from 'next/link'
+import type { ReactNode } from 'react'
 
 export function DetailShell({
   title,
@@ -8,24 +8,21 @@ export function DetailShell({
   backLabel,
   children,
 }: {
-  title: string;
-  subtitle?: string | null;
-  backHref: string;
-  backLabel: string;
-  children: ReactNode;
+  title: string
+  subtitle?: string | null
+  backHref: string
+  backLabel: string
+  children: ReactNode
 }) {
   return (
-    <div className="space-y-6">
-      <div className="space-y-3">
-        <Link href={backHref} className="text-sm text-neutral-500 hover:text-neutral-900">
-          ← {backLabel}
-        </Link>
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
-          {subtitle ? <p className="mt-1 text-sm text-neutral-500">{subtitle}</p> : null}
-        </div>
-      </div>
+    <div className="detail-shell">
+      <Link href={backHref} className="back-link">← {backLabel}</Link>
+      <section className="page-card detail-hero">
+        <p className="eyebrow">Detail view</p>
+        <h1 className="hero-title">{title}</h1>
+        {subtitle ? <p className="hero-copy">{subtitle}</p> : null}
+      </section>
       {children}
     </div>
-  );
+  )
 }

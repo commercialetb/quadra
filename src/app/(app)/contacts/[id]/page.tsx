@@ -1,21 +1,21 @@
-import { notFound } from 'next/navigation';
-import { DetailShell } from '@/components/detail/detail-shell';
-import { EntityListCard } from '@/components/detail/entity-list-card';
-import { InfoCard, InfoRow } from '@/components/detail/info-card';
-import { TimelineCard } from '@/components/detail/timeline-card';
-import { getContactDetail, getTimelineForEntity } from '@/lib/detail-queries';
+import { notFound } from 'next/navigation'
+import { DetailShell } from '@/components/detail/detail-shell'
+import { EntityListCard } from '@/components/detail/entity-list-card'
+import { InfoCard, InfoRow } from '@/components/detail/info-card'
+import { TimelineCard } from '@/components/detail/timeline-card'
+import { getContactDetail, getTimelineForEntity } from '@/lib/detail-queries'
 
 export default async function ContactDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const { contact, phones, opportunities, notes } = await getContactDetail(id);
-  const timeline = await getTimelineForEntity({ contactId: id });
+  const { id } = await params
+  const { contact, phones, opportunities, notes } = await getContactDetail(id)
+  const timeline = await getTimelineForEntity({ contactId: id })
 
-  if (!contact) notFound();
+  if (!contact) notFound()
 
   return (
     <DetailShell title={contact.full_name} subtitle={contact.role} backHref="/contacts" backLabel="Contatti">
-      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="space-y-6">
+      <div className="detail-grid">
+        <div className="stack-lg">
           <InfoCard title="Panoramica contatto">
             <InfoRow label="Email" value={contact.email} />
             <InfoRow label="WhatsApp" value={contact.whatsapp} />
@@ -34,7 +34,7 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
           />
         </div>
 
-        <div className="space-y-6">
+        <div className="stack-lg">
           <EntityListCard
             title="Telefoni"
             empty="Nessun numero inserito."
@@ -54,5 +54,5 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
         </div>
       </div>
     </DetailShell>
-  );
+  )
 }

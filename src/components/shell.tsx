@@ -1,76 +1,70 @@
-import Link from 'next/link';
-import { ReactNode } from 'react';
-import { LogoutButton } from './logout-button';
+'use client'
+
+import Link from 'next/link'
+import { ReactNode } from 'react'
+import { usePathname } from 'next/navigation'
+import { LogoutButton } from './logout-button'
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '/companies', label: 'Aziende' },
-  { href: '/contacts', label: 'Contatti' },
-  { href: '/opportunities', label: 'Opportunita' },
-  { href: '/followups', label: 'Follow-up' },
-];
+  { href: '/dashboard', label: 'Dashboard', short: 'Home', badge: '01' },
+  { href: '/companies', label: 'Aziende', short: 'Aziende', badge: '02' },
+  { href: '/contacts', label: 'Contatti', short: 'Contatti', badge: '03' },
+  { href: '/opportunities', label: 'Opportunita', short: 'Deal', badge: '04' },
+  { href: '/followups', label: 'Follow-up', short: 'Follow-up', badge: '05' },
+]
 
 export function Shell({ children }: { children: ReactNode }) {
-  return (
-    <div style={styles.page}>
-      <aside style={styles.sidebar}>
-        <div>
-          <div style={styles.brand}>Quadra</div>
-          <p style={styles.caption}>CRM semplice, pulito, operativo.</p>
-        </div>
-        <nav style={styles.nav}>
-          {navItems.map((item) => (
-            <Link key={item.href} href={item.href} style={styles.navLink}>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <LogoutButton />
-      </aside>
-      <main style={styles.main}>{children}</main>
-    </div>
-  );
-}
+  const pathname = usePathname()
 
-const styles: Record<string, React.CSSProperties> = {
-  page: {
-    minHeight: '100vh',
-    display: 'grid',
-    gridTemplateColumns: '240px 1fr',
-    background: '#f7f7f8',
-    color: '#111827',
-  },
-  sidebar: {
-    padding: '24px 18px',
-    borderRight: '1px solid #e5e7eb',
-    background: '#ffffff',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 24,
-  },
-  brand: {
-    fontSize: 28,
-    fontWeight: 700,
-    letterSpacing: '-0.03em',
-  },
-  caption: {
-    marginTop: 8,
-    color: '#6b7280',
-    lineHeight: 1.5,
-  },
-  nav: {
-    display: 'grid',
-    gap: 8,
-  },
-  navLink: {
-    padding: '12px 14px',
-    borderRadius: 12,
-    textDecoration: 'none',
-    color: '#111827',
-    background: '#f3f4f6',
-    fontWeight: 500,
-  },
-  main: {
-    padding: 28,
-  },
-};
+  return (
+    <div className="app-shell">
+      <aside className="sidebar">
+        <div>
+          <div className="brand-mark">Q</div>
+          <div className="brand-title">Quadra</div>
+          <p className="brand-copy">CRM personale, chiaro e operativo. Meno attrito, più controllo.</p>
+        </div>
+
+        <nav className="nav-stack">
+          {navItems.map((item) => {
+            const active = pathname === item.href || pathname.startsWith(`${item.href}/`)
+            return (
+              <Link key={item.href} href={item.href} className="nav-link" data-active={active}>
+                <span className="nav-pill">{item.badge}</span>
+                <span>{item.label}</span>
+              </Link>
+            )
+          })}
+        </nav>
+
+        <div style={{ marginTop: 'auto', display: 'grid', gap: 12 }}>
+          <div className="status-pill"><span className="status-dot" /> Core CRM online</div>
+          <LogoutButton />
+        </div>
+      </aside>
+
+      <main className="shell-main">
+        <div className="mobile-topbar">
+          <div>
+            <div style={{ fontSize: 13, color: 'var(--soft)', textTransform: 'uppercase', letterSpacing: '.18em', fontWeight: 700 }}>Quadra</div>
+            <div style={{ marginTop: 4, fontSize: 24, fontWeight: 700, letterSpacing: '-0.05em' }}>Simply is better</div>
+          </div>
+          <div className="status-pill"><span className="status-dot" /> Online</div>
+        </div>
+
+        {children}
+
+        <nav className="mobile-tabbar">
+          {navItems.map((item) => {
+            const active = pathname === item.href || pathname.startsWith(`${item.href}/`)
+            return (
+              <Link key={item.href} href={item.href} data-active={active}>
+                {item.short}
+              </Link>
+            )
+          })}
+        </nav>
+      </main>
+    </div>
+  )
+}

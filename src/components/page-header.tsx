@@ -1,14 +1,26 @@
-export function PageHeader({ title, subtitle }: { title: string; subtitle: string }) {
-  return (
-    <div style={styles.wrapper}>
-      <h1 style={styles.title}>{title}</h1>
-      <p style={styles.subtitle}>{subtitle}</p>
-    </div>
-  );
-}
+import { ReactNode } from 'react'
 
-const styles: Record<string, React.CSSProperties> = {
-  wrapper: { display: 'grid', gap: 8 },
-  title: { margin: 0, fontSize: 36, letterSpacing: '-0.04em' },
-  subtitle: { margin: 0, color: '#6b7280', lineHeight: 1.6 },
-};
+export function PageHeader({
+  title,
+  subtitle,
+  actions,
+  eyebrow = 'Quadra UI v2',
+}: {
+  title: string
+  subtitle: string
+  actions?: ReactNode
+  eyebrow?: string
+}) {
+  return (
+    <div className="hero-card page-card">
+      <p className="eyebrow">{eyebrow}</p>
+      <div className="section-heading" style={{ marginBottom: 0 }}>
+        <div>
+          <h1 className="hero-title">{title}</h1>
+          <p className="hero-copy">{subtitle}</p>
+        </div>
+        {actions ? <div className="quick-actions">{actions}</div> : null}
+      </div>
+    </div>
+  )
+}

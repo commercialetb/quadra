@@ -1,21 +1,21 @@
-import { notFound } from 'next/navigation';
-import { DetailShell } from '@/components/detail/detail-shell';
-import { EntityListCard } from '@/components/detail/entity-list-card';
-import { InfoCard, InfoRow } from '@/components/detail/info-card';
-import { TimelineCard } from '@/components/detail/timeline-card';
-import { getOpportunityDetail, getTimelineForEntity } from '@/lib/detail-queries';
+import { notFound } from 'next/navigation'
+import { DetailShell } from '@/components/detail/detail-shell'
+import { EntityListCard } from '@/components/detail/entity-list-card'
+import { InfoCard, InfoRow } from '@/components/detail/info-card'
+import { TimelineCard } from '@/components/detail/timeline-card'
+import { getOpportunityDetail, getTimelineForEntity } from '@/lib/detail-queries'
 
 export default async function OpportunityDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const { opportunity, projects, notes } = await getOpportunityDetail(id);
-  const timeline = await getTimelineForEntity({ opportunityId: id });
+  const { id } = await params
+  const { opportunity, projects, notes } = await getOpportunityDetail(id)
+  const timeline = await getTimelineForEntity({ opportunityId: id })
 
-  if (!opportunity) notFound();
+  if (!opportunity) notFound()
 
   return (
     <DetailShell title={opportunity.title} subtitle={opportunity.company?.name} backHref="/opportunities" backLabel="Opportunità">
-      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="space-y-6">
+      <div className="detail-grid">
+        <div className="stack-lg">
           <InfoCard title="Panoramica opportunità">
             <InfoRow label="Fase" value={opportunity.stage} />
             <InfoRow label="Valore stimato" value={opportunity.value_estimate ? `€ ${Number(opportunity.value_estimate).toLocaleString('it-IT')}` : '—'} />
@@ -36,7 +36,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
           />
         </div>
 
-        <div className="space-y-6">
+        <div className="stack-lg">
           <EntityListCard
             title="Progetti collegati"
             empty="Nessun progetto collegato."
@@ -50,5 +50,5 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
         </div>
       </div>
     </DetailShell>
-  );
+  )
 }
