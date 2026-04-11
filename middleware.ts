@@ -2,7 +2,20 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({ request })
+  const { pathname } = request.nextUrl
+
+  if (
+    pathname === '/login' ||
+    pathname.startsWith('/auth/callback') ||
+    pathname.startsWith('/_next') ||
+    pathname === '/favicon.ico'
+  ) {
+    return NextResponse.next()
+  }
+
+  let response = NextResponse.next({
+    request,
+  })
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,9 +32,17 @@ export async function middleware(request: NextRequest) {
             options?: CookieOptions
           }>
         ) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
-          response = NextResponse.next({ request })
-          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options))
+          cookiesToSet.forEach(({ name, value }) => {
+            request.cookies.set(name, value)
+          })
+
+          response = NextResponse.next({
+            request,
+          })
+
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options)
+          })
         },
       },
     }
@@ -31,30 +52,14 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const isAuthPage = request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/auth')
-  const isProtectedRoute =
-    request.nextUrl.pathname === '/' ||
-    request.nextUrl.pathname.startsWith('/dashboard') ||
-    request.nextUrl.pathname.startsWith('/companies') ||
-    request.nextUrl.pathname.startsWith('/contacts') ||
-    request.nextUrl.pathname.startsWith('/opportunities') ||
-    request.nextUrl.pathname.startsWith('/followups')
-
-  if (!user && isProtectedRoute) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/login'
-    return NextResponse.redirect(url)
-  }
-
-  if (user && isAuthPage) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/dashboard'
-    return NextResponse.redirect(url)
+  if (!user) {
+    const loginUrl = new URL('/login', request.url)
+    return NextResponse.redirect(loginUrl)
   }
 
   return response
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 }
