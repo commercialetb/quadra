@@ -3,16 +3,23 @@ import { getCompanies, getContacts, getOpportunities } from '@/lib/data'
 import { OpportunitiesCrud } from '@/components/crm/opportunities-crud'
 
 export default async function OpportunitiesPage() {
-  const [opportunities, companies, contacts] = await Promise.all([getOpportunities(), getCompanies(), getContacts()])
+  const [opportunities, companies, contacts] = await Promise.all([
+    getOpportunities(), 
+    getCompanies(), 
+    getContacts()
+  ])
 
   return (
-    <div className="page-wrap">
+    <div className="page-stack">
       <PageHeader
         title="Opportunità"
-        subtitle="Pipeline commerciale più utile: listato pulito, focus sulla fase e niente mini-form sempre aperte."
-        eyebrow="CRM core"
+        subtitle="Trattative pulite, prossima azione in vista e niente caos da gestionale vecchio stile."
       />
-      <OpportunitiesCrud opportunities={opportunities} companies={companies} contacts={contacts} />
+      <OpportunitiesCrud 
+        opportunities={opportunities} 
+        companies={companies} 
+        contacts={contacts} 
+      />
     </div>
   )
 }
