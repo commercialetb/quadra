@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { createCompany, deleteCompany, updateCompanyStatus } from '@/app/(app)/actions'
-import { ActionBar, Field, FormCard, FormGrid, InlineDangerButton, PrimaryButton, inputStyle, selectStyle, textareaStyle } from '@/components/forms/form-primitives'
+import { ActionBar, Field, FormCard, FormGrid, InlineDangerButton, PrimaryButton, selectStyle, inputStyle, textareaStyle } from '@/components/forms/form-primitives'
 import { SearchInput } from '@/components/ui/search-input'
 import { CompanyAvatar } from '@/components/ui/company-avatar'
 
@@ -35,10 +35,10 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
   }, [companies, query, filter])
 
   return (
-    <div className="dual-panel polished-dual-panel">
+    <div className="dual-panel">
       <div className="sticky-panel">
         <form id="new-company" action={createCompany}>
-          <FormCard title="Nuova azienda" subtitle="Scheda essenziale, più chiara e pronta a crescere senza rumore.">
+          <FormCard title="Nuova azienda" subtitle="Pochi campi essenziali, più ordine e nessuna frizione inutile.">
             <FormGrid>
               <Field label="Nome azienda"><input name="name" required style={inputStyle()} /></Field>
               <Field label="Sito web"><input name="website" placeholder="https://" style={inputStyle()} /></Field>
@@ -58,11 +58,11 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
         </form>
       </div>
 
-      <section className="frost-card polished-list-shell">
+      <section className="frost-card">
         <div className="section-heading">
           <div>
             <h2>Aziende</h2>
-            <p>Più riconoscibili, più leggibili, meno sensazione da mini-form ripetuta.</p>
+            <p>Una lista leggibile, con logo, stato e azioni rapide senza sembrare un gestionale pesante.</p>
           </div>
           <div className="section-utility">{items.length} risultati</div>
         </div>
@@ -93,7 +93,11 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                       <span className={`badge ${companyBadge(company.status)}`}>{company.status}</span>
                     </div>
                     <div className="entity-meta-row">
-                      {company.website ? <a className="entity-link" href={company.website.startsWith('http') ? company.website : `https://${company.website}`} target="_blank" rel="noreferrer">{sanitizeWebsite(company.website)}</a> : <span className="entity-muted">Sito non indicato</span>}
+                      {company.website ? (
+                        <a className="entity-link" href={company.website.startsWith('http') ? company.website : `https://${company.website}`} target="_blank" rel="noreferrer">
+                          {sanitizeWebsite(company.website)}
+                        </a>
+                      ) : <span className="entity-muted">Sito non indicato</span>}
                       {company.email ? <span className="entity-muted">{company.email}</span> : null}
                     </div>
                   </div>
@@ -103,20 +107,25 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                 </div>
               </div>
 
-              <div className="entity-bottom-row">
-                <form action={updateCompanyStatus} className="status-inline-form">
-                  <input type="hidden" name="id" value={company.id} />
-                  <div className="compact-label">Stato</div>
-                  <select name="status" defaultValue={company.status} style={selectStyle()}>
-                    {companyStatuses.map((item) => <option key={item} value={item}>{item}</option>)}
-                  </select>
-                  <PrimaryButton>Aggiorna</PrimaryButton>
-                </form>
-                <form action={deleteCompany}>
-                  <input type="hidden" name="id" value={company.id} />
-                  <InlineDangerButton>Elimina</InlineDangerButton>
-                </form>
-              </div>
+              <details className="page-card" style={{ marginTop: 16, background: 'var(--surface-soft)', padding: 16 }}>
+                <summary style={{ cursor: 'pointer', fontWeight: 700 }}>Gestisci stato</summary>
+                <div className="entity-bottom-row">
+                  <form action={updateCompanyStatus} className="status-inline-form">
+                    <input type="hidden" name="id" value={company.id} />
+                    <div style={{ minWidth: 180 }}>
+                      <div className="compact-label">Stato</div>
+                      <select name="status" defaultValue={company.status} style={selectStyle()}>
+                        {companyStatuses.map((item) => <option key={item} value={item}>{item}</option>)}
+                      </select>
+                    </div>
+                    <PrimaryButton>Aggiorna</PrimaryButton>
+                  </form>
+                  <form action={deleteCompany}>
+                    <input type="hidden" name="id" value={company.id} />
+                    <InlineDangerButton>Elimina</InlineDangerButton>
+                  </form>
+                </div>
+              </details>
             </article>
           ))}
           {!items.length ? <div className="empty-copy">Nessuna azienda trovata per questo filtro.</div> : null}

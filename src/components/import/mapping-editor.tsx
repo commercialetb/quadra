@@ -12,29 +12,26 @@ export function MappingEditor({ sheet, onConfirm }: MappingEditorProps) {
   const availableFields = IMPORT_TARGET_FIELDS[sheet.suggestedType] ?? []
 
   return (
-    <div className="rounded-3xl border border-black/5 bg-white p-6 shadow-sm">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold text-slate-950">Mapping colonne</h3>
-        <p className="mt-1 text-sm text-slate-600">Controlla i suggerimenti automatici prima di procedere.</p>
+    <div className="import-panel">
+      <div className="section-heading">
+        <div>
+          <h2>Mapping colonne</h2>
+          <p>Controlla i suggerimenti automatici prima di procedere.</p>
+        </div>
       </div>
-      <div className="grid gap-3">
+      <div className="import-mapping-list">
         {sheet.mappings.map((mapping) => (
-          <div key={mapping.sourceColumn} className="grid gap-3 rounded-2xl border border-slate-200 p-4 md:grid-cols-[1fr_auto_1fr] md:items-center">
+          <div key={mapping.sourceColumn} className="import-mapping-row">
             <div>
-              <p className="text-sm font-medium text-slate-950">{mapping.sourceColumn}</p>
-              <p className="text-xs text-slate-500">colonna origine</p>
+              <div className="entity-title" style={{ fontSize: '1rem' }}>{mapping.sourceColumn}</div>
+              <div className="entity-subtitle">Colonna origine</div>
             </div>
-            <div className="text-center text-slate-400">→</div>
+            <div className="entity-muted" style={{ textAlign: 'center' }}>→</div>
             <div>
-              <select
-                defaultValue={mapping.targetField ?? ''}
-                className="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-0"
-              >
+              <select defaultValue={mapping.targetField ?? ''} style={{ borderRadius: 16, height: 46, padding: '0 14px' }}>
                 <option value="">Ignora colonna</option>
                 {availableFields.map((field) => (
-                  <option key={field} value={field}>
-                    {field}
-                  </option>
+                  <option key={field} value={field}>{field}</option>
                 ))}
               </select>
             </div>
@@ -42,14 +39,8 @@ export function MappingEditor({ sheet, onConfirm }: MappingEditorProps) {
         ))}
       </div>
 
-      <div className="mt-5 flex justify-end">
-        <button
-          type="button"
-          onClick={onConfirm}
-          className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white transition hover:opacity-90"
-        >
-          Conferma mapping
-        </button>
+      <div className="import-actions">
+        <button type="button" onClick={onConfirm} className="button-primary">Conferma mapping</button>
       </div>
     </div>
   )

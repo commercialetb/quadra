@@ -18,10 +18,10 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
   }, [contacts, query])
 
   return (
-    <div className="dual-panel polished-dual-panel">
+    <div className="dual-panel">
       <div className="sticky-panel">
         <form id="new-contact" action={createContact}>
-          <FormCard title="Nuovo contatto" subtitle="Persone, ruoli e relazione con l’azienda in una scheda più pulita.">
+          <FormCard title="Nuovo contatto" subtitle="Più leggibilità, più contesto aziendale, meno caos in inserimento.">
             <FormGrid>
               <Field label="Nome"><input name="first_name" required style={inputStyle()} /></Field>
               <Field label="Cognome"><input name="last_name" required style={inputStyle()} /></Field>
@@ -43,11 +43,11 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
         </form>
       </div>
 
-      <section className="frost-card polished-list-shell">
+      <section className="frost-card">
         <div className="section-heading">
           <div>
             <h2>Contatti</h2>
-            <p>Più identità visiva, meno rumore, più contesto utile a colpo d’occhio.</p>
+            <p>Persone, ruolo e legame con l’azienda: tutto leggibile al primo sguardo.</p>
           </div>
           <div className="section-utility">{items.length} risultati</div>
         </div>
@@ -78,35 +78,39 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
                   <Link className="button-secondary" href={`/contacts/${contact.id}`}>Apri scheda</Link>
                 </div>
               </div>
-              <div className="entity-bottom-row">
-                <form action={updateContact} className="contact-inline-edit">
-                  <input type="hidden" name="id" value={contact.id} />
-                  <div className="compact-field-block">
-                    <div className="compact-label">Azienda</div>
-                    <select name="company_id" defaultValue={contact.company_id ?? ''} style={selectStyle()}>
-                      <option value="">Nessuna</option>
-                      {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
-                    </select>
-                  </div>
-                  <div className="compact-field-block">
-                    <div className="compact-label">Ruolo</div>
-                    <input name="role" defaultValue={contact.role ?? ''} placeholder="Ruolo" style={inputStyle()} />
-                  </div>
-                  <div className="compact-field-block">
-                    <div className="compact-label">Email</div>
-                    <input name="email" defaultValue={contact.email ?? ''} placeholder="Email" style={inputStyle()} />
-                  </div>
-                  <div className="compact-field-block">
-                    <div className="compact-label">WhatsApp</div>
-                    <input name="whatsapp" defaultValue={contact.whatsapp ?? ''} placeholder="WhatsApp" style={inputStyle()} />
-                  </div>
-                  <PrimaryButton>Aggiorna</PrimaryButton>
-                </form>
-                <form action={deleteContact}>
-                  <input type="hidden" name="id" value={contact.id} />
-                  <InlineDangerButton>Elimina</InlineDangerButton>
-                </form>
-              </div>
+
+              <details className="page-card" style={{ marginTop: 16, background: 'var(--surface-soft)', padding: 16 }}>
+                <summary style={{ cursor: 'pointer', fontWeight: 700 }}>Modifica rapida</summary>
+                <div className="entity-bottom-row">
+                  <form action={updateContact} className="contact-inline-edit">
+                    <input type="hidden" name="id" value={contact.id} />
+                    <div className="compact-field-block">
+                      <div className="compact-label">Azienda</div>
+                      <select name="company_id" defaultValue={contact.company_id ?? ''} style={selectStyle()}>
+                        <option value="">Nessuna</option>
+                        {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
+                      </select>
+                    </div>
+                    <div className="compact-field-block">
+                      <div className="compact-label">Ruolo</div>
+                      <input name="role" defaultValue={contact.role ?? ''} placeholder="Ruolo" style={inputStyle()} />
+                    </div>
+                    <div className="compact-field-block">
+                      <div className="compact-label">Email</div>
+                      <input name="email" defaultValue={contact.email ?? ''} placeholder="Email" style={inputStyle()} />
+                    </div>
+                    <div className="compact-field-block">
+                      <div className="compact-label">WhatsApp</div>
+                      <input name="whatsapp" defaultValue={contact.whatsapp ?? ''} placeholder="WhatsApp" style={inputStyle()} />
+                    </div>
+                    <PrimaryButton>Aggiorna</PrimaryButton>
+                  </form>
+                  <form action={deleteContact}>
+                    <input type="hidden" name="id" value={contact.id} />
+                    <InlineDangerButton>Elimina</InlineDangerButton>
+                  </form>
+                </div>
+              </details>
             </article>
           ))}
           {!items.length ? <div className="empty-copy">Nessun contatto trovato.</div> : null}

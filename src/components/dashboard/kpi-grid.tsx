@@ -18,7 +18,7 @@ export function KpiGrid({
   }
 }) {
   const items = [
-    { label: 'Opportunita aperte', value: kpis.openCount, sub: 'Tutte le trattative attive', tone: 'blue' },
+    { label: 'Opportunità aperte', value: kpis.openCount, sub: 'Tutte le trattative attive', tone: 'blue' },
     { label: 'Follow-up scaduti', value: kpis.overdueCount, sub: 'Da sbloccare subito', tone: 'red' },
     { label: 'Follow-up di oggi', value: kpis.todayCount, sub: 'Focus giornata', tone: 'amber' },
     { label: 'Valore pipeline', value: formatCurrency(kpis.pipelineValue), sub: 'Valore totale stimato', tone: 'violet' },

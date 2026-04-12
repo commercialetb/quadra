@@ -4,7 +4,7 @@ export function PageHeader({
   title,
   subtitle,
   actions,
-  eyebrow = 'Quadra UI v3',
+  eyebrow = 'Quadra',
 }: {
   title: string
   subtitle: string
@@ -12,7 +12,7 @@ export function PageHeader({
   eyebrow?: string
 }) {
   return (
-    <div className="hero-card page-card hero-card-v3">
+    <section className="hero-card page-card">
       <p className="eyebrow">{eyebrow}</p>
       <div className="section-heading" style={{ marginBottom: 0 }}>
         <div>
@@ -21,11 +21,6 @@ export function PageHeader({
         </div>
         {actions ? <div className="quick-actions">{actions}</div> : null}
       </div>
-      <div className="hero-accent-row">
-        <span className="status-pill status-pill-accent"><span className="status-dot" /> Responsive</span>
-        <span className="status-pill"><span className="status-dot status-dot-warning" /> Priorita visive</span>
-        <span className="status-pill"><span className="status-dot status-dot-blue" /> Navigazione piu rapida</span>
-      </div>
-    </div>
+    </section>
   )
 }

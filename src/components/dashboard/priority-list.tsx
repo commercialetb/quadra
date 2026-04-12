@@ -14,30 +14,23 @@ function formatDate(value: string | null) {
 export function PriorityList({ staleOpportunities }: { staleOpportunities: Array<any> }) {
   return (
     <SectionCard title="Priorità da sbloccare" subtitle="Le opportunità che meritano un colpo di telefono, una nota o una decisione oggi.">
-      <div style={{ display: 'grid', gap: 12 }}>
+      <div className="company-list-v2">
         {staleOpportunities.length === 0 ? (
-          <div style={{ border: '1px dashed var(--line-strong)', borderRadius: 18, padding: 16, color: 'var(--muted)' }}>
-            Nessuna opportunità ferma. Ottimo segnale.
-          </div>
+          <div className="empty-copy">Nessuna opportunità ferma. Ottimo segnale.</div>
         ) : (
           staleOpportunities.map((item) => (
-            <Link key={item.id} href={`/opportunities/${item.id}`} className="page-card" style={{ padding: 16 }}>
-              <div style={{ display: 'flex', gap: 16, justifyContent: 'space-between', flexWrap: 'wrap' }}>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontWeight: 700, fontSize: 17 }}>{item.title}</div>
-                  <div style={{ marginTop: 6, color: 'var(--muted)', fontSize: 14 }}>
-                    Fase: {item.stage} · Ultimo aggiornamento: {formatDate(item.updated_at)}
-                  </div>
-                  {item.next_action ? (
-                    <div style={{ marginTop: 10, color: 'var(--text)', fontSize: 14 }}>
-                      Prossima azione: <strong>{item.next_action}</strong>
-                    </div>
-                  ) : null}
+            <Link key={item.id} href={`/opportunities/${item.id}`} className="entity-card-v2">
+              <div className="entity-title-row">
+                <div className="entity-title-block">
+                  <div className="entity-title">{item.title}</div>
+                  <div className="entity-subtitle">Fase: {item.stage} · Ultimo aggiornamento: {formatDate(item.updated_at)}</div>
                 </div>
-                <div style={{ textAlign: 'right', color: 'var(--muted)', fontSize: 14 }}>
-                  <div>{item.value_estimate ? `€ ${Number(item.value_estimate).toLocaleString('it-IT')}` : '—'}</div>
-                  <div style={{ marginTop: 6 }}>{formatDate(item.next_action_due_at)}</div>
-                </div>
+                <span className="badge badge-warning">attenzione</span>
+              </div>
+              {item.next_action ? <div className="entity-meta-row"><span className="entity-chip">Prossima azione: {item.next_action}</span></div> : null}
+              <div className="entity-bottom-row" style={{ marginTop: 12 }}>
+                <span className="entity-muted">{item.value_estimate ? `€ ${Number(item.value_estimate).toLocaleString('it-IT')}` : '—'}</span>
+                <span className="entity-muted">{formatDate(item.next_action_due_at)}</span>
               </div>
             </Link>
           ))

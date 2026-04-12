@@ -5,16 +5,14 @@ export function SectionCard({
   subtitle,
   children,
   utility,
-  tone = 'slate',
 }: {
   title: string
   subtitle?: string
   children: ReactNode
   utility?: ReactNode
-  tone?: 'slate' | 'blue' | 'amber' | 'red' | 'green' | 'violet' | string
 }) {
   return (
-    <section className="frost-card" data-tone={tone}>
+    <section className="page-card">
       <div className="section-heading">
         <div>
           <h2>{title}</h2>

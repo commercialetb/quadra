@@ -8,7 +8,7 @@ type AnalysisOverviewProps = {
 
 export function AnalysisOverview({ analysis, selectedSheetIndex, onSelectSheet }: AnalysisOverviewProps) {
   return (
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <div className="import-sheet-grid">
       {analysis.sheets.map((sheet, index) => {
         const selected = selectedSheetIndex === index
         return (
@@ -16,24 +16,19 @@ export function AnalysisOverview({ analysis, selectedSheetIndex, onSelectSheet }
             key={sheet.name}
             type="button"
             onClick={() => onSelectSheet(index)}
-            className={`rounded-3xl border p-5 text-left shadow-sm transition ${selected ? 'border-slate-950 bg-slate-950 text-white' : 'border-black/5 bg-white text-slate-950'}`}
+            className="import-sheet-card"
+            data-active={selected}
           >
-            <div className="flex items-start justify-between gap-3">
+            <div className="entity-title-row">
               <div>
-                <h3 className="text-lg font-semibold">{sheet.name}</h3>
-                <p className={`mt-1 text-sm ${selected ? 'text-slate-300' : 'text-slate-500'}`}>
-                  {sheet.rowCount} righe • {sheet.columns.length} colonne
-                </p>
+                <div className="entity-title">{sheet.name}</div>
+                <div className="entity-subtitle">{sheet.rowCount} righe · {sheet.columns.length} colonne</div>
               </div>
-              <span className={`rounded-full px-3 py-1 text-xs font-medium ${selected ? 'bg-white/15 text-white' : 'bg-slate-100 text-slate-700'}`}>
-                {sheet.suggestedType}
-              </span>
+              <span className="badge badge-dark">{sheet.suggestedType}</span>
             </div>
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="import-chip-row">
               {sheet.columns.slice(0, 6).map((column) => (
-                <span key={column} className={`rounded-full border px-2.5 py-1 text-xs ${selected ? 'border-white/15 text-slate-200' : 'border-slate-200 text-slate-600'}`}>
-                  {column}
-                </span>
+                <span key={column} className="import-chip">{column}</span>
               ))}
             </div>
           </button>

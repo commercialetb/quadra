@@ -17,14 +17,14 @@ export function DashboardShell({ data }: { data: any }) {
 
         <div className="hero-actions">
           <span className="status-pill"><span className="status-dot" /> {data.kpis.todayCount} follow-up oggi</span>
-          <span className="status-pill"><span className="status-dot" /> {data.kpis.openCount} opportunità aperte</span>
-          <span className="status-pill"><span className="status-dot" /> {data.kpis.overdueCount} elementi da sbloccare</span>
+          <span className="status-pill"><span className="status-dot status-dot-blue" /> {data.kpis.openCount} opportunità aperte</span>
+          <span className="status-pill"><span className="status-dot status-dot-warning" /> {data.kpis.overdueCount} elementi da sbloccare</span>
         </div>
       </section>
 
       <KpiGrid kpis={data.kpis} />
 
-      <div style={{ display: 'grid', gap: 18, gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))' }}>
+      <div className="kpi-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))' }}>
         <PriorityList staleOpportunities={data.staleOpportunities} />
         <RecentCompaniesList items={data.recentCompanies} />
       </div>

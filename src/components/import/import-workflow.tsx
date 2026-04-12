@@ -48,9 +48,9 @@ export function ImportWorkflow() {
     : null
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="rounded-3xl border border-black/5 bg-white p-5 shadow-sm">
-        <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600">
+    <div className="page-wrap">
+      <div className="import-card">
+        <div className="import-stepper">
           {[
             ['1', 'Carica'],
             ['2', 'Analizza'],
@@ -59,9 +59,9 @@ export function ImportWorkflow() {
           ].map(([n, label], index) => {
             const active = index === 0 ? true : (index === 1 && step !== 'upload') || (index === 2 && (step === 'mapped' || step === 'ready')) || (index === 3 && step === 'ready')
             return (
-              <div key={label} className={`inline-flex items-center gap-2 rounded-full px-3 py-2 ${active ? 'bg-slate-950 text-white' : 'bg-slate-100 text-slate-600'}`}>
-                <span className="text-xs font-semibold">{n}</span>
-                <span className="text-xs font-medium">{label}</span>
+              <div key={label} className="import-step" data-active={active}>
+                <span>{n}</span>
+                <span>{label}</span>
               </div>
             )
           })}
@@ -82,71 +82,48 @@ export function ImportWorkflow() {
 
       {analysis ? (
         <>
-          <AnalysisOverview
-            analysis={analysis}
-            selectedSheetIndex={selectedSheetIndex}
-            onSelectSheet={setSelectedSheetIndex}
-          />
+          <AnalysisOverview analysis={analysis} selectedSheetIndex={selectedSheetIndex} onSelectSheet={setSelectedSheetIndex} />
 
           {selectedSheet ? (
-            <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+            <div className="import-grid">
               <PreviewTable sheet={selectedSheet} />
-              <MappingEditor
-                sheet={selectedSheet}
-                onConfirm={() => setStep('mapped')}
-              />
+              <MappingEditor sheet={selectedSheet} onConfirm={() => setStep('mapped')} />
             </div>
           ) : null}
 
-          <div className="rounded-3xl border border-black/5 bg-white p-6 shadow-sm">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <section className="import-summary">
+            <div className="section-heading">
               <div>
-                <h3 className="text-lg font-semibold text-slate-950">Pronto per importare</h3>
-                <p className="mt-1 text-sm text-slate-600">
-                  Questo blocco salva in staging. L'import finale nel CRM live sarà il passo successivo.
-                </p>
+                <h2>Pronto per importare</h2>
+                <p>Questo blocco salva in staging. L'import finale nel CRM live sarà il passo successivo.</p>
               </div>
-              <div className="flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  onClick={() => setStep('mapped')}
-                  className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700"
-                >
-                  Conferma mapping
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setStep('ready')}
-                  className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white transition hover:opacity-90"
-                >
-                  Importa in staging
-                </button>
+              <div className="import-actions">
+                <button type="button" onClick={() => setStep('mapped')} className="button-secondary">Conferma mapping</button>
+                <button type="button" onClick={() => setStep('ready')} className="button-primary">Importa in staging</button>
               </div>
             </div>
 
             {summary ? (
-              <div className="mt-5 grid gap-3 md:grid-cols-3">
-                <div className="rounded-2xl bg-slate-50 p-4">
-                  <div className="text-xs uppercase tracking-[0.18em] text-slate-500">Righe mappate</div>
-                  <div className="mt-2 text-2xl font-semibold text-slate-950">{summary.rows}</div>
+              <div className="import-summary-grid">
+                <div className="import-stat" data-tone="slate">
+                  <div className="import-stat-label">Righe mappate</div>
+                  <div className="import-stat-value">{summary.rows}</div>
                 </div>
-                <div className="rounded-2xl bg-amber-50 p-4">
-                  <div className="text-xs uppercase tracking-[0.18em] text-amber-700">Issue trovate</div>
-                  <div className="mt-2 text-2xl font-semibold text-slate-950">{summary.issues}</div>
+                <div className="import-stat" data-tone="amber">
+                  <div className="import-stat-label">Issue trovate</div>
+                  <div className="import-stat-value">{summary.issues}</div>
                 </div>
-                <div className="rounded-2xl bg-emerald-50 p-4">
-                  <div className="text-xs uppercase tracking-[0.18em] text-emerald-700">Errori bloccanti</div>
-                  <div className="mt-2 text-2xl font-semibold text-slate-950">{summary.errors}</div>
+                <div className="import-stat" data-tone="green">
+                  <div className="import-stat-label">Errori bloccanti</div>
+                  <div className="import-stat-value">{summary.errors}</div>
                 </div>
               </div>
             ) : null}
 
             {step === 'ready' ? (
-              <div className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
-                Import demo completato in staging. Prossimo step: collegare upload reale e scrittura su Supabase.
-              </div>
+              <div className="import-file-note">Import demo completato in staging. Prossimo step: collegare upload reale e scrittura su Supabase.</div>
             ) : null}
-          </div>
+          </section>
         </>
       ) : null}
     </div>
