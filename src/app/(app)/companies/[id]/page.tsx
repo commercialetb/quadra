@@ -13,7 +13,14 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
   if (!company) notFound()
 
   return (
-    <DetailShell title={company.name} subtitle={company.legal_name} backHref="/companies" backLabel="Aziende">
+    <DetailShell
+      title={company.name}
+      subtitle={company.legal_name}
+      backHref="/companies"
+      backLabel="Aziende"
+      actions={<><a href={company.website || '#'} className="secondary-button" target="_blank" rel="noreferrer">Sito</a><a href={company.email ? `mailto:${company.email}` : '#'} className="ghost-button">Email</a></>}
+      meta={<><span>{company.status || 'Lead'}</span><span>{contacts.length} contatti</span><span>{opportunities.length} opportunità</span></>}
+    >
       <div className="detail-grid">
         <div className="stack-lg">
           <InfoCard title="Panoramica azienda">

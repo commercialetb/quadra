@@ -13,7 +13,14 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
   if (!opportunity) notFound()
 
   return (
-    <DetailShell title={opportunity.title} subtitle={opportunity.company?.name} backHref="/opportunities" backLabel="Opportunità">
+    <DetailShell
+      title={opportunity.title}
+      subtitle={opportunity.company?.name}
+      backHref="/opportunities"
+      backLabel="Opportunità"
+      actions={<><a href={opportunity.company ? `/companies/${opportunity.company.id}` : '#'} className="secondary-button">Apri azienda</a>{opportunity.primary_contact ? <a href={`/contacts/${opportunity.primary_contact.id}`} className="ghost-button">Apri contatto</a> : null}</>}
+      meta={<><span>{opportunity.stage || 'Nuovo lead'}</span><span>{opportunity.value_estimate ? `€ ${Number(opportunity.value_estimate).toLocaleString('it-IT')}` : 'Valore da definire'}</span><span>{projects.length} progetti</span></>}
+    >
       <div className="detail-grid">
         <div className="stack-lg">
           <InfoCard title="Panoramica opportunità">

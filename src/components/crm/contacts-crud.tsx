@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react'
 import { createContact, deleteContact, updateContact } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
 import { ContactAvatar } from '@/components/ui/contact-avatar'
+import { ConfirmDangerButton, PendingSubmitButton } from '@/components/ui/form-actions'
 
 export function ContactsCrud({ contacts, companies }: { contacts: any[]; companies: any[] }) {
   const [query, setQuery] = useState('')
@@ -23,7 +24,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
         <div className="list-head">
           <div>
             <h2>Contatti</h2>
-            <p>Persone leggibili, azienda chiara, nessun mini form sparso.</p>
+            <p>Persone leggibili, azienda chiara e aggiornamento rapido.</p>
           </div>
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
             + Nuovo contatto
@@ -48,7 +49,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
                   </div>
                   <div className="entity-inline-meta wrap">
                     {contact.email ? <span>{contact.email}</span> : null}
-                    {contact.whatsapp ? <span>WhatsApp</span> : null}
+                    {contact.whatsapp ? <span>WhatsApp disponibile</span> : null}
                     {contact.preferred_contact_method ? <span>{contact.preferred_contact_method}</span> : null}
                   </div>
                 </div>
@@ -63,11 +64,11 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
                     {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
                   </select>
                   <input name="role" defaultValue={contact.role ?? ''} placeholder="Ruolo" className="field-control compact-control" />
-                  <button className="ghost-button" type="submit">Salva</button>
+                  <PendingSubmitButton />
                 </form>
                 <form action={deleteContact}>
                   <input type="hidden" name="id" value={contact.id} />
-                  <button className="danger-button" type="submit">Elimina</button>
+                  <ConfirmDangerButton confirmMessage={`Eliminare davvero ${contact.first_name} ${contact.last_name}?`} />
                 </form>
               </div>
             </article>
@@ -101,7 +102,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
               <label className="field-stack"><span>Note</span><textarea className="field-control field-area" name="notes_summary" /></label>
               <div className="sheet-actions">
                 <button className="secondary-button" type="button" onClick={() => setShowCreate(false)}>Annulla</button>
-                <button className="primary-button" type="submit">Salva contatto</button>
+                <PendingSubmitButton className="primary-button" idleLabel="Salva contatto" />
               </div>
             </form>
           </div>

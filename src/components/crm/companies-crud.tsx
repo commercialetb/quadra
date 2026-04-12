@@ -2,12 +2,19 @@
 
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
-import { useFormStatus } from 'react-dom'
 import { createCompany, deleteCompany, updateCompanyStatus } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
 import { CompanyAvatar } from '@/components/ui/company-avatar'
+import { ConfirmDangerButton, PendingSubmitButton } from '@/components/ui/form-actions'
 
-const companyStatuses = ['lead', 'prospect', 'client', 'partner', 'inactive']
+const companyStatuses = ['lead', 'prospect', 'client', 'partner', 'inactive'] as const
+const companyStatusLabel: Record<string, string> = {
+  lead: 'Lead',
+  prospect: 'Prospect',
+  client: 'Cliente',
+  partner: 'Partner',
+  inactive: 'Inattiva',
+}
 
 function sanitizeWebsite(url?: string | null) {
   if (!url) return ''
@@ -20,16 +27,6 @@ function badgeTone(status?: string) {
   if (status === 'inactive') return 'danger'
   return 'neutral'
 }
-
-function SaveButton({ idleLabel = 'Salva' }: { idleLabel?: string }) {
-  const { pending } = useFormStatus()
-  return (
-    <button className="ghost-button save-button" type="submit" disabled={pending} aria-busy={pending}>
-      {pending ? 'Salvataggio...' : idleLabel}
-    </button>
-  )
-}
-
 
 export function CompaniesCrud({ companies }: { companies: any[] }) {
   const [query, setQuery] = useState('')
@@ -63,7 +60,7 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
           <div className="segmented-control">
             {['all', 'lead', 'prospect', 'client', 'partner'].map((item) => (
               <button key={item} type="button" className={filter === item ? 'is-active' : ''} onClick={() => setFilter(item)}>
-                {item === 'all' ? 'Tutte' : item}
+                {item === 'all' ? 'Tutte' : companyStatusLabel[item] ?? item}
               </button>
             ))}
           </div>
@@ -78,11 +75,11 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                   <div className="entity-card-top">
                     <div>
                       <h3>{company.name}</h3>
-                      <p>{[company.city, company.province].filter(Boolean).join(', ') || 'Localita non indicata'}</p>
+                      <p>{[company.city, company.province].filter(Boolean).join(', ') || 'Località non indicata'}</p>
                     </div>
-                    <span className={`tone-badge ${badgeTone(company.status)}`}>{company.status}</span>
+                    <span className={`tone-badge ${badgeTone(company.status)}`}>{companyStatusLabel[company.status] ?? company.status}</span>
                   </div>
-                  <div className="entity-inline-meta">
+                  <div className="entity-inline-meta wrap">
                     {company.website ? (
                       <a href={company.website.startsWith('http') ? company.website : `https://${company.website}`} target="_blank" rel="noreferrer">
                         {sanitizeWebsite(company.website)}
@@ -100,13 +97,15 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                 <form action={updateCompanyStatus} className="inline-mini-form">
                   <input type="hidden" name="id" value={company.id} />
                   <select name="status" defaultValue={company.status} className="field-control compact-control">
-                    {companyStatuses.map((item) => <option key={item} value={item}>{item}</option>)}
+                    {companyStatuses.map((item) => (
+                      <option key={item} value={item}>{companyStatusLabel[item] ?? item}</option>
+                    ))}
                   </select>
-                  <SaveButton />
+                  <PendingSubmitButton />
                 </form>
                 <form action={deleteCompany}>
                   <input type="hidden" name="id" value={company.id} />
-                  <button className="danger-button" type="submit">Elimina</button>
+                  <ConfirmDangerButton confirmMessage={`Eliminare davvero ${company.name}?`} />
                 </form>
               </div>
             </article>
@@ -134,12 +133,12 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                 <label className="field-stack"><span>Telefono</span><input className="field-control" name="phone" /></label>
                 <label className="field-stack"><span>Città</span><input className="field-control" name="city" /></label>
                 <label className="field-stack"><span>Provincia</span><input className="field-control" name="province" /></label>
-                <label className="field-stack"><span>Stato</span><select className="field-control" name="status" defaultValue="lead">{companyStatuses.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+                <label className="field-stack"><span>Stato</span><select className="field-control" name="status" defaultValue="lead">{companyStatuses.map((item) => <option key={item} value={item}>{companyStatusLabel[item] ?? item}</option>)}</select></label>
               </div>
               <label className="field-stack"><span>Note</span><textarea className="field-control field-area" name="notes_summary" /></label>
               <div className="sheet-actions">
                 <button className="secondary-button" type="button" onClick={() => setShowCreate(false)}>Annulla</button>
-                <SaveButton idleLabel="Salva azienda" />
+                <PendingSubmitButton className="primary-button" idleLabel="Salva azienda" />
               </div>
             </form>
           </div>

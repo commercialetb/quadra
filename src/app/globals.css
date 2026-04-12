@@ -374,3 +374,37 @@ input:focus, select:focus, textarea:focus {
   .sheet-actions { flex-direction: column-reverse; }
   .mobile-nav { width: calc(100% - 20px); }
 }
+
+
+.sidebar-brand-mark-image {
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  display: block;
+  box-shadow: var(--shadow-sm);
+}
+button:disabled {
+  cursor: wait;
+  opacity: .7;
+}
+.save-button[aria-busy="true"],
+.danger-button[aria-busy="true"],
+.primary-button[aria-busy="true"] {
+  transform: translateY(0);
+}
+.detail-meta-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.detail-meta-strip > * {
+  min-height: 34px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(255,255,255,.82);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+  font-weight: 700;
+}
