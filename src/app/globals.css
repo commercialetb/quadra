@@ -159,11 +159,26 @@ input:focus, select:focus, textarea:focus {
   display: none;
 }
 .company-avatar-sm span { font-size: .84rem; }
-.app-main { min-width: 0; display: grid; gap: 14px; }
+.app-main {
+  min-width: 0;
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  align-items: start;
+}
 .app-topbar {
   height: 68px; min-height: 68px; border-radius: 24px; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
-.page-shell, .page-stack, .page-wrap { display: grid; gap: 14px; min-width: 0; width: 100%; }
+.page-shell,
+.page-stack,
+.page-wrap {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  width: 100%;
+  align-content: start;
+  align-items: start;
+}
 
 .app-topbar-kicker { color: var(--soft); font-size: .76rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
 .app-topbar-title { font-size: 1.16rem; font-weight: 800; letter-spacing: -.03em; }
@@ -402,6 +417,6 @@ input:focus, select:focus, textarea:focus {
   .app-sidebar { display: none; }
   .app-topbar { height: 60px; min-height: 60px; padding: 8px 12px; }
   .page-hero { min-height: 118px; padding: 18px; border-radius: 24px; }
-  .page-hero.page-hero-compact { min-height: 84px; padding: 14px 16px; }
+  .page-hero.page-hero-compact { min-height: 78px; padding: 12px 16px; }
   .toolbar-row { grid-template-columns: 1fr; }
 }
