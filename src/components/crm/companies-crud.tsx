@@ -60,7 +60,7 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
 
         <div className="cards-stack">
           {items.map((company) => (
-            <article key={company.id} className="entity-card">
+            <article key={company.id} className="entity-card compact-entity-card">
               <div className="entity-card-main">
                 <CompanyAvatar name={company.name} website={company.website} />
                 <div className="entity-card-copy">

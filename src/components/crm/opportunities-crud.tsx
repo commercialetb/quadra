@@ -55,7 +55,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
 
         <div className="cards-stack">
           {items.map((item) => (
-            <article key={item.id} className="entity-card opportunity-card">
+            <article key={item.id} className="entity-card opportunity-card compact-entity-card">
               <div className="entity-card-copy stretch">
                 <div className="entity-card-top">
                   <div>
