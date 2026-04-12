@@ -1,18 +1,17 @@
 import { PageHeader } from '@/components/page-header'
-import { getCompanies, getContacts } from '@/lib/data'
-import { ContactsCrud } from '@/components/crm/contacts-crud'
+import { getCompanies } from '@/lib/data'
+import { CompaniesCrud } from '@/components/crm/companies-crud'
 
-export default async function ContactsPage() {
-  const [contacts, companies] = await Promise.all([getContacts(), getCompanies()])
+export default async function CompaniesPage() {
+  const companies = await getCompanies()
 
   return (
-    <div className="page-wrap">
+    <div className="page-stack">
       <PageHeader
-        title="Contatti"
-        subtitle="Le persone devono essere subito leggibili: ruolo, azienda e canale principale, senza editing sempre aperto."
-        eyebrow="CRM core"
+        title="Aziende"
+        subtitle="Le aziende devono essere riconoscibili e rapide da scorrere. Niente form sparsi: crei solo quando premi Nuovo."
       />
-      <ContactsCrud contacts={contacts} companies={companies} />
+      <CompaniesCrud companies={companies} />
     </div>
   )
 }
