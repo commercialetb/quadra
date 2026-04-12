@@ -1,10 +1,10 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 export function PageHeader({
   title,
   subtitle,
   actions,
-  eyebrow = 'Quadra CRM',
+  eyebrow = 'CRM core',
 }: {
   title: string
   subtitle: string
@@ -12,15 +12,13 @@ export function PageHeader({
   eyebrow?: string
 }) {
   return (
-    <section className="page-header">
-      <p className="page-eyebrow">{eyebrow}</p>
-      <div className="page-header-grid">
-        <div>
-          <h1 className="page-title">{title}</h1>
-          <p className="page-subtitle">{subtitle}</p>
-        </div>
-        {actions ? <div className="page-actions">{actions}</div> : null}
+    <section className="page-hero">
+      <div>
+        <p className="page-eyebrow">{eyebrow}</p>
+        <h1 className="page-title">{title}</h1>
+        <p className="page-subtitle">{subtitle}</p>
       </div>
+      {actions ? <div className="page-hero-actions">{actions}</div> : null}
     </section>
   )
 }

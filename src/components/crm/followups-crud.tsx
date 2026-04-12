@@ -8,104 +8,120 @@ import { formatDateTime } from '@/lib/format'
 const statuses = ['pending', 'in_progress', 'completed', 'cancelled', 'overdue']
 const priorities = ['low', 'medium', 'high', 'urgent']
 
-function statusBadge(status: string) {
-  if (status === 'completed') return 'badge-success'
-  if (status === 'overdue') return 'badge-danger'
-  if (status === 'in_progress') return 'badge-warning'
-  return 'badge-accent'
+function statusTone(status: string) {
+  if (status === 'completed') return 'success'
+  if (status === 'overdue') return 'danger'
+  if (status === 'in_progress') return 'warning'
+  return 'neutral'
 }
 
-function priorityBadge(priority: string) {
-  if (priority === 'urgent') return 'badge-danger'
-  if (priority === 'high') return 'badge-warning'
-  return 'badge-soft'
+function priorityTone(priority: string) {
+  if (priority === 'urgent') return 'danger'
+  if (priority === 'high') return 'warning'
+  return 'neutral'
 }
 
 export function FollowupsCrud({ followups, companies, contacts, opportunities }: { followups: any[]; companies: any[]; contacts: any[]; opportunities: any[] }) {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
-  const [open, setOpen] = useState(false)
+  const [showCreate, setShowCreate] = useState(false)
 
   const items = useMemo(() => {
     return followups.filter((item) => {
-      const hay = `${item.title} ${item.status || ''} ${item.priority || ''}`.toLowerCase()
-      return hay.includes(query.toLowerCase()) && (filter === 'all' || item.status === filter)
+      const text = `${item.title} ${item.status ?? ''} ${item.priority ?? ''}`.toLowerCase()
+      const matchesQuery = text.includes(query.toLowerCase())
+      const matchesFilter = filter === 'all' ? true : item.status === filter
+      return matchesQuery && matchesFilter
     })
   }, [followups, query, filter])
 
   return (
     <>
-      <section className="section-card">
-        <div className="section-head">
+      <section className="panel-card page-section-card">
+        <div className="list-head">
           <div>
-            <h2 className="section-title">Follow-up</h2>
-            <p className="section-copy">Agenda più pulita, priorità più leggibili, inserimento solo on demand.</p>
+            <h2>Follow-up</h2>
+            <p>Agenda operativa più chiara, con stati e priorità leggibili al volo.</p>
           </div>
-          <div className="section-actions"><button type="button" className="button-primary" onClick={() => setOpen(true)}>+ Nuovo follow-up</button></div>
+          <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
+            + Nuovo follow-up
+          </button>
         </div>
 
-        <div className="entity-toolbar">
-          <SearchInput value={query} onChange={setQuery} placeholder="Cerca per titolo, stato o priorità" />
-          <div className="segmented">
+        <div className="toolbar-row">
+          <SearchInput value={query} onChange={setQuery} placeholder="Cerca per titolo, stato o priorita" />
+          <div className="segmented-control">
             {['all', 'pending', 'in_progress', 'overdue', 'completed'].map((item) => (
-              <button key={item} type="button" data-active={filter === item} onClick={() => setFilter(item)}>{item === 'all' ? 'Tutti' : item}</button>
+              <button key={item} type="button" className={filter === item ? 'is-active' : ''} onClick={() => setFilter(item)}>
+                {item === 'all' ? 'Tutti' : item}
+              </button>
             ))}
           </div>
         </div>
 
-        <div className="entity-list">
+        <div className="cards-stack">
           {items.map((item) => (
             <article key={item.id} className="entity-card">
-              <div className="entity-head">
-                <div className="entity-copy">
-                  <div className="badge-row">
-                    <span className={`badge ${statusBadge(item.status)}`}>{item.status}</span>
-                    <span className={`badge ${priorityBadge(item.priority)}`}>{item.priority}</span>
+              <div className="entity-card-copy stretch">
+                <div className="entity-card-top">
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>Scade {formatDateTime(item.due_at)}</p>
                   </div>
-                  <h3 className="entity-title">{item.title}</h3>
-                  <p className="entity-subtitle">Scade {formatDateTime(item.due_at)}</p>
+                  <div className="entity-inline-meta wrap align-end">
+                    <span className={`tone-badge ${statusTone(item.status)}`}>{item.status}</span>
+                    <span className={`tone-badge ${priorityTone(item.priority)}`}>{item.priority}</span>
+                  </div>
                 </div>
+                {item.description ? <div className="entity-body-copy">{item.description}</div> : null}
               </div>
-              <details className="entity-details">
-                <summary className="details-toggle">Gestisci follow-up <span>+</span></summary>
-                <form action={updateFollowupStatus} className="actions-row" style={{ marginTop: 12 }}>
+              <div className="entity-card-actions">
+                <form action={updateFollowupStatus} className="inline-mini-form">
                   <input type="hidden" name="id" value={item.id} />
-                  <label className="field-label" style={{ minWidth: 240 }}><span>Stato</span><select name="status" defaultValue={item.status}>{statuses.map((status) => <option key={status} value={status}>{status}</option>)}</select></label>
-                  <button className="button-primary" type="submit">Aggiorna stato</button>
+                  <select name="status" defaultValue={item.status} className="field-control compact-control">
+                    {statuses.map((status) => <option key={status} value={status}>{status}</option>)}
+                  </select>
+                  <button className="ghost-button" type="submit">Salva</button>
                 </form>
-                <form action={deleteFollowup} className="actions-row" style={{ justifyContent: 'flex-end', marginTop: 10 }}>
+                <form action={deleteFollowup}>
                   <input type="hidden" name="id" value={item.id} />
-                  <button className="button-danger" type="submit">Elimina</button>
+                  <button className="danger-button" type="submit">Elimina</button>
                 </form>
-              </details>
+              </div>
             </article>
           ))}
-          {!items.length ? <div className="empty-state">Nessun follow-up trovato con questi filtri.</div> : null}
+          {!items.length ? <div className="empty-state-box">Nessun follow-up trovato.</div> : null}
         </div>
       </section>
 
-      {open ? (
-        <div className="modal-layer" onClick={() => setOpen(false)}>
-          <form id="new-followup" action={createFollowup} className="modal-card" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-head">
+      {showCreate ? (
+        <div className="overlay-shell" role="dialog" aria-modal="true">
+          <div className="overlay-backdrop" onClick={() => setShowCreate(false)} />
+          <div className="sheet-card">
+            <div className="sheet-head">
               <div>
-                <h3 className="modal-title">Nuovo follow-up</h3>
-                <p className="modal-copy">Titolo, scadenza e priorità. Collega il resto solo se serve.</p>
+                <p className="page-eyebrow">Quick add</p>
+                <h3>Nuovo follow-up</h3>
               </div>
-              <button type="button" className="button-ghost" onClick={() => setOpen(false)}>Chiudi</button>
+              <button className="ghost-button" type="button" onClick={() => setShowCreate(false)}>Chiudi</button>
             </div>
-            <div className="modal-grid">
-              <label className="field-label"><span>Titolo</span><input name="title" required /></label>
-              <label className="field-label"><span>Scadenza</span><input name="due_at" type="datetime-local" required /></label>
-              <label className="field-label"><span>Priorità</span><select name="priority" defaultValue="medium">{priorities.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
-              <label className="field-label"><span>Stato</span><select name="status" defaultValue="pending">{statuses.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
-              <label className="field-label"><span>Azienda</span><select name="company_id" defaultValue=""><option value="">Nessuna</option>{companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}</select></label>
-              <label className="field-label"><span>Contatto</span><select name="contact_id" defaultValue=""><option value="">Nessuno</option>{contacts.map((contact) => <option key={contact.id} value={contact.id}>{contact.first_name} {contact.last_name}</option>)}</select></label>
-              <label className="field-label"><span>Opportunità</span><select name="opportunity_id" defaultValue=""><option value="">Nessuna</option>{opportunities.map((opportunity) => <option key={opportunity.id} value={opportunity.id}>{opportunity.title}</option>)}</select></label>
-              <label className="field-label" style={{ gridColumn: '1 / -1' }}><span>Descrizione</span><textarea name="description" /></label>
-            </div>
-            <div className="modal-footer"><button type="button" className="button-ghost" onClick={() => setOpen(false)}>Annulla</button><button type="submit" className="button-primary">Salva follow-up</button></div>
-          </form>
+            <form action={createFollowup} className="sheet-form">
+              <div className="form-grid two-col">
+                <label className="field-stack"><span>Titolo</span><input className="field-control" name="title" required /></label>
+                <label className="field-stack"><span>Scadenza</span><input className="field-control" name="due_at" type="datetime-local" required /></label>
+                <label className="field-stack"><span>Priorita</span><select className="field-control" name="priority" defaultValue="medium">{priorities.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+                <label className="field-stack"><span>Stato</span><select className="field-control" name="status" defaultValue="pending">{statuses.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+                <label className="field-stack"><span>Azienda</span><select className="field-control" name="company_id" defaultValue=""><option value="">Nessuna</option>{companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}</select></label>
+                <label className="field-stack"><span>Contatto</span><select className="field-control" name="contact_id" defaultValue=""><option value="">Nessuno</option>{contacts.map((contact) => <option key={contact.id} value={contact.id}>{contact.first_name} {contact.last_name}</option>)}</select></label>
+                <label className="field-stack"><span>Opportunita</span><select className="field-control" name="opportunity_id" defaultValue=""><option value="">Nessuna</option>{opportunities.map((opportunity) => <option key={opportunity.id} value={opportunity.id}>{opportunity.title}</option>)}</select></label>
+              </div>
+              <label className="field-stack"><span>Descrizione</span><textarea className="field-control field-area" name="description" /></label>
+              <div className="sheet-actions">
+                <button className="secondary-button" type="button" onClick={() => setShowCreate(false)}>Annulla</button>
+                <button className="primary-button" type="submit">Salva follow-up</button>
+              </div>
+            </form>
+          </div>
         </div>
       ) : null}
     </>
