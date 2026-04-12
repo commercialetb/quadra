@@ -15,12 +15,16 @@ export function DetailShell({
   children: ReactNode
 }) {
   return (
-    <div className="detail-shell">
-      <Link href={backHref} className="back-link">← {backLabel}</Link>
-      <section className="page-card detail-hero">
-        <p className="eyebrow">Detail view</p>
-        <h1 className="hero-title">{title}</h1>
-        {subtitle ? <p className="hero-copy">{subtitle}</p> : null}
+    <div className="page-stack detail-page">
+      <div className="detail-back-row">
+        <Link href={backHref} className="back-link">← {backLabel}</Link>
+      </div>
+      <section className="page-hero detail-hero-card">
+        <div>
+          <p className="page-eyebrow">Dettaglio</p>
+          <h1 className="page-title">{title}</h1>
+          {subtitle ? <p className="page-subtitle">{subtitle}</p> : null}
+        </div>
       </section>
       {children}
     </div>

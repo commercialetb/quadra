@@ -1,21 +1,24 @@
 'use client'
 
-import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { useMemo, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 export function LogoutButton() {
   const router = useRouter()
+  const supabase = useMemo(() => createClient(), [])
+  const [loading, setLoading] = useState(false)
 
-  async function handleLogout() {
-    const supabase = createClient()
+  async function onLogout() {
+    setLoading(true)
     await supabase.auth.signOut()
-    router.push('/login')
+    router.replace('/login')
     router.refresh()
   }
 
   return (
-    <button type="button" className="ghost-button" onClick={handleLogout}>
-      Logout
+    <button type="button" onClick={onLogout} disabled={loading} className="ghost-button">
+      {loading ? 'Uscita...' : 'Esci'}
     </button>
   )
 }

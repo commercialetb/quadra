@@ -5,123 +5,104 @@ import { usePathname } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { LogoutButton } from '@/components/auth/logout-button'
 
-type ShellProps = {
-  children: ReactNode
-}
-
-const desktopNav = [
-  { href: '/dashboard', label: 'Dashboard', short: '01' },
-  { href: '/companies', label: 'Aziende', short: '02' },
-  { href: '/contacts', label: 'Contatti', short: '03' },
-  { href: '/opportunities', label: 'Opportunita', short: '04' },
-  { href: '/followups', label: 'Follow-up', short: '05' },
-  { href: '/import', label: 'Import', short: '06' },
-]
-
-const mobileNav = [
-  { href: '/dashboard', label: 'Home' },
+const primaryNav = [
+  { href: '/dashboard', label: 'Home', desktop: 'Dashboard' },
   { href: '/companies', label: 'Aziende' },
   { href: '/contacts', label: 'Contatti' },
-  { href: '/opportunities', label: 'Deal' },
-  { href: '/followups', label: 'Task' },
+  { href: '/opportunities', label: 'Deal', desktop: 'Opportunita' },
+  { href: '/followups', label: 'Task', desktop: 'Follow-up' },
 ]
 
-export default function Shell({ children }: ShellProps) {
+function active(pathname: string, href: string) {
+  return pathname === href || pathname.startsWith(`${href}/`)
+}
+
+function currentTitle(pathname: string) {
+  if (pathname.startsWith('/companies')) return 'Aziende'
+  if (pathname.startsWith('/contacts')) return 'Contatti'
+  if (pathname.startsWith('/opportunities')) return 'Opportunita'
+  if (pathname.startsWith('/followups')) return 'Follow-up'
+  if (pathname.startsWith('/import')) return 'Import dati'
+  return 'Dashboard'
+}
+
+export default function Shell({ children }: { children: ReactNode }) {
   const pathname = usePathname()
 
   return (
     <div className="app-shell">
-      <aside className="sidebar">
-        <div className="sidebar-inner">
-          <div className="brand-block">
-            <Link href="/dashboard" className="brand-link">
-              <div className="brand-mark">Q</div>
-              <div>
-                <p className="brand-title">Quadra</p>
-                <p className="brand-subtitle">CRM operativo</p>
-              </div>
+      <aside className="app-sidebar">
+        <div className="sidebar-brand">
+          <div className="sidebar-brand-mark">Q</div>
+          <div>
+            <div className="sidebar-brand-title">Quadra</div>
+            <div className="sidebar-brand-subtitle">CRM personale, simply better</div>
+          </div>
+        </div>
+
+        <nav className="sidebar-nav">
+          {primaryNav.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`sidebar-link ${active(pathname, item.href) ? 'is-active' : ''}`}
+            >
+              <span>{item.desktop ?? item.label}</span>
+            </Link>
+          ))}
+          <Link href="/import" className={`sidebar-link ${active(pathname, '/import') ? 'is-active' : ''}`}>
+            <span>Import</span>
+          </Link>
+        </nav>
+
+        <div className="sidebar-section">
+          <div className="sidebar-section-label">Quick add</div>
+          <div className="sidebar-quick-grid">
+            <Link href="/companies" className="sidebar-quick-card">
+              <span className="sidebar-quick-title">Nuova azienda</span>
+              <span className="sidebar-quick-copy">Anagrafica pulita e veloce.</span>
+            </Link>
+            <Link href="/contacts" className="sidebar-quick-card">
+              <span className="sidebar-quick-title">Nuovo contatto</span>
+              <span className="sidebar-quick-copy">Persona, ruolo e contesto.</span>
             </Link>
           </div>
+        </div>
 
-          <nav className="sidebar-nav" aria-label="Navigazione principale">
-            {desktopNav.map((item) => {
-              const active =
-                pathname === item.href || pathname?.startsWith(`${item.href}/`)
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`sidebar-link ${active ? 'is-active' : ''}`}
-                >
-                  <span className="sidebar-link-index">{item.short}</span>
-                  <span>{item.label}</span>
-                </Link>
-              )
-            })}
-          </nav>
-
-          <div className="sidebar-footer">
-            <div className="sidebar-user-card">
-              <div className="sidebar-user-avatar">A</div>
-              <div>
-                <p className="sidebar-user-name">Account</p>
-                <p className="sidebar-user-meta">Sessione attiva</p>
-              </div>
-            </div>
-            <LogoutButton />
-          </div>
+        <div className="sidebar-footer">
+          <div className="sidebar-status">Core CRM online</div>
+          <LogoutButton />
         </div>
       </aside>
 
       <div className="app-main">
-        <header className="topbar">
+        <header className="app-topbar">
           <div>
-            <p className="topbar-kicker">Quadra</p>
-            <h1 className="topbar-title">
-              {pathname === '/dashboard' && 'Dashboard'}
-              {pathname === '/companies' && 'Aziende'}
-              {pathname === '/contacts' && 'Contatti'}
-              {pathname === '/opportunities' && 'Opportunita'}
-              {pathname === '/followups' && 'Follow-up'}
-              {pathname === '/import' && 'Import'}
-              {![
-                '/dashboard',
-                '/companies',
-                '/contacts',
-                '/opportunities',
-                '/followups',
-                '/import',
-              ].includes(pathname || '') && 'Quadra'}
-            </h1>
+            <div className="app-topbar-kicker">Quadra</div>
+            <div className="app-topbar-title">{currentTitle(pathname)}</div>
           </div>
-
-          <div className="topbar-actions">
-            <Link href="/companies" className="primary-button">
-              + Nuovo
+          <div className="app-topbar-actions">
+            <Link href="/import" className="ghost-button hide-mobile">
+              Import
             </Link>
+            <LogoutButton />
           </div>
         </header>
 
-        <main className="page-content">{children}</main>
-
-        <nav className="mobile-tabbar" aria-label="Navigazione mobile">
-          {mobileNav.map((item) => {
-            const active =
-              pathname === item.href || pathname?.startsWith(`${item.href}/`)
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`mobile-tab ${active ? 'is-active' : ''}`}
-              >
-                <span>{item.label}</span>
-              </Link>
-            )
-          })}
-        </nav>
+        <main className="page-shell">{children}</main>
       </div>
+
+      <nav className="mobile-nav" aria-label="Navigazione primaria">
+        {primaryNav.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`mobile-nav-link ${active(pathname, item.href) ? 'is-active' : ''}`}
+          >
+            {item.label}
+          </Link>
+        ))}
+      </nav>
     </div>
   )
 }

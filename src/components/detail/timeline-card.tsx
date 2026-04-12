@@ -3,39 +3,37 @@ import { it } from 'date-fns/locale'
 import type { TimelineItem } from '@/lib/detail-queries'
 
 function badge(item: TimelineItem) {
-  if (item.item_type === 'followup') {
-    return `${item.status ?? 'pending'} · ${item.priority ?? 'medium'}`
-  }
+  if (item.item_type === 'followup') return `${item.status ?? 'pending'} · ${item.priority ?? 'medium'}`
   return item.kind
 }
 
 export function TimelineCard({ items }: { items: TimelineItem[] }) {
   return (
-    <section className="timeline-card">
-      <div className="section-heading">
+    <section className="panel-card">
+      <div className="panel-head compact">
         <div>
           <h2>Timeline</h2>
-          <p>Attività e follow-up nello stesso flusso, con un linguaggio visivo finalmente coerente.</p>
+          <p>Attivita e follow-up nello stesso flusso, con una gerarchia più pulita.</p>
         </div>
-        <div className="section-utility">{items.length} elementi</div>
       </div>
-      <div className="timeline-stack">
+      <div className="timeline-v2">
         {items.length === 0 ? (
-          <p className="empty-copy">Nessun elemento in timeline.</p>
+          <div className="empty-block">Nessun elemento in timeline.</div>
         ) : (
           items.map((item) => (
-            <div key={`${item.item_type}-${item.id}`} className="timeline-item">
-              <div className="timeline-head">
-                <div>
-                  <div className="timeline-title">{item.title || (item.item_type === 'activity' ? 'Attività' : 'Follow-up')}</div>
-                  <div className="crm-tags" style={{ marginTop: 8 }}>
-                    <span className={`badge ${item.item_type === 'followup' ? 'badge-warning' : 'badge-dark'}`}>{badge(item)}</span>
+            <article key={`${item.item_type}-${item.id}`} className="timeline-card-item">
+              <div className="timeline-line" />
+              <div className="timeline-content">
+                <div className="timeline-head-row">
+                  <div>
+                    <strong>{item.title || (item.item_type === 'activity' ? 'Attivita' : 'Follow-up')}</strong>
+                    <div className="timeline-meta">{badge(item)}</div>
                   </div>
+                  <span className="timeline-date">{format(new Date(item.occurred_at), 'dd MMM yyyy, HH:mm', { locale: it })}</span>
                 </div>
-                <div className="timeline-date">{format(new Date(item.occurred_at), 'dd MMM yyyy, HH:mm', { locale: it })}</div>
+                {item.content ? <p className="timeline-copy">{item.content}</p> : null}
               </div>
-              {item.content ? <p className="timeline-copy">{item.content}</p> : null}
-            </div>
+            </article>
           ))
         )}
       </div>
