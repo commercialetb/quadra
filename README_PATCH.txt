@@ -21,3 +21,4 @@ Da aggiungere anche nel repo:
    - bottone "Riassumi nota"
    - bottone "Suggerisci prossima azione"
    - card "Daily brief" in dashboard
+
