@@ -311,3 +311,50 @@ input:focus, select:focus, textarea:focus {
   .sheet-actions { flex-direction: column-reverse; }
   .mobile-nav { width: calc(100% - 20px); }
 }
+
+
+.dashboard-hero-clean { align-items: flex-start; }
+.dashboard-hero-copy { max-width: 760px; }
+.dashboard-secondary-grid { align-items: start; }
+.panel-card-activity { order: 1; }
+.panel-card-companies { order: 2; }
+.companies-head-inline { align-items: center; }
+.compact-list { gap: 8px; }
+.company-teaser-row { padding: 12px 14px; }
+.company-teaser-row strong { font-size: .98rem; }
+.compact-ghost { min-height: 38px; padding: 0 14px; border-radius: 14px; font-size: .92rem; }
+.empty-block-actionable { display: grid; gap: 12px; justify-items: center; }
+.empty-action-button { width: fit-content; }
+
+@media (max-width: 780px) {
+  .dashboard-hero {
+    padding: 16px;
+    border-radius: 22px;
+  }
+  .dashboard-hero .page-title { font-size: 1.75rem; }
+  .dashboard-hero .page-subtitle {
+    font-size: .95rem;
+    line-height: 1.45;
+    max-width: none;
+  }
+  .today-grid { gap: 12px; }
+  .metric-card { padding: 16px; }
+  .metric-card.metric-primary { min-height: 0; }
+  .panel-card-activity { order: 1; }
+  .panel-card-companies { order: 2; }
+  .companies-teaser-list .simple-row:nth-child(n+4) { display: none; }
+  .compact-list .simple-row:nth-child(n+3),
+  .compact-list .simple-row.static:nth-child(n+3) { display: none; }
+  .mobile-nav {
+    width: calc(100% - 16px);
+    bottom: calc(max(env(safe-area-inset-bottom), 8px) + 4px);
+    padding: 6px;
+    border-radius: 22px;
+    box-shadow: var(--shadow-sm);
+  }
+  .mobile-nav-link {
+    min-height: 44px;
+    border-radius: 14px;
+    font-size: .88rem;
+  }
+}
