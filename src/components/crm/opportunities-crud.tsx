@@ -4,123 +4,112 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { createOpportunity, deleteOpportunity, updateOpportunityStage } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
-import { formatCurrency, formatDate } from '@/lib/format'
+import { formatCurrency, formatDate, formatDateTime } from '@/lib/format'
 
 const stages = ['new_lead', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost']
 
-function stageTone(stage: string) {
-  if (stage === 'won') return 'success'
-  if (stage === 'lost') return 'danger'
-  if (stage === 'proposal' || stage === 'negotiation') return 'warning'
-  return 'neutral'
+function stageBadge(stage: string) {
+  if (stage === 'won') return 'badge-success'
+  if (stage === 'lost') return 'badge-danger'
+  if (stage === 'proposal' || stage === 'negotiation') return 'badge-warning'
+  return 'badge-accent'
 }
 
 export function OpportunitiesCrud({ opportunities, companies, contacts }: { opportunities: any[]; companies: any[]; contacts: any[] }) {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
-  const [showCreate, setShowCreate] = useState(false)
+  const [open, setOpen] = useState(false)
 
   const items = useMemo(() => {
     return opportunities.filter((item) => {
-      const text = `${item.title} ${item.companies?.name ?? ''} ${item.stage ?? ''}`.toLowerCase()
-      const matchesQuery = text.includes(query.toLowerCase())
-      const matchesFilter = filter === 'all' ? true : item.stage === filter
-      return matchesQuery && matchesFilter
+      const hay = `${item.title} ${item.companies?.name || ''} ${item.stage || ''}`.toLowerCase()
+      return hay.includes(query.toLowerCase()) && (filter === 'all' || item.stage === filter)
     })
   }, [opportunities, query, filter])
 
   return (
     <>
-      <section className="panel-card page-section-card">
-        <div className="list-head">
+      <section className="section-card">
+        <div className="section-head">
           <div>
-            <h2>Opportunita</h2>
-            <p>Pipeline leggibile, con priorita e next step in primo piano.</p>
+            <h2 className="section-title">Opportunità</h2>
+            <p className="section-copy">Pipeline leggibile, senza mini-form aperte ovunque.</p>
           </div>
-          <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
-            + Nuova opportunita
-          </button>
+          <div className="section-actions">
+            <button type="button" className="button-primary" onClick={() => setOpen(true)}>+ Nuova opportunità</button>
+          </div>
         </div>
 
-        <div className="toolbar-row">
+        <div className="entity-toolbar">
           <SearchInput value={query} onChange={setQuery} placeholder="Cerca per titolo, azienda o fase" />
-          <div className="segmented-control">
+          <div className="segmented">
             {['all', 'new_lead', 'proposal', 'negotiation', 'won'].map((item) => (
-              <button key={item} type="button" className={filter === item ? 'is-active' : ''} onClick={() => setFilter(item)}>
-                {item === 'all' ? 'Tutte' : item}
+              <button key={item} type="button" data-active={filter === item} onClick={() => setFilter(item)}>
+                {item === 'all' ? 'Tutte' : item.replace('_', ' ')}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="cards-stack">
+        <div className="entity-list">
           {items.map((item) => (
-            <article key={item.id} className="entity-card opportunity-card">
-              <div className="entity-card-copy stretch">
-                <div className="entity-card-top">
-                  <div>
-                    <h3>{item.title}</h3>
-                    <p>{item.companies?.name ?? 'Azienda non indicata'} · chiusura {formatDate(item.expected_close_date)}</p>
+            <article key={item.id} className="entity-card">
+              <div className="entity-head">
+                <div className="entity-copy">
+                  <div className="badge-row"><span className={`badge ${stageBadge(item.stage)}`}>{item.stage.replace('_', ' ')}</span><span className="badge badge-soft">{formatCurrency(item.value_estimate)}</span></div>
+                  <h3 className="entity-title">{item.title}</h3>
+                  <p className="entity-subtitle">{item.companies?.name || 'Azienda non indicata'} · chiusura {formatDate(item.expected_close_date)}</p>
+                  <div className="entity-summary">
+                    {item.next_action ? <span className="badge badge-soft">{item.next_action}</span> : null}
+                    {item.next_action_due_at ? <span className="badge badge-soft">{formatDateTime(item.next_action_due_at)}</span> : null}
                   </div>
-                  <span className={`tone-badge ${stageTone(item.stage)}`}>{item.stage}</span>
                 </div>
-                <div className="entity-inline-meta wrap">
-                  <span>{formatCurrency(item.value_estimate)}</span>
-                  {item.next_action ? <span>{item.next_action}</span> : null}
-                  {item.primary_contact?.full_name ? <span>{item.primary_contact.full_name}</span> : null}
-                </div>
+                <div className="entity-actions"><Link className="button-secondary" href={`/opportunities/${item.id}`}>Apri</Link></div>
               </div>
-              <div className="entity-card-actions">
-                <Link href={`/opportunities/${item.id}`} className="secondary-button">Apri</Link>
-                <form action={updateOpportunityStage} className="inline-mini-form">
+
+              <details className="entity-details">
+                <summary className="details-toggle">Gestisci opportunità <span>+</span></summary>
+                <form action={updateOpportunityStage} className="actions-row" style={{ marginTop: 12 }}>
                   <input type="hidden" name="id" value={item.id} />
-                  <select name="stage" defaultValue={item.stage} className="field-control compact-control">
-                    {stages.map((stage) => <option key={stage} value={stage}>{stage}</option>)}
-                  </select>
-                  <button className="ghost-button" type="submit">Salva</button>
+                  <label className="field-label" style={{ minWidth: 240 }}><span>Fase</span><select name="stage" defaultValue={item.stage}>{stages.map((stage) => <option key={stage} value={stage}>{stage}</option>)}</select></label>
+                  <button className="button-primary" type="submit">Aggiorna fase</button>
                 </form>
-                <form action={deleteOpportunity}>
+                <form action={deleteOpportunity} className="actions-row" style={{ justifyContent: 'flex-end', marginTop: 10 }}>
                   <input type="hidden" name="id" value={item.id} />
-                  <button className="danger-button" type="submit">Elimina</button>
+                  <button className="button-danger" type="submit">Elimina</button>
                 </form>
-              </div>
+              </details>
             </article>
           ))}
-          {!items.length ? <div className="empty-state-box">Nessuna opportunita trovata.</div> : null}
+          {!items.length ? <div className="empty-state">Nessuna opportunità trovata con questi filtri.</div> : null}
         </div>
       </section>
 
-      {showCreate ? (
-        <div className="overlay-shell" role="dialog" aria-modal="true">
-          <div className="overlay-backdrop" onClick={() => setShowCreate(false)} />
-          <div className="sheet-card">
-            <div className="sheet-head">
+      {open ? (
+        <div className="modal-layer" onClick={() => setOpen(false)}>
+          <form id="new-opportunity" action={createOpportunity} className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-head">
               <div>
-                <p className="page-eyebrow">Quick add</p>
-                <h3>Nuova opportunita</h3>
+                <h3 className="modal-title">Nuova opportunità</h3>
+                <p className="modal-copy">Titolo, azienda, fase e prossima azione. Tutto il resto viene dopo.</p>
               </div>
-              <button className="ghost-button" type="button" onClick={() => setShowCreate(false)}>Chiudi</button>
+              <button type="button" className="button-ghost" onClick={() => setOpen(false)}>Chiudi</button>
             </div>
-            <form action={createOpportunity} className="sheet-form">
-              <div className="form-grid two-col">
-                <label className="field-stack"><span>Titolo</span><input className="field-control" name="title" required /></label>
-                <label className="field-stack"><span>Azienda</span><select className="field-control" name="company_id" required defaultValue=""><option value="" disabled>Seleziona</option>{companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}</select></label>
-                <label className="field-stack"><span>Contatto</span><select className="field-control" name="primary_contact_id" defaultValue=""><option value="">Nessuno</option>{contacts.map((contact) => <option key={contact.id} value={contact.id}>{contact.first_name} {contact.last_name}</option>)}</select></label>
-                <label className="field-stack"><span>Fase</span><select className="field-control" name="stage" defaultValue="new_lead">{stages.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
-                <label className="field-stack"><span>Valore stimato</span><input className="field-control" name="value_estimate" type="number" step="0.01" /></label>
-                <label className="field-stack"><span>Probabilita</span><input className="field-control" name="probability" type="number" min="0" max="100" /></label>
-                <label className="field-stack"><span>Chiusura prevista</span><input className="field-control" name="expected_close_date" type="date" /></label>
-                <label className="field-stack"><span>Fonte</span><input className="field-control" name="source" /></label>
-                <label className="field-stack"><span>Next action</span><input className="field-control" name="next_action" /></label>
-                <label className="field-stack"><span>Scadenza next action</span><input className="field-control" name="next_action_due_at" type="datetime-local" /></label>
-              </div>
-              <label className="field-stack"><span>Descrizione</span><textarea className="field-control field-area" name="description" /></label>
-              <div className="sheet-actions">
-                <button className="secondary-button" type="button" onClick={() => setShowCreate(false)}>Annulla</button>
-                <button className="primary-button" type="submit">Salva opportunita</button>
-              </div>
-            </form>
-          </div>
+            <div className="modal-grid">
+              <label className="field-label"><span>Titolo</span><input name="title" required /></label>
+              <label className="field-label"><span>Azienda</span><select name="company_id" required defaultValue=""><option value="" disabled>Seleziona</option>{companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}</select></label>
+              <label className="field-label"><span>Contatto principale</span><select name="primary_contact_id" defaultValue=""><option value="">Nessuno</option>{contacts.map((contact) => <option key={contact.id} value={contact.id}>{contact.first_name} {contact.last_name}</option>)}</select></label>
+              <label className="field-label"><span>Fase</span><select name="stage" defaultValue="new_lead">{stages.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+              <label className="field-label"><span>Valore stimato</span><input name="value_estimate" type="number" step="0.01" /></label>
+              <label className="field-label"><span>Probabilità</span><input name="probability" type="number" min="0" max="100" /></label>
+              <label className="field-label"><span>Chiusura prevista</span><input name="expected_close_date" type="date" /></label>
+              <label className="field-label"><span>Prossima azione</span><input name="next_action" /></label>
+              <label className="field-label"><span>Scadenza prossima azione</span><input name="next_action_due_at" type="datetime-local" /></label>
+              <label className="field-label"><span>Fonte</span><input name="source" /></label>
+              <label className="field-label" style={{ gridColumn: '1 / -1' }}><span>Descrizione</span><textarea name="description" /></label>
+            </div>
+            <div className="modal-footer"><button type="button" className="button-ghost" onClick={() => setOpen(false)}>Annulla</button><button type="submit" className="button-primary">Salva opportunità</button></div>
+          </form>
         </div>
       ) : null}
     </>
