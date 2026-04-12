@@ -41,6 +41,33 @@ export async function createCompany(formData: FormData) {
   revalidatePath('/dashboard');
 }
 
+
+
+export async function updateCompanyDetail(formData: FormData) {
+  const { supabase, user } = await getUserAndClient();
+  const id = text(formData, 'id');
+  const payload = {
+    name: text(formData, 'name'),
+    legal_name: nullable(formData, 'legal_name'),
+    website: nullable(formData, 'website'),
+    email: nullable(formData, 'email'),
+    phone: nullable(formData, 'phone'),
+    address_line1: nullable(formData, 'address_line1'),
+    city: nullable(formData, 'city'),
+    province: nullable(formData, 'province'),
+    industry: nullable(formData, 'industry'),
+    source: nullable(formData, 'source'),
+    status: text(formData, 'status') || 'lead',
+    notes_summary: nullable(formData, 'notes_summary'),
+  };
+  if (!id || !payload.name) throw new Error('ID e nome azienda sono obbligatori');
+  const { error } = await supabase.from('companies').update(payload).eq('id', id).eq('owner_id', user.id);
+  if (error) throw new Error(error.message);
+  revalidatePath('/companies');
+  revalidatePath(`/companies/${id}`);
+  revalidatePath('/dashboard');
+}
+
 export async function updateCompanyStatus(formData: FormData) {
   const { supabase, user } = await getUserAndClient();
   const id = text(formData, 'id');
@@ -110,6 +137,62 @@ export async function updateContact(formData: FormData) {
   revalidatePath('/contacts');
 }
 
+
+
+export async function updateContactDetail(formData: FormData) {
+  const { supabase, user } = await getUserAndClient();
+  const id = text(formData, 'id');
+  const first_name = text(formData, 'first_name');
+  const last_name = text(formData, 'last_name');
+  if (!id || !first_name || !last_name) throw new Error('Nome e cognome sono obbligatori');
+
+  const payload = {
+    first_name,
+    last_name,
+    company_id: nullable(formData, 'company_id'),
+    role: nullable(formData, 'role'),
+    email: nullable(formData, 'email'),
+    whatsapp: nullable(formData, 'whatsapp'),
+    preferred_contact_method: nullable(formData, 'preferred_contact_method'),
+    notes_summary: nullable(formData, 'notes_summary'),
+  };
+  const { error } = await supabase.from('contacts').update(payload).eq('id', id).eq('owner_id', user.id);
+  if (error) throw new Error(error.message);
+
+  const phone = text(formData, 'phone');
+  const { data: existingPhone } = await supabase
+    .from('contact_phones')
+    .select('id')
+    .eq('contact_id', id)
+    .eq('is_primary', true)
+    .maybeSingle();
+
+  if (phone) {
+    if (existingPhone?.id) {
+      const { error: phoneError } = await supabase
+        .from('contact_phones')
+        .update({ phone_number: phone, label: 'mobile', is_primary: true })
+        .eq('id', existingPhone.id);
+      if (phoneError) throw new Error(phoneError.message);
+    } else {
+      const { error: phoneError } = await supabase.from('contact_phones').insert({
+        contact_id: id,
+        phone_number: phone,
+        label: 'mobile',
+        is_primary: true,
+      });
+      if (phoneError) throw new Error(phoneError.message);
+    }
+  } else if (existingPhone?.id) {
+    const { error: phoneError } = await supabase.from('contact_phones').delete().eq('id', existingPhone.id);
+    if (phoneError) throw new Error(phoneError.message);
+  }
+
+  revalidatePath('/contacts');
+  revalidatePath(`/contacts/${id}`);
+  revalidatePath('/dashboard');
+}
+
 export async function deleteContact(formData: FormData) {
   const { supabase, user } = await getUserAndClient();
   const id = text(formData, 'id');
@@ -141,6 +224,31 @@ export async function createOpportunity(formData: FormData) {
   const { error } = await supabase.from('opportunities').insert(payload);
   if (error) throw new Error(error.message);
   revalidatePath('/opportunities');
+  revalidatePath('/dashboard');
+}
+
+
+
+export async function updateOpportunityDetail(formData: FormData) {
+  const { supabase, user } = await getUserAndClient();
+  const id = text(formData, 'id');
+  const payload = {
+    title: text(formData, 'title'),
+    primary_contact_id: nullable(formData, 'primary_contact_id'),
+    description: nullable(formData, 'description'),
+    stage: text(formData, 'stage') || 'new_lead',
+    value_estimate: text(formData, 'value_estimate') ? Number(text(formData, 'value_estimate')) : null,
+    probability: text(formData, 'probability') ? Number(text(formData, 'probability')) : null,
+    expected_close_date: nullable(formData, 'expected_close_date'),
+    next_action: nullable(formData, 'next_action'),
+    next_action_due_at: nullable(formData, 'next_action_due_at'),
+    source: nullable(formData, 'source'),
+  };
+  if (!id || !payload.title) throw new Error('ID e titolo opportunità sono obbligatori');
+  const { error } = await supabase.from('opportunities').update(payload).eq('id', id).eq('owner_id', user.id);
+  if (error) throw new Error(error.message);
+  revalidatePath('/opportunities');
+  revalidatePath(`/opportunities/${id}`);
   revalidatePath('/dashboard');
 }
 

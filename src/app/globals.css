@@ -420,3 +420,17 @@ input:focus, select:focus, textarea:focus {
   .page-hero.page-hero-compact { min-height: 78px; padding: 12px 16px; }
   .toolbar-row { grid-template-columns: 1fr; }
 }
+
+
+.detail-edit-card {
+  background: linear-gradient(135deg, rgba(255,255,255,.95) 0%, rgba(246,243,255,.96) 100%);
+}
+.detail-edit-form {
+  gap: 14px;
+}
+.detail-edit-actions {
+  justify-content: flex-start;
+}
+@media (max-width: 780px) {
+  .detail-edit-actions > * { width: 100%; }
+}
