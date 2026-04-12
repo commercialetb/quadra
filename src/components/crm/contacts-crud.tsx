@@ -3,12 +3,12 @@
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { createContact, deleteContact, updateContact } from '@/app/(app)/actions'
-import { ActionBar, Field, FormCard, FormGrid, InlineDangerButton, PrimaryButton, inputStyle, selectStyle, textareaStyle } from '@/components/forms/form-primitives'
 import { SearchInput } from '@/components/ui/search-input'
 import { ContactAvatar } from '@/components/ui/contact-avatar'
 
 export function ContactsCrud({ contacts, companies }: { contacts: any[]; companies: any[] }) {
   const [query, setQuery] = useState('')
+  const [showCreate, setShowCreate] = useState(false)
 
   const items = useMemo(() => {
     return contacts.filter((contact) => {
@@ -18,104 +18,95 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
   }, [contacts, query])
 
   return (
-    <div className="dual-panel">
-      <div className="sticky-panel">
-        <form id="new-contact" action={createContact}>
-          <FormCard title="Nuovo contatto" subtitle="Più leggibilità, più contesto aziendale, meno caos in inserimento.">
-            <FormGrid>
-              <Field label="Nome"><input name="first_name" required style={inputStyle()} /></Field>
-              <Field label="Cognome"><input name="last_name" required style={inputStyle()} /></Field>
-              <Field label="Azienda">
-                <select name="company_id" style={selectStyle()} defaultValue="">
-                  <option value="">Nessuna</option>
-                  {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
-                </select>
-              </Field>
-              <Field label="Ruolo"><input name="role" style={inputStyle()} /></Field>
-              <Field label="Email"><input name="email" type="email" style={inputStyle()} /></Field>
-              <Field label="Telefono principale"><input name="phone" style={inputStyle()} /></Field>
-              <Field label="WhatsApp"><input name="whatsapp" style={inputStyle()} /></Field>
-              <Field label="Contatto preferito"><input name="preferred_contact_method" placeholder="phone / email / whatsapp" style={inputStyle()} /></Field>
-            </FormGrid>
-            <Field label="Note sintetiche"><textarea name="notes_summary" style={textareaStyle()} /></Field>
-            <ActionBar><PrimaryButton>Salva contatto</PrimaryButton></ActionBar>
-          </FormCard>
-        </form>
-      </div>
-
-      <section className="frost-card">
-        <div className="section-heading">
+    <>
+      <section className="panel-card page-section-card">
+        <div className="list-head">
           <div>
             <h2>Contatti</h2>
-            <p>Persone, ruolo e legame con l’azienda: tutto leggibile al primo sguardo.</p>
+            <p>Persone leggibili, azienda chiara, nessun mini form sparso.</p>
           </div>
-          <div className="section-utility">{items.length} risultati</div>
+          <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
+            + Nuovo contatto
+          </button>
         </div>
-        <div className="search-row" style={{ marginBottom: 18 }}>
+
+        <div className="toolbar-row single">
           <SearchInput value={query} onChange={setQuery} placeholder="Cerca per nome, azienda, email o ruolo" />
         </div>
-        <div className="contact-list-v2">
+
+        <div className="cards-stack">
           {items.map((contact) => (
-            <article key={contact.id} className="entity-card-v2 contact-card-v2">
-              <div className="entity-main-row">
-                <div className="entity-identity">
-                  <ContactAvatar firstName={contact.first_name} lastName={contact.last_name} />
-                  <div className="entity-copy">
-                    <div className="entity-title-row">
-                      <div className="entity-title-block">
-                        <div className="entity-title">{contact.first_name} {contact.last_name}</div>
-                        <div className="entity-subtitle">{contact.role || 'Ruolo non indicato'} {contact.companies?.name ? `· ${contact.companies.name}` : '· Nessuna azienda'}</div>
-                      </div>
-                    </div>
-                    <div className="entity-meta-row wrap">
-                      {contact.email ? <span className="entity-chip">{contact.email}</span> : null}
-                      {contact.whatsapp ? <span className="entity-chip">WhatsApp</span> : null}
-                      {contact.preferred_contact_method ? <span className="entity-chip entity-chip-dark">{contact.preferred_contact_method}</span> : null}
+            <article key={contact.id} className="entity-card">
+              <div className="entity-card-main">
+                <ContactAvatar firstName={contact.first_name} lastName={contact.last_name} />
+                <div className="entity-card-copy">
+                  <div className="entity-card-top compact-gap">
+                    <div>
+                      <h3>{contact.first_name} {contact.last_name}</h3>
+                      <p>{contact.role || 'Ruolo non indicato'} · {contact.companies?.name || 'Nessuna azienda'}</p>
                     </div>
                   </div>
-                </div>
-                <div className="entity-actions-top">
-                  <Link className="button-secondary" href={`/contacts/${contact.id}`}>Apri scheda</Link>
+                  <div className="entity-inline-meta wrap">
+                    {contact.email ? <span>{contact.email}</span> : null}
+                    {contact.whatsapp ? <span>WhatsApp</span> : null}
+                    {contact.preferred_contact_method ? <span>{contact.preferred_contact_method}</span> : null}
+                  </div>
                 </div>
               </div>
 
-              <details className="page-card" style={{ marginTop: 16, background: 'var(--surface-soft)', padding: 16 }}>
-                <summary style={{ cursor: 'pointer', fontWeight: 700 }}>Modifica rapida</summary>
-                <div className="entity-bottom-row">
-                  <form action={updateContact} className="contact-inline-edit">
-                    <input type="hidden" name="id" value={contact.id} />
-                    <div className="compact-field-block">
-                      <div className="compact-label">Azienda</div>
-                      <select name="company_id" defaultValue={contact.company_id ?? ''} style={selectStyle()}>
-                        <option value="">Nessuna</option>
-                        {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
-                      </select>
-                    </div>
-                    <div className="compact-field-block">
-                      <div className="compact-label">Ruolo</div>
-                      <input name="role" defaultValue={contact.role ?? ''} placeholder="Ruolo" style={inputStyle()} />
-                    </div>
-                    <div className="compact-field-block">
-                      <div className="compact-label">Email</div>
-                      <input name="email" defaultValue={contact.email ?? ''} placeholder="Email" style={inputStyle()} />
-                    </div>
-                    <div className="compact-field-block">
-                      <div className="compact-label">WhatsApp</div>
-                      <input name="whatsapp" defaultValue={contact.whatsapp ?? ''} placeholder="WhatsApp" style={inputStyle()} />
-                    </div>
-                    <PrimaryButton>Aggiorna</PrimaryButton>
-                  </form>
-                  <form action={deleteContact}>
-                    <input type="hidden" name="id" value={contact.id} />
-                    <InlineDangerButton>Elimina</InlineDangerButton>
-                  </form>
-                </div>
-              </details>
+              <div className="entity-card-actions">
+                <Link href={`/contacts/${contact.id}`} className="secondary-button">Apri</Link>
+                <form action={updateContact} className="inline-mini-form wide">
+                  <input type="hidden" name="id" value={contact.id} />
+                  <select name="company_id" defaultValue={contact.company_id ?? ''} className="field-control compact-control">
+                    <option value="">Nessuna</option>
+                    {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
+                  </select>
+                  <input name="role" defaultValue={contact.role ?? ''} placeholder="Ruolo" className="field-control compact-control" />
+                  <button className="ghost-button" type="submit">Salva</button>
+                </form>
+                <form action={deleteContact}>
+                  <input type="hidden" name="id" value={contact.id} />
+                  <button className="danger-button" type="submit">Elimina</button>
+                </form>
+              </div>
             </article>
           ))}
-          {!items.length ? <div className="empty-copy">Nessun contatto trovato.</div> : null}
+          {!items.length ? <div className="empty-state-box">Nessun contatto trovato.</div> : null}
         </div>
       </section>
-    </div>
+
+      {showCreate ? (
+        <div className="overlay-shell" role="dialog" aria-modal="true">
+          <div className="overlay-backdrop" onClick={() => setShowCreate(false)} />
+          <div className="sheet-card">
+            <div className="sheet-head">
+              <div>
+                <p className="page-eyebrow">Quick add</p>
+                <h3>Nuovo contatto</h3>
+              </div>
+              <button className="ghost-button" type="button" onClick={() => setShowCreate(false)}>Chiudi</button>
+            </div>
+            <form action={createContact} className="sheet-form">
+              <div className="form-grid two-col">
+                <label className="field-stack"><span>Nome</span><input className="field-control" name="first_name" required /></label>
+                <label className="field-stack"><span>Cognome</span><input className="field-control" name="last_name" required /></label>
+                <label className="field-stack"><span>Azienda</span><select className="field-control" name="company_id" defaultValue=""><option value="">Nessuna</option>{companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}</select></label>
+                <label className="field-stack"><span>Ruolo</span><input className="field-control" name="role" /></label>
+                <label className="field-stack"><span>Email</span><input className="field-control" name="email" type="email" /></label>
+                <label className="field-stack"><span>Telefono</span><input className="field-control" name="phone" /></label>
+                <label className="field-stack"><span>WhatsApp</span><input className="field-control" name="whatsapp" /></label>
+                <label className="field-stack"><span>Metodo preferito</span><input className="field-control" name="preferred_contact_method" /></label>
+              </div>
+              <label className="field-stack"><span>Note</span><textarea className="field-control field-area" name="notes_summary" /></label>
+              <div className="sheet-actions">
+                <button className="secondary-button" type="button" onClick={() => setShowCreate(false)}>Annulla</button>
+                <button className="primary-button" type="submit">Salva contatto</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : null}
+    </>
   )
 }

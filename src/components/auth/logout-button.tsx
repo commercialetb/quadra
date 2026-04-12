@@ -17,13 +17,8 @@ export function LogoutButton() {
   }
 
   return (
-    <button
-      type="button"
-      onClick={onLogout}
-      disabled={loading}
-      className="rounded-2xl border border-black/10 px-3 py-2 text-sm transition hover:bg-black/[0.03] disabled:opacity-60"
-    >
-      {loading ? 'Uscita...' : 'Logout'}
+    <button type="button" onClick={onLogout} disabled={loading} className="ghost-button">
+      {loading ? 'Uscita...' : 'Esci'}
     </button>
   )
 }

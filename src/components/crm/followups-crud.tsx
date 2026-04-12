@@ -2,29 +2,29 @@
 
 import { useMemo, useState } from 'react'
 import { createFollowup, deleteFollowup, updateFollowupStatus } from '@/app/(app)/actions'
-import { ActionBar, Field, FormCard, FormGrid, InlineDangerButton, PrimaryButton, inputStyle, selectStyle, textareaStyle } from '@/components/forms/form-primitives'
 import { SearchInput } from '@/components/ui/search-input'
 import { formatDateTime } from '@/lib/format'
 
 const statuses = ['pending', 'in_progress', 'completed', 'cancelled', 'overdue']
 const priorities = ['low', 'medium', 'high', 'urgent']
 
-function statusBadge(status: string) {
-  if (status === 'completed') return 'badge-success'
-  if (status === 'overdue') return 'badge-danger'
-  if (status === 'in_progress') return 'badge-warning'
-  return 'badge-dark'
+function statusTone(status: string) {
+  if (status === 'completed') return 'success'
+  if (status === 'overdue') return 'danger'
+  if (status === 'in_progress') return 'warning'
+  return 'neutral'
 }
 
-function priorityBadge(priority: string) {
-  if (priority === 'urgent') return 'badge-danger'
-  if (priority === 'high') return 'badge-warning'
-  return 'badge'
+function priorityTone(priority: string) {
+  if (priority === 'urgent') return 'danger'
+  if (priority === 'high') return 'warning'
+  return 'neutral'
 }
 
 export function FollowupsCrud({ followups, companies, contacts, opportunities }: { followups: any[]; companies: any[]; contacts: any[]; opportunities: any[] }) {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
+  const [showCreate, setShowCreate] = useState(false)
 
   const items = useMemo(() => {
     return followups.filter((item) => {
@@ -36,99 +36,94 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
   }, [followups, query, filter])
 
   return (
-    <div className="dual-panel">
-      <div className="sticky-panel">
-        <form id="new-followup" action={createFollowup}>
-          <FormCard title="Nuovo follow-up" subtitle="La tua agenda operativa, con priorità e scadenza chiare.">
-            <FormGrid>
-              <Field label="Titolo"><input name="title" required style={inputStyle()} /></Field>
-              <Field label="Scadenza"><input name="due_at" type="datetime-local" required style={inputStyle()} /></Field>
-              <Field label="Priorità">
-                <select name="priority" defaultValue="medium" style={selectStyle()}>
-                  {priorities.map((item) => <option key={item} value={item}>{item}</option>)}
-                </select>
-              </Field>
-              <Field label="Stato">
-                <select name="status" defaultValue="pending" style={selectStyle()}>
-                  {statuses.map((item) => <option key={item} value={item}>{item}</option>)}
-                </select>
-              </Field>
-              <Field label="Azienda">
-                <select name="company_id" style={selectStyle()} defaultValue="">
-                  <option value="">Nessuna</option>
-                  {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
-                </select>
-              </Field>
-              <Field label="Contatto">
-                <select name="contact_id" style={selectStyle()} defaultValue="">
-                  <option value="">Nessuno</option>
-                  {contacts.map((contact) => <option key={contact.id} value={contact.id}>{contact.first_name} {contact.last_name}</option>)}
-                </select>
-              </Field>
-              <Field label="Opportunità">
-                <select name="opportunity_id" style={selectStyle()} defaultValue="">
-                  <option value="">Nessuna</option>
-                  {opportunities.map((opportunity) => <option key={opportunity.id} value={opportunity.id}>{opportunity.title}</option>)}
-                </select>
-              </Field>
-            </FormGrid>
-            <Field label="Descrizione"><textarea name="description" style={textareaStyle()} /></Field>
-            <ActionBar><PrimaryButton>Salva follow-up</PrimaryButton></ActionBar>
-          </FormCard>
-        </form>
-      </div>
-
-      <section className="frost-card">
-        <div className="section-heading">
+    <>
+      <section className="panel-card page-section-card">
+        <div className="list-head">
           <div>
             <h2>Follow-up</h2>
-            <p>Agenda sobria, chiara, finalmente leggibile anche su mobile.</p>
+            <p>Agenda operativa più chiara, con stati e priorità leggibili al volo.</p>
           </div>
-          <div className="section-utility">{items.length} risultati</div>
+          <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
+            + Nuovo follow-up
+          </button>
         </div>
 
-        <div className="search-row" style={{ marginBottom: 18 }}>
-          <SearchInput value={query} onChange={setQuery} placeholder="Cerca per titolo, stato o priorità" />
-          <div className="segmented">
+        <div className="toolbar-row">
+          <SearchInput value={query} onChange={setQuery} placeholder="Cerca per titolo, stato o priorita" />
+          <div className="segmented-control">
             {['all', 'pending', 'in_progress', 'overdue', 'completed'].map((item) => (
-              <button key={item} type="button" data-active={filter === item} onClick={() => setFilter(item)}>
+              <button key={item} type="button" className={filter === item ? 'is-active' : ''} onClick={() => setFilter(item)}>
                 {item === 'all' ? 'Tutti' : item}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="crm-list-grid">
+        <div className="cards-stack">
           {items.map((item) => (
-            <article key={item.id} className="crm-card">
-              <div className="crm-card-header">
-                <div>
-                  <div className="crm-title">{item.title}</div>
-                  <div className="crm-meta">Scade {formatDateTime(item.due_at)}</div>
-                  <div className="crm-tags">
-                    <span className={`badge ${statusBadge(item.status)}`}>{item.status}</span>
-                    <span className={`badge ${priorityBadge(item.priority)}`}>{item.priority}</span>
+            <article key={item.id} className="entity-card">
+              <div className="entity-card-copy stretch">
+                <div className="entity-card-top">
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>Scade {formatDateTime(item.due_at)}</p>
+                  </div>
+                  <div className="entity-inline-meta wrap align-end">
+                    <span className={`tone-badge ${statusTone(item.status)}`}>{item.status}</span>
+                    <span className={`tone-badge ${priorityTone(item.priority)}`}>{item.priority}</span>
                   </div>
                 </div>
+                {item.description ? <div className="entity-body-copy">{item.description}</div> : null}
               </div>
-              <div className="crm-card-footer">
-                <form action={updateFollowupStatus} className="inline-stack">
+              <div className="entity-card-actions">
+                <form action={updateFollowupStatus} className="inline-mini-form">
                   <input type="hidden" name="id" value={item.id} />
-                  <select name="status" defaultValue={item.status} style={selectStyle()}>
+                  <select name="status" defaultValue={item.status} className="field-control compact-control">
                     {statuses.map((status) => <option key={status} value={status}>{status}</option>)}
                   </select>
-                  <PrimaryButton>Aggiorna</PrimaryButton>
+                  <button className="ghost-button" type="submit">Salva</button>
                 </form>
                 <form action={deleteFollowup}>
                   <input type="hidden" name="id" value={item.id} />
-                  <InlineDangerButton>Elimina</InlineDangerButton>
+                  <button className="danger-button" type="submit">Elimina</button>
                 </form>
               </div>
             </article>
           ))}
-          {!items.length ? <div className="empty-copy">Nessun follow-up trovato per questo filtro.</div> : null}
+          {!items.length ? <div className="empty-state-box">Nessun follow-up trovato.</div> : null}
         </div>
       </section>
-    </div>
+
+      {showCreate ? (
+        <div className="overlay-shell" role="dialog" aria-modal="true">
+          <div className="overlay-backdrop" onClick={() => setShowCreate(false)} />
+          <div className="sheet-card">
+            <div className="sheet-head">
+              <div>
+                <p className="page-eyebrow">Quick add</p>
+                <h3>Nuovo follow-up</h3>
+              </div>
+              <button className="ghost-button" type="button" onClick={() => setShowCreate(false)}>Chiudi</button>
+            </div>
+            <form action={createFollowup} className="sheet-form">
+              <div className="form-grid two-col">
+                <label className="field-stack"><span>Titolo</span><input className="field-control" name="title" required /></label>
+                <label className="field-stack"><span>Scadenza</span><input className="field-control" name="due_at" type="datetime-local" required /></label>
+                <label className="field-stack"><span>Priorita</span><select className="field-control" name="priority" defaultValue="medium">{priorities.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+                <label className="field-stack"><span>Stato</span><select className="field-control" name="status" defaultValue="pending">{statuses.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+                <label className="field-stack"><span>Azienda</span><select className="field-control" name="company_id" defaultValue=""><option value="">Nessuna</option>{companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}</select></label>
+                <label className="field-stack"><span>Contatto</span><select className="field-control" name="contact_id" defaultValue=""><option value="">Nessuno</option>{contacts.map((contact) => <option key={contact.id} value={contact.id}>{contact.first_name} {contact.last_name}</option>)}</select></label>
+                <label className="field-stack"><span>Opportunita</span><select className="field-control" name="opportunity_id" defaultValue=""><option value="">Nessuna</option>{opportunities.map((opportunity) => <option key={opportunity.id} value={opportunity.id}>{opportunity.title}</option>)}</select></label>
+              </div>
+              <label className="field-stack"><span>Descrizione</span><textarea className="field-control field-area" name="description" /></label>
+              <div className="sheet-actions">
+                <button className="secondary-button" type="button" onClick={() => setShowCreate(false)}>Annulla</button>
+                <button className="primary-button" type="submit">Salva follow-up</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : null}
+    </>
   )
 }

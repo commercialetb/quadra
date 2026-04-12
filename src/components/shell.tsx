@@ -3,86 +3,101 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { ReactNode } from 'react'
-import { LogoutButton } from '@/components/logout-button'
+import { LogoutButton } from '@/components/auth/logout-button'
 
-const nav = [
-  { href: '/dashboard', label: 'Dashboard', short: '01' },
-  { href: '/companies', label: 'Aziende', short: '02' },
-  { href: '/contacts', label: 'Contatti', short: '03' },
-  { href: '/opportunities', label: 'Opportunità', short: '04' },
-  { href: '/followups', label: 'Follow-up', short: '05' },
-  { href: '/import', label: 'Import', short: '06' },
+const primaryNav = [
+  { href: '/dashboard', label: 'Home', desktop: 'Dashboard' },
+  { href: '/companies', label: 'Aziende' },
+  { href: '/contacts', label: 'Contatti' },
+  { href: '/opportunities', label: 'Deal', desktop: 'Opportunita' },
+  { href: '/followups', label: 'Task', desktop: 'Follow-up' },
 ]
 
-function isActive(pathname: string, href: string) {
+function active(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`)
 }
 
-export function Shell({ children }: { children: ReactNode }) {
+function currentTitle(pathname: string) {
+  if (pathname.startsWith('/companies')) return 'Aziende'
+  if (pathname.startsWith('/contacts')) return 'Contatti'
+  if (pathname.startsWith('/opportunities')) return 'Opportunita'
+  if (pathname.startsWith('/followups')) return 'Follow-up'
+  if (pathname.startsWith('/import')) return 'Import dati'
+  return 'Dashboard'
+}
+
+export default function Shell({ children }: { children: ReactNode }) {
   const pathname = usePathname()
 
   return (
     <div className="app-shell">
-      <aside className="sidebar">
-        <div className="sidebar-card">
-          <div className="brand-mark">Q</div>
-          <h1 className="brand-title">Quadra</h1>
-          <p className="brand-copy">CRM personale, chiaro e operativo. Meno attrito, più controllo.</p>
-
-          <div className="pill-row">
-            <span className="pill"><span className="pill-dot" /> Rebuild UI</span>
-            <span className="pill">Simply is better</span>
+      <aside className="app-sidebar">
+        <div className="sidebar-brand">
+          <div className="sidebar-brand-mark">Q</div>
+          <div>
+            <div className="sidebar-brand-title">Quadra</div>
+            <div className="sidebar-brand-subtitle">CRM personale, simply better</div>
           </div>
+        </div>
 
-          <nav className="nav-list" aria-label="Navigazione principale">
-            {nav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                prefetch
-                className={`nav-link ${isActive(pathname, item.href) ? 'active' : ''}`}
-              >
-                <span className="nav-index">{item.short}</span>
-                <span>{item.label}</span>
-              </Link>
-            ))}
-          </nav>
+        <nav className="sidebar-nav">
+          {primaryNav.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`sidebar-link ${active(pathname, item.href) ? 'is-active' : ''}`}
+            >
+              <span>{item.desktop ?? item.label}</span>
+            </Link>
+          ))}
+          <Link href="/import" className={`sidebar-link ${active(pathname, '/import') ? 'is-active' : ''}`}>
+            <span>Import</span>
+          </Link>
+        </nav>
 
-          <div className="quick-title">Azioni rapide</div>
-          <div className="quick-grid">
-            <Link className="quick-btn" href="/companies#new-company">+ Azienda</Link>
-            <Link className="quick-btn" href="/contacts#new-contact">+ Contatto</Link>
-            <Link className="quick-btn" href="/opportunities#new-opportunity">+ Opportunità</Link>
+        <div className="sidebar-section">
+          <div className="sidebar-section-label">Quick add</div>
+          <div className="sidebar-quick-grid">
+            <Link href="/companies" className="sidebar-quick-card">
+              <span className="sidebar-quick-title">Nuova azienda</span>
+              <span className="sidebar-quick-copy">Anagrafica pulita e veloce.</span>
+            </Link>
+            <Link href="/contacts" className="sidebar-quick-card">
+              <span className="sidebar-quick-title">Nuovo contatto</span>
+              <span className="sidebar-quick-copy">Persona, ruolo e contesto.</span>
+            </Link>
           </div>
+        </div>
 
-          <div className="quick-title">Sessione</div>
+        <div className="sidebar-footer">
+          <div className="sidebar-status">Core CRM online</div>
           <LogoutButton />
-
-          <div className="status-chip"><span className="pill-dot" /> Core CRM online</div>
         </div>
       </aside>
 
-      <main className="main-area">
-        <header className="topbar">
+      <div className="app-main">
+        <header className="app-topbar">
           <div>
-            <div className="topbar-title">QUADRA</div>
-            <strong>Dashboard, CRM, import e basi AI pronte a crescere</strong>
+            <div className="app-topbar-kicker">Quadra</div>
+            <div className="app-topbar-title">{currentTitle(pathname)}</div>
           </div>
-          <div className="topbar-actions">
-            <span className="status-pill status-pill-accent"><span className="status-dot status-dot-blue" /> Responsive</span>
-            <span className="status-pill"><span className="status-dot" /> Online</span>
+          <div className="app-topbar-actions">
+            <Link href="/import" className="ghost-button hide-mobile">
+              Import
+            </Link>
+            <LogoutButton />
           </div>
         </header>
-        {children}
-      </main>
 
-      <nav className="bottom-nav" aria-label="Navigazione mobile">
-        {nav.map((item) => (
+        <main className="page-shell">{children}</main>
+      </div>
+
+      <nav className="mobile-nav" aria-label="Navigazione primaria">
+        {primaryNav.map((item) => (
           <Link
             key={item.href}
             href={item.href}
-            prefetch
-            className={`bottom-link ${isActive(pathname, item.href) ? 'active' : ''}`}
+            className={`mobile-nav-link ${active(pathname, item.href) ? 'is-active' : ''}`}
           >
             {item.label}
           </Link>
