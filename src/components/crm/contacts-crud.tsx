@@ -9,9 +9,16 @@ import { ConfirmButton } from '@/components/ui/confirm-button'
 import { FormSubmitButton } from '@/components/ui/form-submit-button'
 import { crmLabel } from '@/lib/crm-labels'
 
+const preferredMethods = ['email', 'phone', 'whatsapp']
+
 export function ContactsCrud({ contacts, companies }: { contacts: any[]; companies: any[] }) {
   const [query, setQuery] = useState('')
   const [showCreate, setShowCreate] = useState(false)
+
+  const handleCreate = async (formData: FormData) => {
+    await createContact(formData)
+    setShowCreate(false)
+  }
 
   const items = useMemo(() => {
     return contacts.filter((contact) => {
@@ -92,7 +99,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
               </div>
               <button className="ghost-button" type="button" onClick={() => setShowCreate(false)}>Chiudi</button>
             </div>
-            <form action={createContact} className="sheet-form">
+            <form action={handleCreate} className="sheet-form">
               <div className="form-grid two-col">
                 <label className="field-stack"><span>Nome</span><input className="field-control" name="first_name" required /></label>
                 <label className="field-stack"><span>Cognome</span><input className="field-control" name="last_name" required /></label>
@@ -101,7 +108,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
                 <label className="field-stack"><span>Email</span><input className="field-control" name="email" type="email" /></label>
                 <label className="field-stack"><span>Telefono</span><input className="field-control" name="phone" /></label>
                 <label className="field-stack"><span>WhatsApp</span><input className="field-control" name="whatsapp" /></label>
-                <label className="field-stack"><span>Metodo preferito</span><input className="field-control" name="preferred_contact_method" /></label>
+                <label className="field-stack"><span>Metodo preferito</span><select className="field-control" name="preferred_contact_method" defaultValue=""><option value="">Seleziona</option>{preferredMethods.map((item) => <option key={item} value={item}>{crmLabel(item)}</option>)}</select></label>
               </div>
               <label className="field-stack"><span>Note</span><textarea className="field-control field-area" name="notes_summary" /></label>
               <div className="sheet-actions">

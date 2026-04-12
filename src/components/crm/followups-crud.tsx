@@ -29,6 +29,11 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
   const [filter, setFilter] = useState('all')
   const [showCreate, setShowCreate] = useState(false)
 
+  const handleCreate = async (formData: FormData) => {
+    await createFollowup(formData)
+    setShowCreate(false)
+  }
+
   const items = useMemo(() => {
     return followups.filter((item) => {
       const text = `${item.title} ${item.status ?? ''} ${item.priority ?? ''}`.toLowerCase()
@@ -110,7 +115,7 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
               </div>
               <button className="ghost-button" type="button" onClick={() => setShowCreate(false)}>Chiudi</button>
             </div>
-            <form action={createFollowup} className="sheet-form">
+            <form action={handleCreate} className="sheet-form">
               <div className="form-grid two-col">
                 <label className="field-stack"><span>Titolo</span><input className="field-control" name="title" required /></label>
                 <label className="field-stack"><span>Scadenza</span><input className="field-control" name="due_at" type="datetime-local" required /></label>

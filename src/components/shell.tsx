@@ -82,9 +82,6 @@ export default function Shell({ children }: { children: ReactNode }) {
             <div className="app-topbar-title">{currentTitle(pathname)}</div>
           </div>
           <div className="app-topbar-actions">
-            <Link href="/import" className="ghost-button hide-mobile">
-              Import
-            </Link>
             <LogoutButton />
           </div>
         </header>

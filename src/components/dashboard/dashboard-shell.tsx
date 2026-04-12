@@ -84,6 +84,7 @@ export function DashboardShell({ data }: { data: any }) {
             <a href="/contacts" className="quick-card"><strong>Nuovo contatto</strong><span>Persona, ruolo e contesto.</span></a>
             <a href="/opportunities" className="quick-card"><strong>Nuova opportunita</strong><span>Apri una trattativa in pochi tocchi.</span></a>
             <a href="/followups" className="quick-card"><strong>Nuovo follow-up</strong><span>Blocca subito la prossima azione.</span></a>
+            <a href="/import" className="quick-card"><strong>Import dati</strong><span>Carica fogli e allinea il CRM.</span></a>
           </div>
         </section>
       </div>

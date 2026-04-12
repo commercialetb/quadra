@@ -9,6 +9,8 @@ import { getContactDetail, getTimelineForEntity } from '@/lib/detail-queries'
 import { createClient } from '@/lib/supabase/server'
 import { crmLabel } from '@/lib/crm-labels'
 
+const preferredMethods = ['email', 'phone', 'whatsapp']
+
 export default async function ContactDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const { contact, phones, opportunities, notes } = await getContactDetail(id)
@@ -33,7 +35,7 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
             <label className="field-stack"><span>Email</span><input className="field-control" name="email" type="email" defaultValue={contact.email ?? ''} /></label>
             <label className="field-stack"><span>Telefono principale</span><input className="field-control" name="phone" defaultValue={phones.find((item) => item.is_primary)?.phone_number ?? ''} /></label>
             <label className="field-stack"><span>WhatsApp</span><input className="field-control" name="whatsapp" defaultValue={contact.whatsapp ?? ''} /></label>
-            <label className="field-stack"><span>Metodo preferito</span><input className="field-control" name="preferred_contact_method" defaultValue={contact.preferred_contact_method ?? ''} placeholder="email, telefono, whatsapp" /></label>
+            <label className="field-stack"><span>Metodo preferito</span><select className="field-control" name="preferred_contact_method" defaultValue={contact.preferred_contact_method ?? ''}><option value="">Seleziona</option>{preferredMethods.map((item) => <option key={item} value={item}>{crmLabel(item)}</option>)}</select></label>
             <label className="field-stack" style={{ gridColumn: '1 / -1' }}><span>Note rapide</span><textarea className="field-control field-area" name="notes_summary" defaultValue={contact.notes_summary ?? ''} /></label>
           </DetailEditCard>
 

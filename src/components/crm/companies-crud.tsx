@@ -28,6 +28,11 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
   const [filter, setFilter] = useState('all')
   const [showCreate, setShowCreate] = useState(false)
 
+  const handleCreate = async (formData: FormData) => {
+    await createCompany(formData)
+    setShowCreate(false)
+  }
+
   const items = useMemo(() => {
     return companies.filter((company) => {
       const text = `${company.name} ${company.city ?? ''} ${company.website ?? ''} ${company.status ?? ''}`.toLowerCase()
@@ -121,7 +126,7 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
               </div>
               <button className="ghost-button" type="button" onClick={() => setShowCreate(false)}>Chiudi</button>
             </div>
-            <form action={createCompany} className="sheet-form">
+            <form action={handleCreate} className="sheet-form">
               <div className="form-grid two-col">
                 <label className="field-stack"><span>Nome azienda</span><input className="field-control" name="name" required /></label>
                 <label className="field-stack"><span>Sito web</span><input className="field-control" name="website" placeholder="https://" /></label>
@@ -130,6 +135,8 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                 <label className="field-stack"><span>Città</span><input className="field-control" name="city" /></label>
                 <label className="field-stack"><span>Provincia</span><input className="field-control" name="province" /></label>
                 <label className="field-stack"><span>Stato</span><select className="field-control" name="status" defaultValue="lead">{companyStatuses.map((item) => <option key={item} value={item}>{crmLabel(item)}</option>)}</select></label>
+                <label className="field-stack"><span>Settore</span><input className="field-control" name="industry" /></label>
+                <label className="field-stack"><span>Fonte</span><input className="field-control" name="source" /></label>
               </div>
               <label className="field-stack"><span>Note</span><textarea className="field-control field-area" name="notes_summary" /></label>
               <div className="sheet-actions">

@@ -31,6 +31,8 @@ export async function createCompany(formData: FormData) {
     status: text(formData, 'status') || 'lead',
     phone: nullable(formData, 'phone'),
     email: nullable(formData, 'email'),
+    industry: nullable(formData, 'industry'),
+    source: nullable(formData, 'source'),
     notes_summary: nullable(formData, 'notes_summary'),
   };
 
