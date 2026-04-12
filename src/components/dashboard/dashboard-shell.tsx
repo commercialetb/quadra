@@ -5,19 +5,18 @@ function euro(value: number) {
 }
 
 export function DashboardShell({ data }: { data: any }) {
+  const recentCompanies = (data.recentCompanies || []).slice(0, 4)
+  const recentActivities = (data.recentActivities || []).slice(0, 3)
+
   return (
-    <div className="page-stack">
-      <section className="dashboard-hero">
-        <div>
+    <div className="page-stack dashboard-page-stack">
+      <section className="dashboard-hero dashboard-hero-clean">
+        <div className="dashboard-hero-copy">
           <p className="page-eyebrow">Workspace</p>
           <h1 className="page-title">Benvenuto.</h1>
           <p className="page-subtitle">
             Oggi conta soprattutto questo: follow-up da chiudere, trattative da sbloccare e un paio di scorciatoie per non perdere ritmo.
           </p>
-        </div>
-        <div className="dashboard-hero-actions">
-          <Link href="/companies" className="primary-button">Nuova azienda</Link>
-          <Link href="/contacts" className="secondary-button">Nuovo contatto</Link>
         </div>
       </section>
 
@@ -45,7 +44,7 @@ export function DashboardShell({ data }: { data: any }) {
       </section>
 
       <div className="dashboard-grid">
-        <section className="panel-card panel-card-accent">
+        <section className="panel-card panel-card-accent dashboard-primary-panel">
           <div className="panel-head">
             <div>
               <h2>Da fare oggi</h2>
@@ -77,7 +76,7 @@ export function DashboardShell({ data }: { data: any }) {
           </div>
         </section>
 
-        <section className="panel-card">
+        <section className="panel-card dashboard-quick-panel">
           <div className="panel-head">
             <div>
               <h2>Quick add</h2>
@@ -93,31 +92,34 @@ export function DashboardShell({ data }: { data: any }) {
         </section>
       </div>
 
-      <div className="dashboard-grid two-up">
-        <section className="panel-card">
-          <div className="panel-head"><div><h2>Aziende recenti</h2><p>Le anagrafiche appena toccate.</p></div></div>
-          <div className="simple-list">
-            {data.recentCompanies.length === 0 ? <div className="empty-block">Nessuna azienda recente.</div> : data.recentCompanies.map((item: any) => (
-              <Link key={item.id} href={`/companies/${item.id}`} className="simple-row">
-                <div>
-                  <strong>{item.name}</strong>
-                  <span>{item.city || 'Citta non indicata'} · {item.status}</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        <section className="panel-card">
+      <div className="dashboard-grid two-up dashboard-secondary-grid">
+        <section className="panel-card panel-card-activity">
           <div className="panel-head"><div><h2>Attivita recenti</h2><p>Ultimi tocchi nel CRM.</p></div></div>
-          <div className="simple-list">
-            {data.recentActivities.length === 0 ? <div className="empty-block">Nessuna attività recente.</div> : data.recentActivities.map((item: any) => (
+          <div className="simple-list compact-list">
+            {recentActivities.length === 0 ? <div className="empty-block">Nessuna attività recente.</div> : recentActivities.map((item: any) => (
               <div key={item.id} className="simple-row static">
                 <div>
                   <strong>{item.subject || 'Attivita'}</strong>
                   <span>{item.kind} · {new Date(item.happened_at).toLocaleDateString('it-IT')}</span>
                 </div>
               </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="panel-card panel-card-companies">
+          <div className="panel-head companies-head-inline">
+            <div><h2>Aziende recenti</h2><p>Le anagrafiche appena toccate.</p></div>
+            <Link href="/companies" className="ghost-button compact-ghost">Vedi tutte</Link>
+          </div>
+          <div className="simple-list companies-teaser-list">
+            {recentCompanies.length === 0 ? <div className="empty-block">Nessuna azienda recente.</div> : recentCompanies.map((item: any) => (
+              <Link key={item.id} href={`/companies/${item.id}`} className="simple-row company-teaser-row">
+                <div>
+                  <strong>{item.name}</strong>
+                  <span>{item.city || 'Citta non indicata'} · {item.status}</span>
+                </div>
+              </Link>
             ))}
           </div>
         </section>
