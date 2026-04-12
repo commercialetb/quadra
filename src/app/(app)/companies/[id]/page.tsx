@@ -12,7 +12,7 @@ const companyStatuses = ['lead', 'prospect', 'client', 'partner', 'inactive']
 
 export default async function CompanyDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const { company, contacts, opportunities, projects, notes } = await getCompanyDetail(id)
+  const { company, contacts, opportunities, notes } = await getCompanyDetail(id)
   const timeline = await getTimelineForEntity({ companyId: id })
 
   if (!company) notFound()
@@ -80,19 +80,6 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
               label: opportunity.title,
               meta: [crmLabel(opportunity.stage), opportunity.value_estimate ? `€ ${Number(opportunity.value_estimate).toLocaleString('it-IT')}` : null].filter(Boolean).join(' · '),
               href: `/opportunities/${opportunity.id}`,
-            }))}
-          />
-
-          <EntityListCard
-            title="Progetti"
-            empty="Nessun progetto collegato."
-            ctaLabel="+ Aggiungi progetto"
-            ctaHref="/projects"
-            items={projects.map((project) => ({
-              id: project.id,
-              label: project.title,
-              meta: [project.status, project.budget ? `€ ${Number(project.budget).toLocaleString('it-IT')}` : null].filter(Boolean).join(' · '),
-              href: `/projects/${project.id}`,
             }))}
           />
         </div>
