@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { DetailShell } from '@/components/detail/detail-shell'
 import { EntityListCard } from '@/components/detail/entity-list-card'
@@ -13,13 +14,13 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
   if (!opportunity) notFound()
 
   return (
-    <DetailShell title={opportunity.title} subtitle={opportunity.company?.name} backHref="/opportunities" backLabel="Opportunità">
+    <DetailShell title={opportunity.title} subtitle={opportunity.company?.name} backHref="/opportunities" backLabel="Opportunita">
       <div className="detail-grid">
         <div className="stack-lg">
-          <InfoCard title="Panoramica opportunità">
+          <InfoCard title="Panoramica opportunita">
             <InfoRow label="Fase" value={opportunity.stage} />
             <InfoRow label="Valore stimato" value={opportunity.value_estimate ? `€ ${Number(opportunity.value_estimate).toLocaleString('it-IT')}` : '—'} />
-            <InfoRow label="Probabilità" value={typeof opportunity.probability === 'number' ? `${opportunity.probability}%` : '—'} />
+            <InfoRow label="Probabilita" value={typeof opportunity.probability === 'number' ? `${opportunity.probability}%` : '—'} />
             <InfoRow label="Contatto principale" value={opportunity.primary_contact?.full_name} />
             <InfoRow label="Next action" value={opportunity.next_action} />
             <InfoRow label="Scadenza next action" value={opportunity.next_action_due_at ? new Date(opportunity.next_action_due_at).toLocaleString('it-IT') : '—'} />
@@ -40,7 +41,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
           <EntityListCard
             title="Progetti collegati"
             empty="Nessun progetto collegato."
-            emptyAction={{ label: 'Crea progetto', href: '/projects' }}
+            emptyAction={<Link href="/projects/new" className="button-secondary">+ Crea progetto</Link>}
             items={projects.map((project) => ({
               id: project.id,
               label: project.title,

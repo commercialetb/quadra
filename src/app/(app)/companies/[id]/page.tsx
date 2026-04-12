@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { DetailShell } from '@/components/detail/detail-shell'
 import { EntityListCard } from '@/components/detail/entity-list-card'
@@ -18,12 +19,12 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
         <div className="stack-lg">
           <InfoCard title="Panoramica azienda">
             <InfoRow label="Status" value={company.status} />
-            <InfoRow label="Sito web" value={company.website ? <a href={company.website} target="_blank">{company.website}</a> : '—'} />
+            <InfoRow label="Sito web" value={company.website ? <a href={company.website} target="_blank" rel="noreferrer">{company.website}</a> : '—'} />
             <InfoRow label="Email" value={company.email} />
             <InfoRow label="Telefono" value={company.phone} />
             <InfoRow label="Indirizzo" value={[company.address_line1, company.city, company.province].filter(Boolean).join(', ')} />
             <InfoRow label="Settore" value={company.industry} />
-            <InfoRow label="Fonte" value={company.source} />
+            <InfoRow label="Note" value={company.notes_summary} />
           </InfoCard>
 
           <TimelineCard items={timeline} />
@@ -39,7 +40,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           <EntityListCard
             title="Contatti"
             empty="Nessun contatto collegato."
-            emptyAction={{ label: 'Aggiungi contatto', href: '/contacts#new-contact' }}
+            emptyAction={<Link href="/contacts#new-contact" className="button-secondary">+ Aggiungi contatto</Link>}
             items={contacts.map((contact) => ({
               id: contact.id,
               label: contact.full_name,
@@ -49,9 +50,9 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           />
 
           <EntityListCard
-            title="Opportunità"
-            empty="Nessuna opportunità aperta."
-            emptyAction={{ label: 'Aggiungi opportunità', href: '/opportunities#new-opportunity' }}
+            title="Opportunita"
+            empty="Nessuna opportunita collegata."
+            emptyAction={<Link href="/opportunities#new-opportunity" className="button-secondary">+ Aggiungi opportunita</Link>}
             items={opportunities.map((opportunity) => ({
               id: opportunity.id,
               label: opportunity.title,
@@ -63,7 +64,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           <EntityListCard
             title="Progetti"
             empty="Nessun progetto collegato."
-            emptyAction={{ label: 'Aggiungi progetto', href: '/projects' }}
+            emptyAction={<Link href="/projects/new" className="button-secondary">+ Aggiungi progetto</Link>}
             items={projects.map((project) => ({
               id: project.id,
               label: project.title,
