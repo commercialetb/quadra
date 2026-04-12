@@ -5,16 +5,16 @@ function euro(value: number) {
 }
 
 export function DashboardShell({ data }: { data: any }) {
-  const recentCompanies = (data.recentCompanies || []).slice(0, 4)
-  const recentActivities = (data.recentActivities || []).slice(0, 3)
+  const recentActivities = data.recentActivities.slice(0, 3)
+  const recentCompanies = data.recentCompanies.slice(0, 4)
 
   return (
-    <div className="page-stack dashboard-page-stack">
+    <div className="page-stack">
       <section className="dashboard-hero dashboard-hero-clean">
-        <div className="dashboard-hero-copy">
+        <div>
           <p className="page-eyebrow">Workspace</p>
           <h1 className="page-title">Benvenuto.</h1>
-          <p className="page-subtitle">
+          <p className="page-subtitle dashboard-copy-compact">
             Oggi conta soprattutto questo: follow-up da chiudere, trattative da sbloccare e un paio di scorciatoie per non perdere ritmo.
           </p>
         </div>
@@ -44,7 +44,7 @@ export function DashboardShell({ data }: { data: any }) {
       </section>
 
       <div className="dashboard-grid">
-        <section className="panel-card panel-card-accent dashboard-primary-panel">
+        <section className="panel-card panel-card-accent">
           <div className="panel-head">
             <div>
               <h2>Da fare oggi</h2>
@@ -76,7 +76,7 @@ export function DashboardShell({ data }: { data: any }) {
           </div>
         </section>
 
-        <section className="panel-card dashboard-quick-panel">
+        <section className="panel-card quick-add-panel">
           <div className="panel-head">
             <div>
               <h2>Quick add</h2>
@@ -92,12 +92,12 @@ export function DashboardShell({ data }: { data: any }) {
         </section>
       </div>
 
-      <div className="dashboard-grid two-up dashboard-secondary-grid">
-        <section className="panel-card panel-card-activity">
-          <div className="panel-head"><div><h2>Attivita recenti</h2><p>Ultimi tocchi nel CRM.</p></div></div>
+      <div className="dashboard-grid two-up recent-sections-grid">
+        <section className="panel-card recent-activity-card">
+          <div className="panel-head"><div><h2>Attività recenti</h2><p>Ultimi tocchi nel CRM.</p></div></div>
           <div className="simple-list compact-list">
             {recentActivities.length === 0 ? <div className="empty-block">Nessuna attività recente.</div> : recentActivities.map((item: any) => (
-              <div key={item.id} className="simple-row static">
+              <div key={item.id} className="simple-row static compact-row">
                 <div>
                   <strong>{item.subject || 'Attivita'}</strong>
                   <span>{item.kind} · {new Date(item.happened_at).toLocaleDateString('it-IT')}</span>
@@ -107,17 +107,17 @@ export function DashboardShell({ data }: { data: any }) {
           </div>
         </section>
 
-        <section className="panel-card panel-card-companies">
-          <div className="panel-head companies-head-inline">
-            <div><h2>Aziende recenti</h2><p>Le anagrafiche appena toccate.</p></div>
-            <Link href="/companies" className="ghost-button compact-ghost">Vedi tutte</Link>
-          </div>
-          <div className="simple-list companies-teaser-list">
+        <section className="panel-card recent-companies-card">
+          <div className="panel-head"><div><h2>Aziende recenti</h2><p>Le anagrafiche appena toccate.</p></div></div>
+          <div className="simple-list compact-list">
             {recentCompanies.length === 0 ? <div className="empty-block">Nessuna azienda recente.</div> : recentCompanies.map((item: any) => (
-              <Link key={item.id} href={`/companies/${item.id}`} className="simple-row company-teaser-row">
-                <div>
-                  <strong>{item.name}</strong>
-                  <span>{item.city || 'Citta non indicata'} · {item.status}</span>
+              <Link key={item.id} href={`/companies/${item.id}`} className="simple-row compact-row company-row-with-logo">
+                <div className="company-row-identity">
+                  <span className="company-mini-logo">{item.name?.slice(0, 1)?.toUpperCase() || 'Q'}</span>
+                  <div>
+                    <strong>{item.name}</strong>
+                    <span>{item.city || 'Città non indicata'} · {item.status}</span>
+                  </div>
                 </div>
               </Link>
             ))}

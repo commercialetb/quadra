@@ -1,23 +1,8 @@
-# Quadra CRM
+Apply these files on top of the baseline from `quadra-main (1).zip`.
 
-Milestone 3 ready.
-
-## Incluso
-- auth classica (email + password)
-- shell responsive
-- dashboard v3 con colore funzionale
-- liste e detail pages coerenti
-- loading skeleton per route principali
-- import starter Excel -> staging per Companies + Contacts
-
-## Avvio
-1. configura `.env.local` da `.env.example`
-2. deploya o avvia Next.js
-3. verifica redirect URL in Supabase
-4. testa login, dashboard, CRUD base
-
-## Import Excel
-Vedi:
-- `import/crm_excel_mapping.md`
-- `import/import_companies_contacts.sql`
-- `scripts/import_companies_contacts.py`
+Changes included:
+- compact headers for Opportunities and Follow-up pages
+- dashboard hero cleaned up (no duplicated CTA buttons)
+- dashboard mobile sections shortened and reordered
+- CTA buttons in empty state boxes on company/opportunity detail pages
+- small company logo/fallback added in dashboard recent companies list

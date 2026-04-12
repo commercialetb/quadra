@@ -313,48 +313,33 @@ input:focus, select:focus, textarea:focus {
 }
 
 
-.dashboard-hero-clean { align-items: flex-start; }
-.dashboard-hero-copy { max-width: 760px; }
-.dashboard-secondary-grid { align-items: start; }
-.panel-card-activity { order: 1; }
-.panel-card-companies { order: 2; }
-.companies-head-inline { align-items: center; }
+.page-hero-compact { padding: 18px 20px; border-radius: 22px; }
+.page-hero-compact .page-title { font-size: clamp(1.8rem, 3vw, 2.4rem); }
+.page-hero-compact .page-subtitle { margin-top: 8px; max-width: 42rem; }
+
+.empty-block-with-action { display: grid; gap: 12px; justify-items: center; }
+.empty-cta-button { min-width: 210px; }
+
+.dashboard-hero-clean { align-items: start; min-height: 0; }
+.dashboard-copy-compact { max-width: 44rem; }
+.quick-add-panel { align-self: start; }
+.recent-sections-grid .recent-activity-card { order: 1; }
+.recent-sections-grid .recent-companies-card { order: 2; }
 .compact-list { gap: 8px; }
-.company-teaser-row { padding: 12px 14px; }
-.company-teaser-row strong { font-size: .98rem; }
-.compact-ghost { min-height: 38px; padding: 0 14px; border-radius: 14px; font-size: .92rem; }
-.empty-block-actionable { display: grid; gap: 12px; justify-items: center; }
-.empty-action-button { width: fit-content; }
+.compact-row { padding: 12px 14px; min-height: 0; }
+.company-row-with-logo { justify-content: flex-start; }
+.company-row-identity { display: flex; align-items: center; gap: 12px; }
+.company-mini-logo {
+  width: 36px; height: 36px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--primary) 0%, #16a5a7 100%); color: #fff; font-size: .9rem; font-weight: 800;
+}
 
 @media (max-width: 780px) {
-  .dashboard-hero {
-    padding: 16px;
-    border-radius: 22px;
-  }
-  .dashboard-hero .page-title { font-size: 1.75rem; }
-  .dashboard-hero .page-subtitle {
-    font-size: .95rem;
-    line-height: 1.45;
-    max-width: none;
-  }
-  .today-grid { gap: 12px; }
-  .metric-card { padding: 16px; }
-  .metric-card.metric-primary { min-height: 0; }
-  .panel-card-activity { order: 1; }
-  .panel-card-companies { order: 2; }
-  .companies-teaser-list .simple-row:nth-child(n+4) { display: none; }
-  .compact-list .simple-row:nth-child(n+3),
-  .compact-list .simple-row.static:nth-child(n+3) { display: none; }
-  .mobile-nav {
-    width: calc(100% - 16px);
-    bottom: calc(max(env(safe-area-inset-bottom), 8px) + 4px);
-    padding: 6px;
-    border-radius: 22px;
-    box-shadow: var(--shadow-sm);
-  }
-  .mobile-nav-link {
-    min-height: 44px;
-    border-radius: 14px;
-    font-size: .88rem;
-  }
+  .page-hero-compact { padding: 14px 16px; border-radius: 20px; }
+  .dashboard-hero-clean { padding: 14px 16px; }
+  .dashboard-copy-compact { font-size: .95rem; line-height: 1.45; max-width: none; }
+  .recent-sections-grid .recent-activity-card { order: 1; }
+  .recent-sections-grid .recent-companies-card { order: 2; }
+   .recent-companies-card .simple-row:nth-child(n+5) { display: none; }
+  .recent-activity-card .simple-row:nth-child(n+4) { display: none; }
 }

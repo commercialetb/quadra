@@ -40,8 +40,8 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
           <EntityListCard
             title="Progetti collegati"
             empty="Nessun progetto collegato."
-            emptyActionLabel="+ Crea progetto"
-            emptyActionHref="/projects/new"
+            ctaLabel="+ Crea progetto"
+            ctaHref="/projects"
             items={projects.map((project) => ({
               id: project.id,
               label: project.title,

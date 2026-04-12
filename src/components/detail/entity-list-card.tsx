@@ -4,25 +4,25 @@ export function EntityListCard({
   title,
   empty,
   items,
-  emptyActionLabel,
-  emptyActionHref,
+  ctaLabel,
+  ctaHref,
 }: {
   title: string
   empty: string
   items: Array<{ id: string; label: string; meta?: string | null; href?: string }>
-  emptyActionLabel?: string
-  emptyActionHref?: string
+  ctaLabel?: string
+  ctaHref?: string
 }) {
   return (
     <section className="panel-card">
       <div className="panel-head compact"><div><h2>{title}</h2></div></div>
       <div className="simple-list">
         {items.length === 0 ? (
-          <div className="empty-block empty-block-actionable">
+          <div className="empty-block empty-block-with-action">
             <span>{empty}</span>
-            {emptyActionLabel && emptyActionHref ? (
-              <Link href={emptyActionHref} className="ghost-button compact-ghost empty-action-button">
-                {emptyActionLabel}
+            {ctaLabel && ctaHref ? (
+              <Link href={ctaHref} className="ghost-button empty-cta-button">
+                {ctaLabel}
               </Link>
             ) : null}
           </div>
