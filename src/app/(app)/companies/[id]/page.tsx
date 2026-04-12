@@ -40,7 +40,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           <EntityListCard
             title="Contatti"
             empty="Nessun contatto collegato."
-            /* emptyAction rimosso perché non supportato dal componente */
+            emptyAction={<Link href="/contacts#new-contact" className="button-secondary">+ Aggiungi contatto</Link>}
             items={contacts.map((contact) => ({
               id: contact.id,
               label: contact.full_name,
@@ -50,9 +50,9 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           />
 
           <EntityListCard
-            title="Opportunità"
-            empty="Nessuna opportunità collegata."
-            /* emptyAction rimosso perché non supportato dal componente */
+            title="Opportunita"
+            empty="Nessuna opportunita collegata."
+            emptyAction={<Link href="/opportunities#new-opportunity" className="button-secondary">+ Aggiungi opportunita</Link>}
             items={opportunities.map((opportunity) => ({
               id: opportunity.id,
               label: opportunity.title,
@@ -64,7 +64,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           <EntityListCard
             title="Progetti"
             empty="Nessun progetto collegato."
-            /* emptyAction rimosso perché non supportato dal componente */
+            emptyAction={<Link href="/projects/new" className="button-secondary">+ Aggiungi progetto</Link>}
             items={projects.map((project) => ({
               id: project.id,
               label: project.title,

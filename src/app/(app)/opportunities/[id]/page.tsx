@@ -8,40 +8,32 @@ import { getOpportunityDetail, getTimelineForEntity } from '@/lib/detail-queries
 
 export default async function OpportunityDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const { opportunity, projects, contacts, notes } = await getOpportunityDetail(id)
+  const { opportunity, projects, notes } = await getOpportunityDetail(id)
   const timeline = await getTimelineForEntity({ opportunityId: id })
 
   if (!opportunity) notFound()
 
   return (
-    <DetailShell 
-      title={opportunity.title} 
-      subtitle={opportunity.company?.name} 
-      backHref="/opportunities" 
-      backLabel="Opportunità"
-    >
+    <DetailShell title={opportunity.title} subtitle={opportunity.company?.name} backHref="/opportunities" backLabel="Opportunita">
       <div className="detail-grid">
         <div className="stack-lg">
-          <InfoCard title="Dettagli Opportunità">
-            <InfoRow label="Stato" value={opportunity.stage} />
-            <InfoRow 
-              label="Valore Stimato" 
-              value={opportunity.value_estimate ? `€ ${Number(opportunity.value_estimate).toLocaleString('it-IT')}` : '—'} 
-            />
-            <InfoRow label="Probabilità" value={opportunity.probability ? `${opportunity.probability}%` : '—'} />
-            <InfoRow label="Chiusura Prevista" value={opportunity.expected_close_date || '—'} />
+          <InfoCard title="Panoramica opportunita">
+            <InfoRow label="Fase" value={opportunity.stage} />
+            <InfoRow label="Valore stimato" value={opportunity.value_estimate ? `€ ${Number(opportunity.value_estimate).toLocaleString('it-IT')}` : '—'} />
+            <InfoRow label="Probabilita" value={typeof opportunity.probability === 'number' ? `${opportunity.probability}%` : '—'} />
+            <InfoRow label="Contatto principale" value={opportunity.primary_contact?.full_name} />
+            <InfoRow label="Next action" value={opportunity.next_action} />
+            <InfoRow label="Scadenza next action" value={opportunity.next_action_due_at ? new Date(opportunity.next_action_due_at).toLocaleString('it-IT') : '—'} />
+            <InfoRow label="Chiusa prevista" value={opportunity.expected_close_date ? new Date(opportunity.expected_close_date).toLocaleDateString('it-IT') : '—'} />
+            <InfoRow label="Descrizione" value={opportunity.description} />
           </InfoCard>
 
           <TimelineCard items={timeline} />
-          
+
           <EntityListCard
-            title="Note"
+            title="Note recenti"
             empty="Nessuna nota collegata."
-            items={notes.map((note) => ({ 
-              id: note.id, 
-              label: note.title || 'Nota', 
-              meta: note.body 
-            }))}
+            items={notes.map((note) => ({ id: note.id, label: note.title || 'Nota', meta: note.body }))}
           />
         </div>
 
@@ -49,23 +41,12 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
           <EntityListCard
             title="Progetti collegati"
             empty="Nessun progetto collegato."
-            /* emptyAction rimosso per risolvere l'errore TypeScript */
+            emptyAction={<Link href="/projects/new" className="button-secondary">+ Crea progetto</Link>}
             items={projects.map((project) => ({
               id: project.id,
               label: project.title,
-              meta: project.status,
+              meta: [project.status, project.budget ? `€ ${Number(project.budget).toLocaleString('it-IT')}` : null].filter(Boolean).join(' · '),
               href: `/projects/${project.id}`,
-            }))}
-          />
-
-          <EntityListCard
-            title="Contatti referenti"
-            empty="Nessun contatto collegato."
-            items={contacts.map((contact) => ({
-              id: contact.id,
-              label: contact.full_name,
-              meta: contact.role,
-              href: `/contacts/${contact.id}`,
             }))}
           />
         </div>
