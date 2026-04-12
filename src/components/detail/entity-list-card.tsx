@@ -4,17 +4,28 @@ export function EntityListCard({
   title,
   empty,
   items,
+  emptyActionLabel,
+  emptyActionHref,
 }: {
   title: string
   empty: string
   items: Array<{ id: string; label: string; meta?: string | null; href?: string }>
+  emptyActionLabel?: string
+  emptyActionHref?: string
 }) {
   return (
     <section className="panel-card">
       <div className="panel-head compact"><div><h2>{title}</h2></div></div>
       <div className="simple-list">
         {items.length === 0 ? (
-          <div className="empty-block">{empty}</div>
+          <div className="empty-block empty-block-actionable">
+            <span>{empty}</span>
+            {emptyActionLabel && emptyActionHref ? (
+              <Link href={emptyActionHref} className="ghost-button compact-ghost empty-action-button">
+                {emptyActionLabel}
+              </Link>
+            ) : null}
+          </div>
         ) : (
           items.map((item) => (
             item.href ? (
