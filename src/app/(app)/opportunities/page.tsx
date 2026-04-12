@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { PageHeader } from '@/components/page-header'
 import { getCompanies, getContacts, getOpportunities } from '@/lib/data'
 import { OpportunitiesCrud } from '@/components/crm/opportunities-crud'
@@ -10,9 +9,8 @@ export default async function OpportunitiesPage() {
     <div className="page-wrap">
       <PageHeader
         title="Opportunità"
-        subtitle="Pipeline commerciale essenziale, leggibile e pronta a diventare davvero wow."
+        subtitle="Pipeline commerciale più utile: listato pulito, focus sulla fase e niente mini-form sempre aperte."
         eyebrow="CRM core"
-        actions={<Link className="button-primary" href="#new-opportunity">+ Nuova opportunità</Link>}
       />
       <OpportunitiesCrud opportunities={opportunities} companies={companies} contacts={contacts} />
     </div>

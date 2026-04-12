@@ -4,7 +4,7 @@ export function PageHeader({
   title,
   subtitle,
   actions,
-  eyebrow = 'Quadra',
+  eyebrow = 'Quadra CRM',
 }: {
   title: string
   subtitle: string
@@ -12,14 +12,14 @@ export function PageHeader({
   eyebrow?: string
 }) {
   return (
-    <section className="hero-card page-card">
-      <p className="eyebrow">{eyebrow}</p>
-      <div className="section-heading" style={{ marginBottom: 0 }}>
+    <section className="page-header">
+      <p className="page-eyebrow">{eyebrow}</p>
+      <div className="page-header-grid">
         <div>
-          <h1 className="hero-title">{title}</h1>
-          <p className="hero-copy">{subtitle}</p>
+          <h1 className="page-title">{title}</h1>
+          <p className="page-subtitle">{subtitle}</p>
         </div>
-        {actions ? <div className="quick-actions">{actions}</div> : null}
+        {actions ? <div className="page-actions">{actions}</div> : null}
       </div>
     </section>
   )
