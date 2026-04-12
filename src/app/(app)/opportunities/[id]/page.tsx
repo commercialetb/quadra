@@ -40,6 +40,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
           <EntityListCard
             title="Progetti collegati"
             empty="Nessun progetto collegato."
+            emptyAction={{ label: 'Crea progetto', href: '/projects' }}
             items={projects.map((project) => ({
               id: project.id,
               label: project.title,

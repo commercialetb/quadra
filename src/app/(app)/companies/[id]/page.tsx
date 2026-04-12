@@ -39,6 +39,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           <EntityListCard
             title="Contatti"
             empty="Nessun contatto collegato."
+            emptyAction={{ label: 'Aggiungi contatto', href: '/contacts#new-contact' }}
             items={contacts.map((contact) => ({
               id: contact.id,
               label: contact.full_name,
@@ -50,6 +51,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           <EntityListCard
             title="Opportunità"
             empty="Nessuna opportunità aperta."
+            emptyAction={{ label: 'Aggiungi opportunità', href: '/opportunities#new-opportunity' }}
             items={opportunities.map((opportunity) => ({
               id: opportunity.id,
               label: opportunity.title,
@@ -61,6 +63,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           <EntityListCard
             title="Progetti"
             empty="Nessun progetto collegato."
+            emptyAction={{ label: 'Aggiungi progetto', href: '/projects' }}
             items={projects.map((project) => ({
               id: project.id,
               label: project.title,

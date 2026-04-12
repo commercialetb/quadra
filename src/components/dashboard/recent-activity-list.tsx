@@ -10,21 +10,21 @@ function formatDate(value: string) {
 }
 
 export function RecentActivityList({ items }: { items: Array<any> }) {
+  const visible = items.slice(0, 4)
+
   return (
-    <SectionCard title="Attività recenti" subtitle="Lo storico essenziale, senza rumore.">
-      <div className="timeline-stack">
-        {items.length === 0 ? (
-          <div className="empty-copy">Nessuna attività registrata.</div>
+    <SectionCard title="Attività recenti" subtitle="Ultimi tocchi nel CRM.">
+      <div className="recent-list compact-list">
+        {visible.length === 0 ? (
+          <div className="empty-inline">Nessuna attività recente.</div>
         ) : (
-          items.map((item) => (
-            <div key={item.id} className="timeline-card">
-              <div className="timeline-head">
-                <div>
-                  <div className="timeline-title">{item.subject || 'Attività senza oggetto'}</div>
-                  <div className="timeline-date">{item.kind} · {formatDate(item.happened_at)}</div>
-                </div>
+          visible.map((item) => (
+            <div key={item.id} className="recent-row recent-activity-row">
+              <div>
+                <div className="recent-row-title">{item.subject || 'Attività senza oggetto'}</div>
+                <div className="recent-row-meta">{item.kind} · {formatDate(item.happened_at)}</div>
+                {item.content ? <p className="recent-row-copy">{item.content}</p> : null}
               </div>
-              {item.content ? <p className="timeline-copy">{item.content}</p> : null}
             </div>
           ))
         )}

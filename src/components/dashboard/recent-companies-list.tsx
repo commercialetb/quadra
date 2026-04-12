@@ -10,24 +10,24 @@ function formatDate(value: string) {
 }
 
 export function RecentCompaniesList({ items }: { items: Array<any> }) {
+  const visible = items.slice(0, 5)
+
   return (
-    <SectionCard title="Aziende recenti" subtitle="Le anagrafiche nuove o appena toccate, per rientrare subito nel contesto.">
-      <div className="company-list-v2">
-        {items.length === 0 ? (
-          <div className="empty-copy">Nessuna azienda presente.</div>
+    <SectionCard title="Aziende recenti" subtitle="Le anagrafiche appena toccate, senza rubare tutta la schermata." utility={items.length > 5 ? <Link href="/companies">Vedi tutto</Link> : undefined}>
+      <div className="recent-list compact-list">
+        {visible.length === 0 ? (
+          <div className="empty-inline">Nessuna azienda presente.</div>
         ) : (
-          items.map((item) => (
-            <Link key={item.id} href={`/companies/${item.id}`} className="entity-card-v2">
-              <div className="entity-main-row">
-                <div className="entity-identity">
-                  <CompanyAvatar name={item.name} website={item.website} size="sm" />
-                  <div className="entity-copy">
-                    <div className="entity-title">{item.name}</div>
-                    <div className="entity-subtitle">{item.city || 'Città non indicata'} · {item.status}</div>
-                  </div>
+          visible.map((item) => (
+            <Link key={item.id} href={`/companies/${item.id}`} className="recent-row compact-row">
+              <div className="recent-row-main">
+                <CompanyAvatar name={item.name} website={item.website} size="sm" />
+                <div>
+                  <div className="recent-row-title">{item.name}</div>
+                  <div className="recent-row-meta">{item.city || 'Città non indicata'} · {item.status}</div>
                 </div>
-                <div className="entity-muted">{formatDate(item.created_at)}</div>
               </div>
+              <div className="recent-row-date">{formatDate(item.created_at)}</div>
             </Link>
           ))
         )}
