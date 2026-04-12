@@ -3,24 +3,13 @@
 import { useMemo, useState } from 'react'
 import { createFollowup, deleteFollowup, updateFollowupStatus } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
+import { ConfirmButton } from '@/components/ui/confirm-button'
+import { FormSubmitButton } from '@/components/ui/form-submit-button'
 import { formatDateTime } from '@/lib/format'
-import { ConfirmDangerButton, PendingSubmitButton } from '@/components/ui/form-actions'
+import { crmLabel } from '@/lib/crm-labels'
 
-const statuses = ['pending', 'in_progress', 'completed', 'cancelled', 'overdue'] as const
-const priorities = ['low', 'medium', 'high', 'urgent'] as const
-const statusLabel: Record<string, string> = {
-  pending: 'Da fare',
-  in_progress: 'In corso',
-  completed: 'Completato',
-  cancelled: 'Annullato',
-  overdue: 'In ritardo',
-}
-const priorityLabel: Record<string, string> = {
-  low: 'Bassa',
-  medium: 'Media',
-  high: 'Alta',
-  urgent: 'Urgente',
-}
+const statuses = ['pending', 'in_progress', 'completed', 'cancelled', 'overdue']
+const priorities = ['low', 'medium', 'high', 'urgent']
 
 function statusTone(status: string) {
   if (status === 'completed') return 'success'
@@ -67,7 +56,7 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
           <div className="segmented-control">
             {['all', 'pending', 'in_progress', 'overdue', 'completed'].map((item) => (
               <button key={item} type="button" className={filter === item ? 'is-active' : ''} onClick={() => setFilter(item)}>
-                {item === 'all' ? 'Tutti' : statusLabel[item] ?? item}
+                {item === 'all' ? 'Tutti' : crmLabel(item)}
               </button>
             ))}
           </div>
@@ -83,23 +72,25 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
                     <p>Scade {formatDateTime(item.due_at)}</p>
                   </div>
                   <div className="entity-inline-meta wrap align-end">
-                    <span className={`tone-badge ${statusTone(item.status)}`}>{statusLabel[item.status] ?? item.status}</span>
-                    <span className={`tone-badge ${priorityTone(item.priority)}`}>{priorityLabel[item.priority] ?? item.priority}</span>
+                    <span className={`tone-badge ${statusTone(item.status)}`}>{crmLabel(item.status)}</span>
+                    <span className={`tone-badge ${priorityTone(item.priority)}`}>{crmLabel(item.priority)}</span>
                   </div>
                 </div>
                 {item.description ? <div className="entity-body-copy">{item.description}</div> : null}
               </div>
-              <div className="entity-card-actions">
-                <form action={updateFollowupStatus} className="inline-mini-form">
-                  <input type="hidden" name="id" value={item.id} />
-                  <select name="status" defaultValue={item.status} className="field-control compact-control">
-                    {statuses.map((status) => <option key={status} value={status}>{statusLabel[status] ?? status}</option>)}
-                  </select>
-                  <PendingSubmitButton />
-                </form>
+              <div className="entity-card-actions entity-card-actions-split">
+                <div className="entity-card-actions-main">
+                  <form action={updateFollowupStatus} className="inline-mini-form compact-inline-form">
+                    <input type="hidden" name="id" value={item.id} />
+                    <select name="status" defaultValue={item.status} className="field-control compact-control">
+                      {statuses.map((status) => <option key={status} value={status}>{crmLabel(status)}</option>)}
+                    </select>
+                    <FormSubmitButton />
+                  </form>
+                </div>
                 <form action={deleteFollowup}>
                   <input type="hidden" name="id" value={item.id} />
-                  <ConfirmDangerButton confirmMessage={`Eliminare davvero il follow-up ${item.title}?`} />
+                  <ConfirmButton confirmMessage={`Eliminare il follow-up ${item.title}?`} />
                 </form>
               </div>
             </article>
@@ -123,8 +114,8 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
               <div className="form-grid two-col">
                 <label className="field-stack"><span>Titolo</span><input className="field-control" name="title" required /></label>
                 <label className="field-stack"><span>Scadenza</span><input className="field-control" name="due_at" type="datetime-local" required /></label>
-                <label className="field-stack"><span>Priorità</span><select className="field-control" name="priority" defaultValue="medium">{priorities.map((item) => <option key={item} value={item}>{priorityLabel[item] ?? item}</option>)}</select></label>
-                <label className="field-stack"><span>Stato</span><select className="field-control" name="status" defaultValue="pending">{statuses.map((item) => <option key={item} value={item}>{statusLabel[item] ?? item}</option>)}</select></label>
+                <label className="field-stack"><span>Priorità</span><select className="field-control" name="priority" defaultValue="medium">{priorities.map((item) => <option key={item} value={item}>{crmLabel(item)}</option>)}</select></label>
+                <label className="field-stack"><span>Stato</span><select className="field-control" name="status" defaultValue="pending">{statuses.map((item) => <option key={item} value={item}>{crmLabel(item)}</option>)}</select></label>
                 <label className="field-stack"><span>Azienda</span><select className="field-control" name="company_id" defaultValue=""><option value="">Nessuna</option>{companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}</select></label>
                 <label className="field-stack"><span>Contatto</span><select className="field-control" name="contact_id" defaultValue=""><option value="">Nessuno</option>{contacts.map((contact) => <option key={contact.id} value={contact.id}>{contact.first_name} {contact.last_name}</option>)}</select></label>
                 <label className="field-stack"><span>Opportunità</span><select className="field-control" name="opportunity_id" defaultValue=""><option value="">Nessuna</option>{opportunities.map((opportunity) => <option key={opportunity.id} value={opportunity.id}>{opportunity.title}</option>)}</select></label>
@@ -132,7 +123,7 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
               <label className="field-stack"><span>Descrizione</span><textarea className="field-control field-area" name="description" /></label>
               <div className="sheet-actions">
                 <button className="secondary-button" type="button" onClick={() => setShowCreate(false)}>Annulla</button>
-                <PendingSubmitButton className="primary-button" idleLabel="Salva follow-up" />
+                <FormSubmitButton idleLabel="Salva follow-up" variant="primary" />
               </div>
             </form>
           </div>

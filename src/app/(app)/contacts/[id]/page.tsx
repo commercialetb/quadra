@@ -13,14 +13,7 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
   if (!contact) notFound()
 
   return (
-    <DetailShell
-      title={contact.full_name}
-      subtitle={contact.role}
-      backHref="/contacts"
-      backLabel="Contatti"
-      actions={<><a href={contact.email ? `mailto:${contact.email}` : '#'} className="secondary-button">Email</a>{contact.whatsapp ? <a href={`https://wa.me/${String(contact.whatsapp).replace(/[^\d]/g, '')}`} className="ghost-button" target="_blank" rel="noreferrer">WhatsApp</a> : null}</>}
-      meta={<><span>{contact.company?.name || 'Nessuna azienda'}</span><span>{phones.length} numeri</span><span>{opportunities.length} opportunità</span></>}
-    >
+    <DetailShell title={contact.full_name} subtitle={contact.role} backHref="/contacts" backLabel="Contatti">
       <div className="detail-grid">
         <div className="stack-lg">
           <InfoCard title="Panoramica contatto">

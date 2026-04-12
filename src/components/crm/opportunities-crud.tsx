@@ -4,19 +4,12 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { createOpportunity, deleteOpportunity, updateOpportunityStage } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
+import { ConfirmButton } from '@/components/ui/confirm-button'
+import { FormSubmitButton } from '@/components/ui/form-submit-button'
 import { formatCurrency, formatDate } from '@/lib/format'
-import { ConfirmDangerButton, PendingSubmitButton } from '@/components/ui/form-actions'
+import { crmLabel } from '@/lib/crm-labels'
 
-const stages = ['new_lead', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost'] as const
-const stageLabel: Record<string, string> = {
-  new_lead: 'Nuovo lead',
-  contacted: 'Contattata',
-  qualified: 'Qualificata',
-  proposal: 'Proposta',
-  negotiation: 'Negoziazione',
-  won: 'Vinta',
-  lost: 'Persa',
-}
+const stages = ['new_lead', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost']
 
 function stageTone(stage: string) {
   if (stage === 'won') return 'success'
@@ -57,7 +50,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
           <div className="segmented-control">
             {['all', 'new_lead', 'proposal', 'negotiation', 'won'].map((item) => (
               <button key={item} type="button" className={filter === item ? 'is-active' : ''} onClick={() => setFilter(item)}>
-                {item === 'all' ? 'Tutte' : stageLabel[item] ?? item}
+                {crmLabel(item)}
               </button>
             ))}
           </div>
@@ -72,7 +65,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
                     <h3>{item.title}</h3>
                     <p>{item.companies?.name ?? 'Azienda non indicata'} · chiusura {formatDate(item.expected_close_date)}</p>
                   </div>
-                  <span className={`tone-badge ${stageTone(item.stage)}`}>{stageLabel[item.stage] ?? item.stage}</span>
+                  <span className={`tone-badge ${stageTone(item.stage)}`}>{crmLabel(item.stage)}</span>
                 </div>
                 <div className="entity-inline-meta wrap">
                   <span>{formatCurrency(item.value_estimate)}</span>
@@ -80,18 +73,20 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
                   {item.primary_contact?.full_name ? <span>{item.primary_contact.full_name}</span> : null}
                 </div>
               </div>
-              <div className="entity-card-actions">
-                <Link href={`/opportunities/${item.id}`} className="secondary-button">Apri</Link>
-                <form action={updateOpportunityStage} className="inline-mini-form">
-                  <input type="hidden" name="id" value={item.id} />
-                  <select name="stage" defaultValue={item.stage} className="field-control compact-control">
-                    {stages.map((stage) => <option key={stage} value={stage}>{stageLabel[stage] ?? stage}</option>)}
-                  </select>
-                  <PendingSubmitButton />
-                </form>
+              <div className="entity-card-actions entity-card-actions-split">
+                <div className="entity-card-actions-main">
+                  <Link href={`/opportunities/${item.id}`} className="secondary-button">Apri</Link>
+                  <form action={updateOpportunityStage} className="inline-mini-form compact-inline-form">
+                    <input type="hidden" name="id" value={item.id} />
+                    <select name="stage" defaultValue={item.stage} className="field-control compact-control">
+                      {stages.map((stage) => <option key={stage} value={stage}>{crmLabel(stage)}</option>)}
+                    </select>
+                    <FormSubmitButton />
+                  </form>
+                </div>
                 <form action={deleteOpportunity}>
                   <input type="hidden" name="id" value={item.id} />
-                  <ConfirmDangerButton confirmMessage={`Eliminare davvero l'opportunità ${item.title}?`} />
+                  <ConfirmButton confirmMessage={`Eliminare l'opportunità ${item.title}?`} />
                 </form>
               </div>
             </article>
@@ -116,18 +111,18 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
                 <label className="field-stack"><span>Titolo</span><input className="field-control" name="title" required /></label>
                 <label className="field-stack"><span>Azienda</span><select className="field-control" name="company_id" required defaultValue=""><option value="" disabled>Seleziona</option>{companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}</select></label>
                 <label className="field-stack"><span>Contatto</span><select className="field-control" name="primary_contact_id" defaultValue=""><option value="">Nessuno</option>{contacts.map((contact) => <option key={contact.id} value={contact.id}>{contact.first_name} {contact.last_name}</option>)}</select></label>
-                <label className="field-stack"><span>Fase</span><select className="field-control" name="stage" defaultValue="new_lead">{stages.map((item) => <option key={item} value={item}>{stageLabel[item] ?? item}</option>)}</select></label>
+                <label className="field-stack"><span>Fase</span><select className="field-control" name="stage" defaultValue="new_lead">{stages.map((item) => <option key={item} value={item}>{crmLabel(item)}</option>)}</select></label>
                 <label className="field-stack"><span>Valore stimato</span><input className="field-control" name="value_estimate" type="number" step="0.01" /></label>
                 <label className="field-stack"><span>Probabilità</span><input className="field-control" name="probability" type="number" min="0" max="100" /></label>
                 <label className="field-stack"><span>Chiusura prevista</span><input className="field-control" name="expected_close_date" type="date" /></label>
                 <label className="field-stack"><span>Fonte</span><input className="field-control" name="source" /></label>
-                <label className="field-stack"><span>Next action</span><input className="field-control" name="next_action" /></label>
-                <label className="field-stack"><span>Scadenza next action</span><input className="field-control" name="next_action_due_at" type="datetime-local" /></label>
+                <label className="field-stack"><span>Prossima azione</span><input className="field-control" name="next_action" /></label>
+                <label className="field-stack"><span>Scadenza prossima azione</span><input className="field-control" name="next_action_due_at" type="datetime-local" /></label>
               </div>
               <label className="field-stack"><span>Descrizione</span><textarea className="field-control field-area" name="description" /></label>
               <div className="sheet-actions">
                 <button className="secondary-button" type="button" onClick={() => setShowCreate(false)}>Annulla</button>
-                <PendingSubmitButton className="primary-button" idleLabel="Salva opportunità" />
+                <FormSubmitButton idleLabel="Salva opportunità" variant="primary" />
               </div>
             </form>
           </div>

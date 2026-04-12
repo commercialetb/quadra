@@ -20,7 +20,7 @@ function active(pathname: string, href: string) {
 function currentTitle(pathname: string) {
   if (pathname.startsWith('/companies')) return 'Aziende'
   if (pathname.startsWith('/contacts')) return 'Contatti'
-  if (pathname.startsWith('/opportunities')) return 'Opportunita'
+  if (pathname.startsWith('/opportunities')) return 'Opportunità'
   if (pathname.startsWith('/followups')) return 'Follow-up'
   if (pathname.startsWith('/import')) return 'Import dati'
   return 'Dashboard'
@@ -33,10 +33,10 @@ export default function Shell({ children }: { children: ReactNode }) {
     <div className="app-shell">
       <aside className="app-sidebar">
         <div className="sidebar-brand">
-          <img src="/icons/icon.svg" alt="Quadra" className="sidebar-brand-mark-image" />
+          <div className="sidebar-brand-mark">Q</div>
           <div>
             <div className="sidebar-brand-title">Quadra</div>
-            <div className="sidebar-brand-subtitle">CRM personale, chiaro e operativo</div>
+            <div className="sidebar-brand-subtitle">CRM personale, simply better</div>
           </div>
         </div>
 
