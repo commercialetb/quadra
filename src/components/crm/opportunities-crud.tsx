@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
+import { useFormStatus } from 'react-dom'
 import { createOpportunity, deleteOpportunity, updateOpportunityStage } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
 import { formatCurrency, formatDate } from '@/lib/format'
@@ -14,6 +15,16 @@ function stageTone(stage: string) {
   if (stage === 'proposal' || stage === 'negotiation') return 'warning'
   return 'neutral'
 }
+
+function SaveButton({ idleLabel = 'Salva' }: { idleLabel?: string }) {
+  const { pending } = useFormStatus()
+  return (
+    <button className="ghost-button save-button" type="submit" disabled={pending} aria-busy={pending}>
+      {pending ? 'Salvataggio...' : idleLabel}
+    </button>
+  )
+}
+
 
 export function OpportunitiesCrud({ opportunities, companies, contacts }: { opportunities: any[]; companies: any[]; contacts: any[] }) {
   const [query, setQuery] = useState('')
@@ -55,7 +66,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
 
         <div className="cards-stack">
           {items.map((item) => (
-            <article key={item.id} className="entity-card opportunity-card compact-entity-card">
+            <article key={item.id} className="entity-card opportunity-card">
               <div className="entity-card-copy stretch">
                 <div className="entity-card-top">
                   <div>
@@ -77,7 +88,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
                   <select name="stage" defaultValue={item.stage} className="field-control compact-control">
                     {stages.map((stage) => <option key={stage} value={stage}>{stage}</option>)}
                   </select>
-                  <button className="ghost-button" type="submit">Salva</button>
+                  <SaveButton />
                 </form>
                 <form action={deleteOpportunity}>
                   <input type="hidden" name="id" value={item.id} />
@@ -117,7 +128,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
               <label className="field-stack"><span>Descrizione</span><textarea className="field-control field-area" name="description" /></label>
               <div className="sheet-actions">
                 <button className="secondary-button" type="button" onClick={() => setShowCreate(false)}>Annulla</button>
-                <button className="primary-button" type="submit">Salva opportunita</button>
+                <SaveButton idleLabel="Salva opportunita" />
               </div>
             </form>
           </div>

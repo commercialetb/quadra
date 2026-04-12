@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { useFormStatus } from 'react-dom'
 import { createFollowup, deleteFollowup, updateFollowupStatus } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
 import { formatDateTime } from '@/lib/format'
@@ -20,6 +21,16 @@ function priorityTone(priority: string) {
   if (priority === 'high') return 'warning'
   return 'neutral'
 }
+
+function SaveButton({ idleLabel = 'Salva' }: { idleLabel?: string }) {
+  const { pending } = useFormStatus()
+  return (
+    <button className="ghost-button save-button" type="submit" disabled={pending} aria-busy={pending}>
+      {pending ? 'Salvataggio...' : idleLabel}
+    </button>
+  )
+}
+
 
 export function FollowupsCrud({ followups, companies, contacts, opportunities }: { followups: any[]; companies: any[]; contacts: any[]; opportunities: any[] }) {
   const [query, setQuery] = useState('')
@@ -61,7 +72,7 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
 
         <div className="cards-stack">
           {items.map((item) => (
-            <article key={item.id} className="entity-card compact-entity-card">
+            <article key={item.id} className="entity-card">
               <div className="entity-card-copy stretch">
                 <div className="entity-card-top">
                   <div>
@@ -81,7 +92,7 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
                   <select name="status" defaultValue={item.status} className="field-control compact-control">
                     {statuses.map((status) => <option key={status} value={status}>{status}</option>)}
                   </select>
-                  <button className="ghost-button" type="submit">Salva</button>
+                  <SaveButton />
                 </form>
                 <form action={deleteFollowup}>
                   <input type="hidden" name="id" value={item.id} />
@@ -118,7 +129,7 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
               <label className="field-stack"><span>Descrizione</span><textarea className="field-control field-area" name="description" /></label>
               <div className="sheet-actions">
                 <button className="secondary-button" type="button" onClick={() => setShowCreate(false)}>Annulla</button>
-                <button className="primary-button" type="submit">Salva follow-up</button>
+                <SaveButton idleLabel="Salva follow-up" />
               </div>
             </form>
           </div>

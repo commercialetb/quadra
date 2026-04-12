@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
+import { useFormStatus } from 'react-dom'
 import { createCompany, deleteCompany, updateCompanyStatus } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
 import { CompanyAvatar } from '@/components/ui/company-avatar'
@@ -19,6 +20,16 @@ function badgeTone(status?: string) {
   if (status === 'inactive') return 'danger'
   return 'neutral'
 }
+
+function SaveButton({ idleLabel = 'Salva' }: { idleLabel?: string }) {
+  const { pending } = useFormStatus()
+  return (
+    <button className="ghost-button save-button" type="submit" disabled={pending} aria-busy={pending}>
+      {pending ? 'Salvataggio...' : idleLabel}
+    </button>
+  )
+}
+
 
 export function CompaniesCrud({ companies }: { companies: any[] }) {
   const [query, setQuery] = useState('')
@@ -60,7 +71,7 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
 
         <div className="cards-stack">
           {items.map((company) => (
-            <article key={company.id} className="entity-card compact-entity-card">
+            <article key={company.id} className="entity-card">
               <div className="entity-card-main">
                 <CompanyAvatar name={company.name} website={company.website} />
                 <div className="entity-card-copy">
@@ -91,7 +102,7 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                   <select name="status" defaultValue={company.status} className="field-control compact-control">
                     {companyStatuses.map((item) => <option key={item} value={item}>{item}</option>)}
                   </select>
-                  <button className="ghost-button" type="submit">Salva</button>
+                  <SaveButton />
                 </form>
                 <form action={deleteCompany}>
                   <input type="hidden" name="id" value={company.id} />
@@ -128,7 +139,7 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
               <label className="field-stack"><span>Note</span><textarea className="field-control field-area" name="notes_summary" /></label>
               <div className="sheet-actions">
                 <button className="secondary-button" type="button" onClick={() => setShowCreate(false)}>Annulla</button>
-                <button className="primary-button" type="submit">Salva azienda</button>
+                <SaveButton idleLabel="Salva azienda" />
               </div>
             </form>
           </div>

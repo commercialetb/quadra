@@ -113,10 +113,58 @@ input:focus, select:focus, textarea:focus {
 .sidebar-footer { margin-top: auto; display: grid; gap: 10px; }
 .sidebar-status { color: var(--muted); font-size: .92rem; }
 
+
+.page-wrap { display: grid; gap: 18px; min-width: 0; }
+.company-avatar,
+.company-avatar-sm {
+  position: relative;
+  overflow: hidden;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.94);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+.company-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+}
+.company-avatar-sm {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+}
+.company-avatar img,
+.company-avatar-sm img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #fff;
+}
+.company-avatar span,
+.company-avatar-sm span {
+  position: absolute;
+  inset: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  letter-spacing: -.04em;
+}
+.company-avatar.has-image span,
+.company-avatar-sm.has-image span {
+  display: none;
+}
+.company-avatar-sm span { font-size: .84rem; }
 .app-main { min-width: 0; display: grid; gap: 16px; }
 .app-topbar {
-  min-height: 60px; border-radius: 22px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  height: 72px; min-height: 72px; border-radius: 24px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
+.page-shell, .page-stack { display: grid; gap: 18px; min-width: 0; width: 100%; }
+
 .app-topbar-kicker { color: var(--soft); font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 .app-topbar-title { font-size: 1.2rem; font-weight: 800; letter-spacing: -.03em; }
 .app-topbar-actions { display: flex; align-items: center; gap: 10px; }
@@ -125,10 +173,6 @@ input:focus, select:focus, textarea:focus {
   border-radius: 30px; padding: 26px 24px; display: flex; justify-content: space-between; gap: 16px; align-items: end;
   background: linear-gradient(135deg, rgba(255,255,255,.9) 0%, rgba(240,234,255,.95) 100%);
 }
-.dashboard-hero-compact { padding: 20px 22px; align-items: start; }
-.dashboard-subtitle-compact { max-width: 40rem; }
-.compact-list .simple-row { padding: 12px 14px; }
-.quick-add-panel { align-self: start; }
 .page-title { margin: 8px 0 0; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.02; letter-spacing: -.07em; }
 .page-subtitle { margin: 12px 0 0; color: var(--muted); max-width: 48rem; font-size: 1.05rem; line-height: 1.6; }
 .page-hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -264,7 +308,7 @@ input:focus, select:focus, textarea:focus {
   border-radius: 26px; padding: 8px; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; z-index: 30;
 }
 .mobile-nav-link {
-  min-height: 46px; border-radius: 16px; color: var(--muted); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: .92rem;
+  min-height: 52px; border-radius: 18px; color: var(--muted); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: .92rem;
 }
 .mobile-nav-link.is-active { background: rgba(107,78,255,.12); color: var(--text); }
 .hide-mobile { display: inline-flex; }
@@ -293,33 +337,40 @@ input:focus, select:focus, textarea:focus {
   .app-shell { grid-template-columns: 1fr; }
   .app-sidebar { display: none; }
   .mobile-nav { display: grid; }
-  .app-main { padding-bottom: 88px; }
-  .app-topbar { min-height: 58px; padding: 10px 12px; border-radius: 20px; }
-  .app-topbar-title { font-size: 1rem; }
-  .app-topbar-kicker { display: none; }
-  .dashboard-grid, .dashboard-grid.two-up, .detail-grid { grid-template-columns: 1fr; }
-  .today-grid { grid-template-columns: 1fr 1fr; }
-  .toolbar-row { grid-template-columns: 1fr; }
-  .segmented-control { width: 100%; overflow-x: auto; flex-wrap: nowrap; }
-  .segmented-control button { white-space: nowrap; }
-  .mobile-priority-first { order: 1; }
-  .mobile-priority-second { order: 2; }
+  .app-main { padding-bottom: 92px; }
+  .dashboard-grid, .dashboard-grid.two-up, .detail-grid, .today-grid { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 780px) {
   .app-shell { padding: max(env(safe-area-inset-top), 10px) 10px max(env(safe-area-inset-bottom), 10px); }
+  .app-topbar { height: 64px; min-height: 64px; padding: 10px 12px; border-radius: 20px; }
+  .page-shell { gap: 14px; }
+  .page-wrap { gap: 14px; }
+  .page-hero, .dashboard-hero, .panel-card { padding: 16px; }
+  .list-head, .panel-head { flex-direction: column; align-items: stretch; }
+  .list-head > .primary-button, .panel-head > .primary-button { width: 100%; }
+  .toolbar-row { gap: 10px; }
+  .segmented-control { overflow-x: auto; flex-wrap: nowrap; width: 100%; }
+  .segmented-control button { white-space: nowrap; }
+  .entity-card { padding: 16px; }
+  .entity-card-main { gap: 12px; }
+  .entity-card-actions { display: grid; grid-template-columns: 1fr; }
+  .inline-mini-form.wide, .inline-mini-form { display: grid; grid-template-columns: 1fr; width: 100%; }
+  .inline-mini-form .compact-control, .inline-mini-form .field-control, .entity-card-actions > * { width: 100%; }
+  .mobile-nav { width: calc(100% - 24px); max-width: 700px; bottom: calc(max(env(safe-area-inset-bottom), 10px) + 6px); }
+  .mobile-nav-link { min-height: 50px; }
+  .app-topbar-title { font-size: 1rem; }
+  .app-topbar-kicker { display: none; }
   .hide-mobile { display: none; }
   .page-hero, .dashboard-hero, .panel-card { border-radius: 24px; padding: 18px; }
-  .dashboard-hero-compact { padding: 16px 18px; }
   .page-title { font-size: 2rem; }
   .page-subtitle { font-size: .98rem; }
   .toolbar-row, .form-grid.two-col, .dashboard-grid, .dashboard-grid.two-up, .detail-grid, .today-grid, .auth-grid, .auth-row, .quick-grid-cards { grid-template-columns: 1fr; }
-  .entity-card, .opportunity-card { padding: 16px; }
   .entity-card-actions { align-items: stretch; }
   .entity-card-actions > * { width: 100%; }
   .inline-mini-form { width: 100%; }
   .inline-mini-form .compact-control, .inline-mini-form .field-control { flex: 1; width: 100%; }
   .sheet-card { width: 100%; border-radius: 24px 24px 20px 20px; }
   .sheet-actions { flex-direction: column-reverse; }
-  .mobile-nav { width: calc(100% - 20px); padding: 6px; }
+  .mobile-nav { width: calc(100% - 20px); }
 }
