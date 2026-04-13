@@ -25,17 +25,7 @@ export function AssistantPanel({ data }: { data: DashboardData }) {
   async function generateBrief() {
     setLoading(true)
     try {
-      const response = await fetch('/api/ai/daily-brief', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          overdueFollowups: data.kpis.overdueCount,
-          dueToday: data.kpis.todayCount,
-          openOpportunities: data.kpis.openCount,
-          pipelineValue: data.kpis.pipelineValue,
-          highlights,
-        }),
-      })
+      const response = await fetch('/api/ai/daily-brief', { method: 'POST' })
       const result = await response.json()
       setBrief(result.brief || result.error || 'Nessun brief disponibile.')
     } catch {

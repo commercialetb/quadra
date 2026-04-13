@@ -1,31 +1,27 @@
-import { getAiConfig } from './env';
-import { GroqAdapter } from './groq';
-import type { AiCompletionInput } from './types';
+import { runAiWithFallback } from './router';
+import type { AiCompletionInput, ParsedNoteResult } from './types';
 
-function getAdapter() {
-  const cfg = getAiConfig();
-
-  switch (cfg.provider) {
-    case 'groq':
-    default:
-      return new GroqAdapter();
+function safeJsonParse<T>(value: string): T | null {
+  try {
+    return JSON.parse(value) as T;
+  } catch {
+    return null;
   }
 }
 
 export async function runAiCompletion(input: AiCompletionInput) {
-  const adapter = getAdapter();
-  return adapter.complete(input);
+  return runAiWithFallback(input);
 }
 
 export async function summarizeNote(note: string) {
   return runAiCompletion({
     task: 'summarize_note',
-    maxTokens: 180,
+    maxTokens: 220,
     messages: [
       {
         role: 'system',
         content:
-          'You are Quadra, a concise CRM assistant. Summarize the note in clean business Italian. Keep it short, actionable, and factual.',
+          'Sei Quadra, un assistente CRM conciso. Riassumi la nota in italiano business, in massimo 4 righe, restando fattuale e operativo.',
       },
       {
         role: 'user',
@@ -41,15 +37,19 @@ export async function suggestNextAction(context: {
   opportunity?: string;
   stage?: string;
   note?: string;
+  valueEstimate?: number | null;
+  probability?: number | null;
+  nextActionDueAt?: string | null;
+  openFollowups?: Array<{ title: string; due_at?: string | null; priority?: string | null; status?: string | null }>;
 }) {
   return runAiCompletion({
     task: 'suggest_next_action',
-    maxTokens: 220,
+    maxTokens: 280,
     messages: [
       {
         role: 'system',
         content:
-          'You are Quadra, a CRM copilot. Suggest the single best next action in Italian, practical and short. Then give a short reason.',
+          'Sei Quadra, copilota CRM operativo. Rispondi in italiano. Dai: 1) prossima azione consigliata, 2) motivo breve, 3) bozza di follow-up in una riga. Sii concreto e non verboso.',
       },
       {
         role: 'user',
@@ -64,16 +64,76 @@ export async function buildDailyBrief(context: {
   dueToday: number;
   openOpportunities: number;
   pipelineValue?: number;
+  staleOpportunities?: Array<{ title: string; stage?: string | null; updated_at?: string | null }>;
   highlights?: string[];
 }) {
   return runAiCompletion({
     task: 'daily_brief',
-    maxTokens: 260,
+    maxTokens: 320,
     messages: [
       {
         role: 'system',
         content:
-          'You are Quadra, a daily CRM briefing assistant. Write a short Italian morning brief, calm and executive, with priorities first.',
+          'Sei Quadra, assistente CRM. Scrivi un brief giornaliero in italiano con questo schema: Priorita di oggi, Rischi, Focus commerciale. Mantieni tono executive e molto pratico.',
+      },
+      {
+        role: 'user',
+        content: JSON.stringify(context, null, 2),
+      },
+    ],
+  });
+}
+
+export async function parseNoteToCrmStructure(note: string) {
+  const result = await runAiCompletion({
+    task: 'parse_note',
+    maxTokens: 350,
+    jsonMode: true,
+    messages: [
+      {
+        role: 'system',
+        content:
+          'Estrai da questa nota un JSON valido con le chiavi: summary, followUpTitle, followUpDueHint, priority, opportunitySignal, suggestedStatusUpdate. priority deve essere low, medium o high. opportunitySignal deve essere negative, neutral o positive. Rispondi solo con JSON.',
+      },
+      {
+        role: 'user',
+        content: note,
+      },
+    ],
+  });
+
+  const parsed = safeJsonParse<ParsedNoteResult>(result.text);
+
+  return {
+    result,
+    parsed: parsed ?? {
+      summary: result.text,
+      followUpTitle: 'Verificare manualmente la prossima azione',
+      followUpDueHint: 'Da definire',
+      priority: 'medium',
+      opportunitySignal: 'neutral',
+      suggestedStatusUpdate: 'Nessun aggiornamento automatico consigliato',
+    },
+  };
+}
+
+export async function generateAssistedMessage(context: {
+  messageType: 'email' | 'whatsapp' | 'followup' | 'recap';
+  tone?: 'formale' | 'diretto' | 'caldo' | 'commerciale';
+  company?: string;
+  contact?: string;
+  opportunity?: string;
+  objective?: string;
+  notes?: string;
+}) {
+  return runAiCompletion({
+    task: 'generate_message',
+    maxTokens: 420,
+    messages: [
+      {
+        role: 'system',
+        content:
+          'Sei Quadra, assistente commerciale. Scrivi un messaggio in italiano, pronto da copiare, coerente con il tipo richiesto. Mantieni tono professionale e concreto.',
       },
       {
         role: 'user',

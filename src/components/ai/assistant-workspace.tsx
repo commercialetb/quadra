@@ -2,12 +2,43 @@
 
 import { useState } from 'react'
 
+type ParsedNote = {
+  summary: string
+  followUpTitle: string
+  followUpDueHint: string
+  priority: 'low' | 'medium' | 'high'
+  opportunitySignal: 'negative' | 'neutral' | 'positive'
+  suggestedStatusUpdate: string
+}
+
+type MessageForm = {
+  messageType: 'email' | 'whatsapp' | 'followup' | 'recap'
+  tone: 'formale' | 'diretto' | 'caldo' | 'commerciale'
+  company: string
+  contact: string
+  opportunity: string
+  objective: string
+  notes: string
+}
+
 export function AssistantWorkspace() {
   const [note, setNote] = useState('')
   const [summary, setSummary] = useState('')
   const [context, setContext] = useState({ company: '', contact: '', opportunity: '', stage: '', note: '' })
   const [nextAction, setNextAction] = useState('')
-  const [busy, setBusy] = useState<'summary' | 'action' | ''>('')
+  const [parseInput, setParseInput] = useState('')
+  const [parsed, setParsed] = useState<ParsedNote | null>(null)
+  const [messageForm, setMessageForm] = useState<MessageForm>({
+    messageType: 'email',
+    tone: 'commerciale',
+    company: '',
+    contact: '',
+    opportunity: '',
+    objective: '',
+    notes: '',
+  })
+  const [generatedMessage, setGeneratedMessage] = useState('')
+  const [busy, setBusy] = useState<'summary' | 'action' | 'parse' | 'message' | ''>('')
 
   async function summarize() {
     setBusy('summary')
@@ -39,13 +70,43 @@ export function AssistantWorkspace() {
     }
   }
 
+  async function parseNote() {
+    setBusy('parse')
+    try {
+      const response = await fetch('/api/ai/parse-note', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ note: parseInput }),
+      })
+      const result = await response.json()
+      setParsed(result.parsed || null)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  async function generateMessage() {
+    setBusy('message')
+    try {
+      const response = await fetch('/api/ai/generate-message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(messageForm),
+      })
+      const result = await response.json()
+      setGeneratedMessage(result.message || result.error || 'Nessun output disponibile.')
+    } finally {
+      setBusy('')
+    }
+  }
+
   return (
     <div className="page-stack">
       <section className="dashboard-hero dashboard-hero-compact">
         <div>
           <p className="page-eyebrow">Quadra AI</p>
           <h1 className="page-title">Assistente operativo</h1>
-          <p className="page-subtitle dashboard-subtitle-compact">Riassumi note e fatti suggerire la prossima azione migliore.</p>
+          <p className="page-subtitle dashboard-subtitle-compact">Riassumi, struttura note CRM, suggerisci next action e genera messaggi pronti.</p>
         </div>
       </section>
 
@@ -92,6 +153,79 @@ export function AssistantWorkspace() {
             </button>
           </div>
           <div className="assistant-output">{nextAction || 'Il suggerimento comparirà qui.'}</div>
+        </section>
+
+        <section className="panel-card">
+          <div className="panel-head">
+            <div>
+              <h2>Nota → struttura CRM</h2>
+              <p>Estrae riepilogo, follow-up suggerito, priorità e segnale opportunità.</p>
+            </div>
+          </div>
+          <label className="field-stack">
+            <span>Nota libera</span>
+            <textarea className="field-control field-area assistant-textarea" value={parseInput} onChange={(e) => setParseInput(e.target.value)} placeholder="Es. Sentito Rossi, interessato, richiamare giovedì, budget 12k, vuole demo..." />
+          </label>
+          <div className="sheet-actions assistant-actions">
+            <button type="button" className="primary-button" onClick={parseNote} disabled={!parseInput.trim() || busy === 'parse'}>
+              {busy === 'parse' ? 'Analisi...' : 'Struttura'}
+            </button>
+          </div>
+          <div className="assistant-output">
+            {parsed ? (
+              <div className="stack-sm">
+                <div><strong>Summary:</strong> {parsed.summary}</div>
+                <div><strong>Follow-up:</strong> {parsed.followUpTitle}</div>
+                <div><strong>Quando:</strong> {parsed.followUpDueHint}</div>
+                <div><strong>Priorità:</strong> {parsed.priority}</div>
+                <div><strong>Segnale opportunità:</strong> {parsed.opportunitySignal}</div>
+                <div><strong>Aggiornamento:</strong> {parsed.suggestedStatusUpdate}</div>
+              </div>
+            ) : 'La struttura CRM comparirà qui.'}
+          </div>
+        </section>
+
+        <section className="panel-card">
+          <div className="panel-head">
+            <div>
+              <h2>Genera messaggio</h2>
+              <p>Crea email, WhatsApp, recap o follow-up pronti da copiare.</p>
+            </div>
+          </div>
+          <div className="form-grid two-col">
+            <label className="field-stack">
+              <span>Tipo</span>
+              <select className="field-control" value={messageForm.messageType} onChange={(e) => setMessageForm({ ...messageForm, messageType: e.target.value as MessageForm['messageType'] })}>
+                <option value="email">Email</option>
+                <option value="whatsapp">WhatsApp</option>
+                <option value="followup">Follow-up</option>
+                <option value="recap">Recap post call</option>
+              </select>
+            </label>
+            <label className="field-stack">
+              <span>Tono</span>
+              <select className="field-control" value={messageForm.tone} onChange={(e) => setMessageForm({ ...messageForm, tone: e.target.value as MessageForm['tone'] })}>
+                <option value="commerciale">Commerciale</option>
+                <option value="formale">Formale</option>
+                <option value="diretto">Diretto</option>
+                <option value="caldo">Caldo</option>
+              </select>
+            </label>
+            <label className="field-stack"><span>Azienda</span><input className="field-control" value={messageForm.company} onChange={(e) => setMessageForm({ ...messageForm, company: e.target.value })} /></label>
+            <label className="field-stack"><span>Contatto</span><input className="field-control" value={messageForm.contact} onChange={(e) => setMessageForm({ ...messageForm, contact: e.target.value })} /></label>
+            <label className="field-stack"><span>Opportunità</span><input className="field-control" value={messageForm.opportunity} onChange={(e) => setMessageForm({ ...messageForm, opportunity: e.target.value })} /></label>
+            <label className="field-stack"><span>Obiettivo</span><input className="field-control" value={messageForm.objective} onChange={(e) => setMessageForm({ ...messageForm, objective: e.target.value })} /></label>
+          </div>
+          <label className="field-stack">
+            <span>Note di contesto</span>
+            <textarea className="field-control field-area assistant-textarea" value={messageForm.notes} onChange={(e) => setMessageForm({ ...messageForm, notes: e.target.value })} />
+          </label>
+          <div className="sheet-actions assistant-actions">
+            <button type="button" className="primary-button" onClick={generateMessage} disabled={busy === 'message'}>
+              {busy === 'message' ? 'Generazione...' : 'Genera'}
+            </button>
+          </div>
+          <div className="assistant-output">{generatedMessage || 'Il messaggio generato comparirà qui.'}</div>
         </section>
       </div>
     </div>
