@@ -81,6 +81,7 @@ export function AssistantPanel({ data }: { data: DashboardData }) {
           {loading === 'query' ? 'Analisi...' : 'Interroga il CRM'}
         </button>
         <a href="/assistant" className="ghost-button">Apri assistente</a>
+        <a href="/capture/voice" className="ghost-button">Cattura vocale</a>
       </div>
 
       {answer ? <div className="assistant-brief" style={{ marginTop: 14 }}>{answer}</div> : null}

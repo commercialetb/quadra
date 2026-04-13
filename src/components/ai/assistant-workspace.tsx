@@ -130,6 +130,20 @@ export function AssistantWorkspace() {
       </section>
 
       <div className="dashboard-grid two-up assistant-grid">
+      <section className="panel-card">
+        <div className="panel-head">
+          <div>
+            <h2>Siri / Shortcut</h2>
+            <p>Per note vocali e cattura rapida usa la pagina guidata con parsing AI e salvataggio follow-up.</p>
+          </div>
+        </div>
+        <div className="assistant-output">Apri la cattura vocale, incolla un dettato o passa il testo da Comandi Rapidi, poi salva il follow-up già strutturato.</div>
+        <div className="sheet-actions assistant-actions">
+          <a href="/capture/voice" className="primary-button">Apri cattura vocale</a>
+          <a href="/capture/followup" className="secondary-button">Cattura semplice</a>
+        </div>
+      </section>
+
         <section className="panel-card">
           <div className="panel-head">
             <div>
