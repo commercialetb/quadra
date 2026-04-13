@@ -1,10 +1,19 @@
-<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <linearGradient id="g" x1="64" y1="56" x2="436" y2="448" gradientUnits="userSpaceOnUse">
-    <stop stop-color="#7C5CFF"/>
-    <stop offset="1" stop-color="#13B7B0"/>
-  </linearGradient>
-</defs>
-<rect x="40" y="40" width="432" height="432" rx="136" fill="url(#g)"/>
-<path d="M262.863 132C193.467 132 142 183.466 142 252.863C142 322.26 193.467 374 262.863 374C299.534 374 329.863 360.61 351.507 336.795L385.617 370.904C394.325 379.613 408.444 379.613 417.153 370.904C425.861 362.195 425.861 348.076 417.153 339.367L383.252 305.466C401.343 283.739 411.727 256.028 411.727 226C411.727 156.603 360.261 132 290.864 132H262.863ZM262.863 176.545H290.864C334.85 176.545 367.182 204.503 367.182 248.489C367.182 292.475 334.85 329.455 290.864 329.455H262.863C217.749 329.455 186.545 298.25 186.545 252.863C186.545 207.75 217.749 176.545 262.863 176.545Z" fill="white"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="g" x1="48" y1="48" x2="448" y2="448" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#684EFF"/>
+      <stop offset="0.62" stop-color="#14BFB7"/>
+      <stop offset="1" stop-color="#FFAA00"/>
+    </linearGradient>
+    <filter id="s" x="0" y="0" width="512" height="512" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#0F172A" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <g filter="url(#s)">
+    <rect x="40" y="40" width="432" height="432" rx="108" fill="url(#g)"/>
+    <rect x="68" y="68" width="376" height="376" rx="92" stroke="white" stroke-opacity="0.22" stroke-width="6"/>
+    <circle cx="246" cy="228" r="128" stroke="white" stroke-width="46"/>
+    <rect x="282" y="280" width="94" height="124" rx="24" fill="white"/>
+    <circle cx="320" cy="238" r="42" fill="#FFB648" fill-opacity="0.78"/>
+  </g>
 </svg>
