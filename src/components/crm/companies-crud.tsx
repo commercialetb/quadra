@@ -61,10 +61,10 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
 
         <div className="toolbar-row">
           <SearchInput value={query} onChange={setQuery} placeholder="Cerca per nome, città o stato" />
-          <div className="segmented-control">
+          <div className="segmented-control company-status-tabs">
             {['all', 'lead', 'prospect', 'client', 'partner'].map((item) => (
               <button key={item} type="button" className={filter === item ? 'is-active' : ''} onClick={() => setFilter(item)}>
-                {item === 'all' ? 'Tutte' : item}
+                {item === 'all' ? 'Tutte' : item === 'lead' ? 'Lead' : item === 'prospect' ? 'Prospect' : item === 'client' ? 'Cliente' : 'Partner'}
               </button>
             ))}
           </div>

@@ -33,7 +33,7 @@ export default function Shell({ children }: { children: ReactNode }) {
     <div className="app-shell">
       <aside className="app-sidebar">
         <div className="sidebar-brand">
-          <img src="/icons/brand-mark.png" alt="Quadra" className="sidebar-brand-mark sidebar-brand-mark-image" />
+          <img src="/icons/brand-mark-v18.png" alt="Quadra" className="sidebar-brand-mark sidebar-brand-mark-image" />
           <div>
             <div className="sidebar-brand-title">Quadra</div>
             <div className="sidebar-brand-subtitle">CRM personale</div>
