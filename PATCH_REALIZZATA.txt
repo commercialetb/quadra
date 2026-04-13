@@ -1,0 +1,6 @@
+Patch realizzata:
+- Assistente AI in dashboard + pagina dedicata
+- Shortcut follow-up pronta per Siri/Comandi Rapidi
+- Liste aziende/contatti/opportunita/follow-up alleggerite
+- Opportunity detail con follow-up collegati
+- Shell ripulita e naming unificato
