@@ -5,20 +5,10 @@ import { useMemo, useState } from 'react'
 import { createContact, deleteContact, updateContact } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
 import { ContactAvatar } from '@/components/ui/contact-avatar'
-import { ConfirmButton } from '@/components/ui/confirm-button'
-import { FormSubmitButton } from '@/components/ui/form-submit-button'
-import { crmLabel } from '@/lib/crm-labels'
-
-const preferredMethods = ['email', 'phone', 'whatsapp']
 
 export function ContactsCrud({ contacts, companies }: { contacts: any[]; companies: any[] }) {
   const [query, setQuery] = useState('')
   const [showCreate, setShowCreate] = useState(false)
-
-  const handleCreate = async (formData: FormData) => {
-    await createContact(formData)
-    setShowCreate(false)
-  }
 
   const items = useMemo(() => {
     return contacts.filter((contact) => {
@@ -33,7 +23,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
         <div className="list-head">
           <div>
             <h2>Contatti</h2>
-            <p>Persone leggibili, azienda chiara e aggiornamento rapido senza disordine.</p>
+            <p>Persone leggibili, azienda chiara, nessun mini form sparso.</p>
           </div>
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
             + Nuovo contatto
@@ -58,28 +48,26 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
                   </div>
                   <div className="entity-inline-meta wrap">
                     {contact.email ? <span>{contact.email}</span> : null}
-                    {contact.whatsapp ? <span>{crmLabel('whatsapp')}</span> : null}
-                    {contact.preferred_contact_method ? <span>{crmLabel(contact.preferred_contact_method)}</span> : null}
+                    {contact.whatsapp ? <span>WhatsApp</span> : null}
+                    {contact.preferred_contact_method ? <span>{contact.preferred_contact_method}</span> : null}
                   </div>
                 </div>
               </div>
 
-              <div className="entity-card-actions entity-card-actions-split">
-                <div className="entity-card-actions-main">
-                  <Link href={`/contacts/${contact.id}`} className="secondary-button">Apri</Link>
-                  <form action={updateContact} className="inline-mini-form wide compact-inline-form">
-                    <input type="hidden" name="id" value={contact.id} />
-                    <select name="company_id" defaultValue={contact.company_id ?? ''} className="field-control compact-control">
-                      <option value="">Nessuna</option>
-                      {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
-                    </select>
-                    <input name="role" defaultValue={contact.role ?? ''} placeholder="Ruolo" className="field-control compact-control" />
-                    <FormSubmitButton />
-                  </form>
-                </div>
+              <div className="entity-card-actions">
+                <Link href={`/contacts/${contact.id}`} className="secondary-button">Apri</Link>
+                <form action={updateContact} className="inline-mini-form wide">
+                  <input type="hidden" name="id" value={contact.id} />
+                  <select name="company_id" defaultValue={contact.company_id ?? ''} className="field-control compact-control">
+                    <option value="">Nessuna</option>
+                    {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
+                  </select>
+                  <input name="role" defaultValue={contact.role ?? ''} placeholder="Ruolo" className="field-control compact-control" />
+                  <button className="ghost-button" type="submit">Salva</button>
+                </form>
                 <form action={deleteContact}>
                   <input type="hidden" name="id" value={contact.id} />
-                  <ConfirmButton confirmMessage={`Eliminare ${contact.first_name} ${contact.last_name}?`} />
+                  <button className="danger-button" type="submit">Elimina</button>
                 </form>
               </div>
             </article>
@@ -99,7 +87,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
               </div>
               <button className="ghost-button" type="button" onClick={() => setShowCreate(false)}>Chiudi</button>
             </div>
-            <form action={handleCreate} className="sheet-form">
+            <form action={createContact} className="sheet-form">
               <div className="form-grid two-col">
                 <label className="field-stack"><span>Nome</span><input className="field-control" name="first_name" required /></label>
                 <label className="field-stack"><span>Cognome</span><input className="field-control" name="last_name" required /></label>
@@ -108,12 +96,12 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
                 <label className="field-stack"><span>Email</span><input className="field-control" name="email" type="email" /></label>
                 <label className="field-stack"><span>Telefono</span><input className="field-control" name="phone" /></label>
                 <label className="field-stack"><span>WhatsApp</span><input className="field-control" name="whatsapp" /></label>
-                <label className="field-stack"><span>Metodo preferito</span><select className="field-control" name="preferred_contact_method" defaultValue=""><option value="">Seleziona</option>{preferredMethods.map((item) => <option key={item} value={item}>{crmLabel(item)}</option>)}</select></label>
+                <label className="field-stack"><span>Metodo preferito</span><input className="field-control" name="preferred_contact_method" /></label>
               </div>
               <label className="field-stack"><span>Note</span><textarea className="field-control field-area" name="notes_summary" /></label>
               <div className="sheet-actions">
                 <button className="secondary-button" type="button" onClick={() => setShowCreate(false)}>Annulla</button>
-                <FormSubmitButton idleLabel="Salva contatto" variant="primary" />
+                <button className="primary-button" type="submit">Salva contatto</button>
               </div>
             </form>
           </div>

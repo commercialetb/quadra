@@ -11,7 +11,6 @@ export default async function CompaniesPage() {
         title="Aziende"
         subtitle="Le aziende devono essere riconoscibili e rapide da scorrere. Niente form sparsi: crei solo quando premi Nuovo."
         eyebrow="CRM core"
-        compact
       />
       <CompaniesCrud companies={companies} />
     </div>

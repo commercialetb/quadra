@@ -19,7 +19,7 @@ export function DetailShell({
       <div className="detail-back-row">
         <Link href={backHref} className="back-link">← {backLabel}</Link>
       </div>
-      <section className="page-hero page-hero-compact detail-hero-card">
+      <section className="page-hero detail-hero-card">
         <div>
           <p className="page-eyebrow">Dettaglio</p>
           <h1 className="page-title">{title}</h1>

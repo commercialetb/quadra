@@ -1,11 +1,9 @@
-import Link from 'next/link'
-
 export function DashboardShell({ data }: { data: any }) {
   const recentCompanies = (data.recentCompanies || []).slice(0, 4)
   const recentActivities = (data.recentActivities || []).slice(0, 4)
 
   return (
-    <div className="page-stack dashboard-page-stack">
+    <div className="page-stack">
       <section className="dashboard-hero dashboard-hero-compact">
         <div>
           <p className="page-eyebrow">Workspace</p>
@@ -14,18 +12,9 @@ export function DashboardShell({ data }: { data: any }) {
             Oggi conta soprattutto questo: follow-up da chiudere e trattative da sbloccare.
           </p>
         </div>
-        <div className="dashboard-hero-actions hide-mobile">
-          <Link href="/import" className="secondary-button">Import dati</Link>
-        </div>
       </section>
 
-      <section className="dashboard-mobile-shortcuts" aria-label="Azioni rapide dashboard">
-        <Link href="/companies" className="dashboard-shortcut">Nuova azienda</Link>
-        <Link href="/contacts" className="dashboard-shortcut">Nuovo contatto</Link>
-        <Link href="/import" className="dashboard-shortcut dashboard-shortcut-accent">Import</Link>
-      </section>
-
-      <section className="today-grid today-grid-priority">
+      <section className="today-grid">
         <article className="metric-card metric-primary">
           <span className="metric-label">Follow-up oggi</span>
           <strong className="metric-value">{data.kpis.todayCount}</strong>
@@ -36,12 +25,12 @@ export function DashboardShell({ data }: { data: any }) {
           <strong className="metric-value">{data.kpis.overdueCount}</strong>
           <span className="metric-note">Scaduti o in ritardo.</span>
         </article>
-        <article className="metric-card kpi-secondary-mobile">
+        <article className="metric-card">
           <span className="metric-label">Opportunita attive</span>
           <strong className="metric-value">{data.kpis.openCount}</strong>
           <span className="metric-note">Pipeline viva e in movimento.</span>
         </article>
-        <article className="metric-card kpi-secondary-mobile">
+        <article className="metric-card">
           <span className="metric-label">Valore pipeline</span>
           <strong className="metric-value">
             {new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(data.kpis.pipelineValue || 0)}
@@ -50,7 +39,7 @@ export function DashboardShell({ data }: { data: any }) {
         </article>
       </section>
 
-      <div className="dashboard-grid dashboard-grid-main">
+      <div className="dashboard-grid">
         <section className="panel-card panel-card-accent">
           <div className="panel-head">
             <div>
@@ -83,7 +72,7 @@ export function DashboardShell({ data }: { data: any }) {
           </div>
         </section>
 
-        <section className="panel-card quick-add-panel dashboard-desktop-only">
+        <section className="panel-card quick-add-panel">
           <div className="panel-head">
             <div>
               <h2>Quick add</h2>
@@ -95,12 +84,12 @@ export function DashboardShell({ data }: { data: any }) {
             <a href="/contacts" className="quick-card"><strong>Nuovo contatto</strong><span>Persona, ruolo e contesto.</span></a>
             <a href="/opportunities" className="quick-card"><strong>Nuova opportunita</strong><span>Apri una trattativa in pochi tocchi.</span></a>
             <a href="/followups" className="quick-card"><strong>Nuovo follow-up</strong><span>Blocca subito la prossima azione.</span></a>
-            <a href="/import" className="quick-card"><strong>Import dati</strong><span>Carica fogli e allinea il CRM.</span></a>
+            <a href="/import" className="quick-card"><strong>Import dati</strong><span>Carica CSV e popola il CRM.</span></a>
           </div>
         </section>
       </div>
 
-      <div className="dashboard-grid two-up dashboard-recents dashboard-desktop-only">
+      <div className="dashboard-grid two-up dashboard-two-up-mobile-order">
         <section className="panel-card mobile-priority-second">
           <div className="panel-head"><div><h2>Aziende recenti</h2><p>Le anagrafiche appena toccate.</p></div></div>
           <div className="simple-list compact-list">
