@@ -654,3 +654,26 @@ input:focus, select:focus, textarea:focus {
 }
 .import-card, .import-summary { padding: 20px; }
 .import-upload-actions .ghost-button, .import-upload-actions .primary-button, .import-actions .button-primary { min-height: 46px; border-radius: 16px; }
+
+
+.cleaner-actions { align-items: center; }
+.compact-inline-form { gap: 8px; }
+.danger-ghost { color: #b42318; border-color: rgba(180, 35, 24, 0.18); }
+.danger-ghost:hover { background: rgba(180, 35, 24, 0.06); }
+.clickable-task-item { text-decoration: none; color: inherit; }
+.clickable-task-item:hover { transform: translateY(-1px); }
+.assistant-panel { min-height: 100%; }
+.assistant-brief, .assistant-output {
+  white-space: pre-wrap;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255,255,255,0.72);
+  border-radius: 18px;
+  padding: 16px 18px;
+  line-height: 1.55;
+}
+.assistant-links, .assistant-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+.assistant-textarea { min-height: 180px; }
+.inline-shortcut-form code { word-break: break-all; }
+@media (max-width: 900px) {
+  .assistant-links > *, .assistant-actions > * { width: 100%; }
+}

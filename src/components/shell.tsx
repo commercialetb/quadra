@@ -6,11 +6,11 @@ import type { ReactNode } from 'react'
 import { LogoutButton } from '@/components/auth/logout-button'
 
 const primaryNav = [
-  { href: '/dashboard', label: 'Home', desktop: 'Dashboard' },
+  { href: '/dashboard', label: 'Dashboard' },
   { href: '/companies', label: 'Aziende' },
   { href: '/contacts', label: 'Contatti' },
-  { href: '/opportunities', label: 'Deal', desktop: 'Opportunita' },
-  { href: '/followups', label: 'Task', desktop: 'Follow-up' },
+  { href: '/opportunities', label: 'Opportunità' },
+  { href: '/followups', label: 'Follow-up' },
 ]
 
 function active(pathname: string, href: string) {
@@ -20,9 +20,11 @@ function active(pathname: string, href: string) {
 function currentTitle(pathname: string) {
   if (pathname.startsWith('/companies')) return 'Aziende'
   if (pathname.startsWith('/contacts')) return 'Contatti'
-  if (pathname.startsWith('/opportunities')) return 'Opportunita'
+  if (pathname.startsWith('/opportunities')) return 'Opportunità'
   if (pathname.startsWith('/followups')) return 'Follow-up'
   if (pathname.startsWith('/import')) return 'Import dati'
+  if (pathname.startsWith('/assistant')) return 'Assistente AI'
+  if (pathname.startsWith('/capture/followup')) return 'Shortcut follow-up'
   return 'Dashboard'
 }
 
@@ -47,11 +49,14 @@ export default function Shell({ children }: { children: ReactNode }) {
               href={item.href}
               className={`sidebar-link ${active(pathname, item.href) ? 'is-active' : ''}`}
             >
-              <span>{item.desktop ?? item.label}</span>
+              <span>{item.label}</span>
             </Link>
           ))}
           <Link href="/import" className={`sidebar-link ${active(pathname, '/import') ? 'is-active' : ''}`}>
             <span>Import</span>
+          </Link>
+          <Link href="/assistant" className={`sidebar-link ${active(pathname, '/assistant') ? 'is-active' : ''}`}>
+            <span>Assistente AI</span>
           </Link>
         </nav>
 
@@ -62,15 +67,15 @@ export default function Shell({ children }: { children: ReactNode }) {
               <span className="sidebar-quick-title">Nuova azienda</span>
               <span className="sidebar-quick-copy">Anagrafica pulita e veloce.</span>
             </Link>
-            <Link href="/contacts" className="sidebar-quick-card">
-              <span className="sidebar-quick-title">Nuovo contatto</span>
-              <span className="sidebar-quick-copy">Persona, ruolo e contesto.</span>
+            <Link href="/capture/followup" className="sidebar-quick-card">
+              <span className="sidebar-quick-title">Follow-up rapido</span>
+              <span className="sidebar-quick-copy">Pronto anche per Siri Shortcut.</span>
             </Link>
           </div>
         </div>
 
         <div className="sidebar-footer">
-          <div className="sidebar-status">Core CRM online</div>
+          <div className="sidebar-status">Core CRM + AI online</div>
           <LogoutButton />
         </div>
       </aside>
@@ -82,6 +87,9 @@ export default function Shell({ children }: { children: ReactNode }) {
             <div className="app-topbar-title">{currentTitle(pathname)}</div>
           </div>
           <div className="app-topbar-actions">
+            <Link href="/assistant" className="ghost-button hide-mobile">
+              Assistente AI
+            </Link>
             <Link href="/import" className="ghost-button hide-mobile">
               Import
             </Link>

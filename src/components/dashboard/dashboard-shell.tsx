@@ -1,3 +1,6 @@
+import { AssistantPanel } from '@/components/ai/assistant-panel'
+import { followupStatusLabel, priorityLabel, stageLabel } from '@/lib/crm-labels'
+
 export function DashboardShell({ data }: { data: any }) {
   const recentCompanies = (data.recentCompanies || []).slice(0, 4)
   const recentActivities = (data.recentActivities || []).slice(0, 4)
@@ -26,7 +29,7 @@ export function DashboardShell({ data }: { data: any }) {
           <span className="metric-note">Scaduti o in ritardo.</span>
         </article>
         <article className="metric-card">
-          <span className="metric-label">Opportunita attive</span>
+          <span className="metric-label">Opportunità attive</span>
           <strong className="metric-value">{data.kpis.openCount}</strong>
           <span className="metric-note">Pipeline viva e in movimento.</span>
         </article>
@@ -46,47 +49,34 @@ export function DashboardShell({ data }: { data: any }) {
               <h2>Da fare oggi</h2>
               <p>Le azioni operative da tenere vicine.</p>
             </div>
+            <a href="/followups" className="secondary-button">Apri agenda</a>
           </div>
           <div className="task-list">
             {data.todayFollowups.length === 0 && data.staleOpportunities.length === 0 ? (
               <div className="empty-block">Nessun allarme. Ottimo segnale.</div>
             ) : null}
             {data.todayFollowups.map((item: any) => (
-              <div key={item.id} className="task-item">
+              <a key={item.id} href="/followups" className="task-item clickable-task-item">
                 <div>
                   <div className="task-title">{item.title}</div>
-                  <div className="task-meta">Scade oggi · {item.priority}</div>
+                  <div className="task-meta">Scade oggi · {priorityLabel(item.priority)} · {followupStatusLabel(item.status)}</div>
                 </div>
                 <span className="task-badge">oggi</span>
-              </div>
+              </a>
             ))}
             {data.staleOpportunities.map((item: any) => (
-              <div key={item.id} className="task-item">
+              <a key={item.id} href={`/opportunities/${item.id}`} className="task-item clickable-task-item">
                 <div>
                   <div className="task-title">{item.title}</div>
-                  <div className="task-meta">Trattativa ferma</div>
+                  <div className="task-meta">{stageLabel(item.stage)} · trattativa ferma</div>
                 </div>
                 <span className="task-badge warning">ferma</span>
-              </div>
+              </a>
             ))}
           </div>
         </section>
 
-        <section className="panel-card quick-add-panel">
-          <div className="panel-head">
-            <div>
-              <h2>Quick add</h2>
-              <p>Parti subito senza passare da schermate lunghe.</p>
-            </div>
-          </div>
-          <div className="quick-grid-cards">
-            <a href="/companies" className="quick-card"><strong>Nuova azienda</strong><span>Crea una scheda pulita.</span></a>
-            <a href="/contacts" className="quick-card"><strong>Nuovo contatto</strong><span>Persona, ruolo e contesto.</span></a>
-            <a href="/opportunities" className="quick-card"><strong>Nuova opportunita</strong><span>Apri una trattativa in pochi tocchi.</span></a>
-            <a href="/followups" className="quick-card"><strong>Nuovo follow-up</strong><span>Blocca subito la prossima azione.</span></a>
-            <a href="/import" className="quick-card"><strong>Import dati</strong><span>Carica CSV e popola il CRM.</span></a>
-          </div>
-        </section>
+        <AssistantPanel data={data} />
       </div>
 
       <div className="dashboard-grid two-up dashboard-two-up-mobile-order">
@@ -97,7 +87,7 @@ export function DashboardShell({ data }: { data: any }) {
               <a key={item.id} href={`/companies/${item.id}`} className="simple-row">
                 <div>
                   <strong>{item.name}</strong>
-                  <span>{item.city || 'Citta non indicata'} · {item.status}</span>
+                  <span>{item.city || 'Città non indicata'} · {item.status}</span>
                 </div>
               </a>
             ))}
@@ -105,12 +95,12 @@ export function DashboardShell({ data }: { data: any }) {
         </section>
 
         <section className="panel-card mobile-priority-first">
-          <div className="panel-head"><div><h2>Attivita recenti</h2><p>Ultimi tocchi nel CRM.</p></div></div>
+          <div className="panel-head"><div><h2>Attività recenti</h2><p>Ultimi tocchi nel CRM.</p></div></div>
           <div className="simple-list compact-list">
-            {recentActivities.length === 0 ? <div className="empty-block">Nessuna attivita recente.</div> : recentActivities.map((item: any) => (
+            {recentActivities.length === 0 ? <div className="empty-block">Nessuna attività recente.</div> : recentActivities.map((item: any) => (
               <div key={item.id} className="simple-row static">
                 <div>
-                  <strong>{item.subject || 'Attivita'}</strong>
+                  <strong>{item.subject || 'Attività'}</strong>
                   <span>{item.kind}</span>
                 </div>
               </div>

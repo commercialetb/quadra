@@ -6,6 +6,7 @@ import { createContact, deleteContact, updateContact } from '@/app/(app)/actions
 import { SearchInput } from '@/components/ui/search-input'
 import { ContactAvatar } from '@/components/ui/contact-avatar'
 import { CONTACT_METHOD_OPTIONS } from '@/lib/crm-options'
+import { labelize } from '@/lib/crm-labels'
 
 export function ContactsCrud({ contacts, companies }: { contacts: any[]; companies: any[] }) {
   const [query, setQuery] = useState('')
@@ -24,7 +25,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
         <div className="list-head">
           <div>
             <h2>Contatti</h2>
-            <p>Persone leggibili, azienda chiara, nessun mini form sparso.</p>
+            <p>Persone leggibili, azienda chiara e azioni essenziali.</p>
           </div>
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
             + Nuovo contatto
@@ -40,7 +41,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
             <article key={contact.id} className="entity-card">
               <div className="entity-card-main">
                 <ContactAvatar firstName={contact.first_name} lastName={contact.last_name} />
-                <div className="entity-card-copy">
+                <div className="entity-card-copy stretch">
                   <div className="entity-card-top compact-gap">
                     <div>
                       <h3>{contact.first_name} {contact.last_name}</h3>
@@ -49,26 +50,26 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
                   </div>
                   <div className="entity-inline-meta wrap">
                     {contact.email ? <span>{contact.email}</span> : null}
-                    {contact.whatsapp ? <span>WhatsApp</span> : null}
-                    {contact.preferred_contact_method ? <span>{contact.preferred_contact_method}</span> : null}
+                    {contact.whatsapp ? <span>WhatsApp disponibile</span> : null}
+                    {contact.preferred_contact_method ? <span>{labelize(contact.preferred_contact_method)}</span> : null}
                   </div>
                 </div>
               </div>
 
-              <div className="entity-card-actions">
-                <Link href={`/contacts/${contact.id}`} className="secondary-button">Apri</Link>
-                <form action={updateContact} className="inline-mini-form wide">
+              <div className="entity-card-actions cleaner-actions">
+                <Link href={`/contacts/${contact.id}`} className="secondary-button">Apri scheda</Link>
+                <form action={updateContact} className="inline-mini-form compact-inline-form wide">
                   <input type="hidden" name="id" value={contact.id} />
                   <select name="company_id" defaultValue={contact.company_id ?? ''} className="field-control compact-control">
                     <option value="">Nessuna</option>
                     {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
                   </select>
                   <input name="role" defaultValue={contact.role ?? ''} placeholder="Ruolo" className="field-control compact-control" />
-                  <button className="ghost-button" type="submit">Salva</button>
+                  <button className="ghost-button" type="submit">Aggiorna</button>
                 </form>
                 <form action={deleteContact}>
                   <input type="hidden" name="id" value={contact.id} />
-                  <button className="danger-button" type="submit">Elimina</button>
+                  <button className="ghost-button danger-ghost" type="submit">Elimina</button>
                 </form>
               </div>
             </article>

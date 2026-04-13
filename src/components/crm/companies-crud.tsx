@@ -7,6 +7,7 @@ import { createCompany, deleteCompany, updateCompanyStatus } from '@/app/(app)/a
 import { SearchInput } from '@/components/ui/search-input'
 import { CompanyAvatar } from '@/components/ui/company-avatar'
 import { COMPANY_INDUSTRY_OPTIONS } from '@/lib/crm-options'
+import { labelize } from '@/lib/crm-labels'
 
 const companyStatuses = ['lead', 'prospect', 'client', 'partner', 'inactive']
 
@@ -30,7 +31,6 @@ function SaveButton({ idleLabel = 'Salva' }: { idleLabel?: string }) {
     </button>
   )
 }
-
 
 export function CompaniesCrud({ companies }: { companies: any[] }) {
   const [query, setQuery] = useState('')
@@ -64,7 +64,7 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
           <div className="segmented-control">
             {['all', 'lead', 'prospect', 'client', 'partner'].map((item) => (
               <button key={item} type="button" className={filter === item ? 'is-active' : ''} onClick={() => setFilter(item)}>
-                {item === 'all' ? 'Tutte' : item}
+                {item === 'all' ? 'Tutte' : labelize(item)}
               </button>
             ))}
           </div>
@@ -75,13 +75,13 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
             <article key={company.id} className="entity-card">
               <div className="entity-card-main">
                 <CompanyAvatar name={company.name} website={company.website} />
-                <div className="entity-card-copy">
+                <div className="entity-card-copy stretch">
                   <div className="entity-card-top">
                     <div>
                       <h3>{company.name}</h3>
-                      <p>{[company.city, company.province].filter(Boolean).join(', ') || 'Localita non indicata'}</p>
+                      <p>{[company.city, company.province].filter(Boolean).join(', ') || 'Località non indicata'}</p>
                     </div>
-                    <span className={`tone-badge ${badgeTone(company.status)}`}>{company.status}</span>
+                    <span className={`tone-badge ${badgeTone(company.status)}`}>{labelize(company.status)}</span>
                   </div>
                   <div className="entity-inline-meta wrap">
                     {company.website ? (
@@ -92,22 +92,23 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                       <span>Sito non indicato</span>
                     )}
                     {company.email ? <span>{company.email}</span> : null}
+                    {company.phone ? <span>{company.phone}</span> : null}
                   </div>
                 </div>
               </div>
 
-              <div className="entity-card-actions">
-                <Link href={`/companies/${company.id}`} className="secondary-button">Apri</Link>
-                <form action={updateCompanyStatus} className="inline-mini-form">
+              <div className="entity-card-actions cleaner-actions">
+                <Link href={`/companies/${company.id}`} className="secondary-button">Apri scheda</Link>
+                <form action={updateCompanyStatus} className="inline-mini-form compact-inline-form">
                   <input type="hidden" name="id" value={company.id} />
                   <select name="status" defaultValue={company.status} className="field-control compact-control">
-                    {companyStatuses.map((item) => <option key={item} value={item}>{item}</option>)}
+                    {companyStatuses.map((item) => <option key={item} value={item}>{labelize(item)}</option>)}
                   </select>
-                  <SaveButton />
+                  <SaveButton idleLabel="Aggiorna" />
                 </form>
                 <form action={deleteCompany}>
                   <input type="hidden" name="id" value={company.id} />
-                  <button className="danger-button" type="submit">Elimina</button>
+                  <button className="ghost-button danger-ghost" type="submit">Elimina</button>
                 </form>
               </div>
             </article>
@@ -135,7 +136,7 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                 <label className="field-stack"><span>Telefono</span><input className="field-control" name="phone" /></label>
                 <label className="field-stack"><span>Città</span><input className="field-control" name="city" /></label>
                 <label className="field-stack"><span>Provincia</span><input className="field-control" name="province" /></label>
-                <label className="field-stack"><span>Stato</span><select className="field-control" name="status" defaultValue="lead">{companyStatuses.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+                <label className="field-stack"><span>Stato</span><select className="field-control" name="status" defaultValue="lead">{companyStatuses.map((item) => <option key={item} value={item}>{labelize(item)}</option>)}</select></label>
                 <label className="field-stack"><span>Settore</span><select className="field-control" name="industry" defaultValue=""><option value="">Seleziona</option>{COMPANY_INDUSTRY_OPTIONS.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
                 <label className="field-stack"><span>Fonte</span><input className="field-control" name="source" /></label>
               </div>

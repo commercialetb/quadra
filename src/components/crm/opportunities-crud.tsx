@@ -6,6 +6,7 @@ import { useFormStatus } from 'react-dom'
 import { createOpportunity, deleteOpportunity, updateOpportunityStage } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
 import { formatCurrency, formatDate } from '@/lib/format'
+import { stageLabel } from '@/lib/crm-labels'
 
 const stages = ['new_lead', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost']
 
@@ -25,7 +26,6 @@ function SaveButton({ idleLabel = 'Salva' }: { idleLabel?: string }) {
   )
 }
 
-
 export function OpportunitiesCrud({ opportunities, companies, contacts }: { opportunities: any[]; companies: any[]; contacts: any[] }) {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
@@ -36,7 +36,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
 
   const items = useMemo(() => {
     return opportunities.filter((item) => {
-      const text = `${item.title} ${item.companies?.name ?? ''} ${item.stage ?? ''}`.toLowerCase()
+      const text = `${item.title} ${item.companies?.name ?? ''} ${item.stage ?? ''} ${item.next_action ?? ''}`.toLowerCase()
       const matchesQuery = text.includes(query.toLowerCase())
       const matchesFilter = filter === 'all' ? true : item.stage === filter
       return matchesQuery && matchesFilter
@@ -48,20 +48,20 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
       <section className="panel-card page-section-card">
         <div className="list-head">
           <div>
-            <h2>Opportunita</h2>
-            <p>Pipeline leggibile, con priorita e next step in primo piano.</p>
+            <h2>Opportunità</h2>
+            <p>Pipeline leggibile, con valore e prossima mossa in primo piano.</p>
           </div>
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
-            + Nuova opportunita
+            + Nuova opportunità
           </button>
         </div>
 
         <div className="toolbar-row">
-          <SearchInput value={query} onChange={setQuery} placeholder="Cerca per titolo, azienda o fase" />
+          <SearchInput value={query} onChange={setQuery} placeholder="Cerca per titolo, azienda, fase o next action" />
           <div className="segmented-control">
             {['all', 'new_lead', 'proposal', 'negotiation', 'won'].map((item) => (
               <button key={item} type="button" className={filter === item ? 'is-active' : ''} onClick={() => setFilter(item)}>
-                {item === 'all' ? 'Tutte' : item}
+                {item === 'all' ? 'Tutte' : stageLabel(item)}
               </button>
             ))}
           </div>
@@ -76,31 +76,31 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
                     <h3>{item.title}</h3>
                     <p>{item.companies?.name ?? 'Azienda non indicata'} · chiusura {formatDate(item.expected_close_date)}</p>
                   </div>
-                  <span className={`tone-badge ${stageTone(item.stage)}`}>{item.stage}</span>
+                  <span className={`tone-badge ${stageTone(item.stage)}`}>{stageLabel(item.stage)}</span>
                 </div>
                 <div className="entity-inline-meta wrap">
                   <span>{formatCurrency(item.value_estimate)}</span>
-                  {item.next_action ? <span>{item.next_action}</span> : null}
+                  {item.next_action ? <span>Prossimo passo: {item.next_action}</span> : null}
                   {item.primary_contact?.full_name ? <span>{item.primary_contact.full_name}</span> : null}
                 </div>
               </div>
-              <div className="entity-card-actions">
-                <Link href={`/opportunities/${item.id}`} className="secondary-button">Apri</Link>
-                <form action={updateOpportunityStage} className="inline-mini-form">
+              <div className="entity-card-actions cleaner-actions">
+                <Link href={`/opportunities/${item.id}`} className="secondary-button">Apri scheda</Link>
+                <form action={updateOpportunityStage} className="inline-mini-form compact-inline-form">
                   <input type="hidden" name="id" value={item.id} />
                   <select name="stage" defaultValue={item.stage} className="field-control compact-control">
-                    {stages.map((stage) => <option key={stage} value={stage}>{stage}</option>)}
+                    {stages.map((stage) => <option key={stage} value={stage}>{stageLabel(stage)}</option>)}
                   </select>
-                  <SaveButton />
+                  <SaveButton idleLabel="Aggiorna" />
                 </form>
                 <form action={deleteOpportunity}>
                   <input type="hidden" name="id" value={item.id} />
-                  <button className="danger-button" type="submit">Elimina</button>
+                  <button className="ghost-button danger-ghost" type="submit">Elimina</button>
                 </form>
               </div>
             </article>
           ))}
-          {!items.length ? <div className="empty-state-box">Nessuna opportunita trovata.</div> : null}
+          {!items.length ? <div className="empty-state-box">Nessuna opportunità trovata.</div> : null}
         </div>
       </section>
 
@@ -111,7 +111,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
             <div className="sheet-head">
               <div>
                 <p className="page-eyebrow">Quick add</p>
-                <h3>Nuova opportunita</h3>
+                <h3>Nuova opportunità</h3>
               </div>
               <button className="ghost-button" type="button" onClick={() => setShowCreate(false)}>Chiudi</button>
             </div>
@@ -120,7 +120,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
                 <label className="field-stack"><span>Titolo</span><input className="field-control" name="title" required /></label>
                 <label className="field-stack"><span>Azienda</span><select className="field-control" name="company_id" required value={selectedCompanyId} onChange={(event) => setSelectedCompanyId(event.target.value)}><option value="" disabled>Seleziona</option>{companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}</select></label>
                 <label className="field-stack"><span>Contatto</span><select className="field-control" name="primary_contact_id" defaultValue=""><option value="">Nessuno</option>{availableContacts.map((contact) => <option key={contact.id} value={contact.id}>{contact.first_name} {contact.last_name}</option>)}</select></label>
-                <label className="field-stack"><span>Fase</span><select className="field-control" name="stage" defaultValue="new_lead">{stages.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+                <label className="field-stack"><span>Fase</span><select className="field-control" name="stage" defaultValue="new_lead">{stages.map((item) => <option key={item} value={item}>{stageLabel(item)}</option>)}</select></label>
                 <label className="field-stack"><span>Valore stimato</span><input className="field-control" name="value_estimate" type="number" step="0.01" /></label>
                 <label className="field-stack"><span>Probabilità %</span><input className="field-control" name="probability" type="number" min="0" max="100" /></label>
                 <label className="field-stack"><span>Chiusura prevista</span><input className="field-control" name="expected_close_date" type="date" /></label>
@@ -131,7 +131,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
               <label className="field-stack"><span>Descrizione</span><textarea className="field-control field-area" name="description" /></label>
               <div className="sheet-actions">
                 <button className="secondary-button" type="button" onClick={() => setShowCreate(false)}>Annulla</button>
-                <SaveButton idleLabel="Salva opportunita" />
+                <SaveButton idleLabel="Salva opportunità" />
               </div>
             </form>
           </div>
