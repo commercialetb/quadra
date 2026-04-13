@@ -1,6 +1,8 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+
+type EditFormState = { ok: boolean; message?: string }
 import { createClient } from '@/lib/supabase/server';
 
 function text(formData: FormData, key: string) {
@@ -280,6 +282,8 @@ export async function createCompany(formData: FormData) {
     status: text(formData, 'status') || 'lead',
     phone: nullable(formData, 'phone'),
     email: nullable(formData, 'email'),
+    industry: nullable(formData, 'industry'),
+    source: nullable(formData, 'source'),
     notes_summary: nullable(formData, 'notes_summary'),
   };
 
@@ -410,6 +414,109 @@ export async function deleteOpportunity(formData: FormData) {
   if (error) throw new Error(error.message);
   revalidatePath('/opportunities');
   revalidatePath('/dashboard');
+}
+
+
+export async function updateCompanyDetailsAction(_state: EditFormState, formData: FormData): Promise<EditFormState> {
+  try {
+    const { supabase, user } = await getUserAndClient();
+    const id = text(formData, 'id');
+    const payload = {
+      name: text(formData, 'name'),
+      legal_name: nullable(formData, 'legal_name'),
+      website: nullable(formData, 'website'),
+      email: nullable(formData, 'email'),
+      phone: nullable(formData, 'phone'),
+      address_line1: nullable(formData, 'address_line1'),
+      city: nullable(formData, 'city'),
+      province: nullable(formData, 'province'),
+      industry: nullable(formData, 'industry'),
+      source: nullable(formData, 'source'),
+      status: text(formData, 'status') || 'lead',
+      notes_summary: nullable(formData, 'notes_summary'),
+    };
+    if (!id || !payload.name) return { ok: false, message: 'Nome azienda obbligatorio.' };
+    const { error } = await supabase.from('companies').update(payload).eq('id', id).eq('owner_id', user.id);
+    if (error) return { ok: false, message: error.message };
+    revalidatePath('/companies');
+    revalidatePath(`/companies/${id}`);
+    revalidatePath('/dashboard');
+    return { ok: true, message: 'Azienda aggiornata.' };
+  } catch (error: any) {
+    return { ok: false, message: error?.message || 'Errore durante il salvataggio.' };
+  }
+}
+
+export async function updateContactDetailsAction(_state: EditFormState, formData: FormData): Promise<EditFormState> {
+  try {
+    const { supabase, user } = await getUserAndClient();
+    const id = text(formData, 'id');
+    const payload = {
+      first_name: text(formData, 'first_name'),
+      last_name: text(formData, 'last_name'),
+      company_id: nullable(formData, 'company_id'),
+      role: nullable(formData, 'role'),
+      email: nullable(formData, 'email'),
+      whatsapp: nullable(formData, 'whatsapp'),
+      preferred_contact_method: nullable(formData, 'preferred_contact_method'),
+      notes_summary: nullable(formData, 'notes_summary'),
+    };
+    if (!id || !payload.first_name || !payload.last_name) return { ok: false, message: 'Nome e cognome sono obbligatori.' };
+    const { error } = await supabase.from('contacts').update(payload).eq('id', id).eq('owner_id', user.id);
+    if (error) return { ok: false, message: error.message };
+
+    const primaryPhone = text(formData, 'phone');
+    const { data: existingPhone } = await supabase
+      .from('contact_phones')
+      .select('id')
+      .eq('contact_id', id)
+      .eq('is_primary', true)
+      .maybeSingle();
+
+    if (primaryPhone) {
+      if (existingPhone?.id) {
+        await supabase.from('contact_phones').update({ phone_number: primaryPhone, label: 'mobile' }).eq('id', existingPhone.id);
+      } else {
+        await supabase.from('contact_phones').insert({ contact_id: id, phone_number: primaryPhone, label: 'mobile', is_primary: true });
+      }
+    }
+
+    revalidatePath('/contacts');
+    revalidatePath(`/contacts/${id}`);
+    revalidatePath('/dashboard');
+    return { ok: true, message: 'Contatto aggiornato.' };
+  } catch (error: any) {
+    return { ok: false, message: error?.message || 'Errore durante il salvataggio.' };
+  }
+}
+
+export async function updateOpportunityDetailsAction(_state: EditFormState, formData: FormData): Promise<EditFormState> {
+  try {
+    const { supabase, user } = await getUserAndClient();
+    const id = text(formData, 'id');
+    const payload = {
+      company_id: text(formData, 'company_id'),
+      primary_contact_id: nullable(formData, 'primary_contact_id'),
+      title: text(formData, 'title'),
+      stage: text(formData, 'stage') || 'new_lead',
+      value_estimate: nullable(formData, 'value_estimate') ? Number(text(formData, 'value_estimate')) : null,
+      probability: nullable(formData, 'probability') ? Number(text(formData, 'probability')) : null,
+      source: nullable(formData, 'source'),
+      next_action: nullable(formData, 'next_action'),
+      next_action_due_at: nullable(formData, 'next_action_due_at'),
+      expected_close_date: nullable(formData, 'expected_close_date'),
+      description: nullable(formData, 'description'),
+    };
+    if (!id || !payload.company_id || !payload.title) return { ok: false, message: 'Titolo e azienda sono obbligatori.' };
+    const { error } = await supabase.from('opportunities').update(payload).eq('id', id).eq('owner_id', user.id);
+    if (error) return { ok: false, message: error.message };
+    revalidatePath('/opportunities');
+    revalidatePath(`/opportunities/${id}`);
+    revalidatePath('/dashboard');
+    return { ok: true, message: 'Opportunità aggiornata.' };
+  } catch (error: any) {
+    return { ok: false, message: error?.message || 'Errore durante il salvataggio.' };
+  }
 }
 
 export async function createFollowup(formData: FormData) {

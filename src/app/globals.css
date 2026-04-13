@@ -293,6 +293,12 @@ input:focus, select:focus, textarea:focus {
 .info-row-v2 span { color: var(--muted); }
 .info-row-v2 strong { max-width: 62%; text-align: right; }
 .timeline-v2 { display: grid; gap: 12px; }
+
+.edit-toggle-card { display: grid; gap: 14px; }
+.detail-edit-form { display: grid; gap: 14px; }
+.detail-edit-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.info-row-v2 strong a { color: var(--primary); word-break: break-word; }
+
 .timeline-card-item { display: grid; grid-template-columns: 14px 1fr; gap: 12px; }
 .timeline-line { width: 14px; border-radius: 999px; background: linear-gradient(180deg, var(--primary) 0%, rgba(107,78,255,.15) 100%); }
 .timeline-content { border-radius: 18px; border: 1px solid var(--line); background: rgba(255,255,255,.8); padding: 14px; }
@@ -372,5 +378,6 @@ input:focus, select:focus, textarea:focus {
   .inline-mini-form .compact-control, .inline-mini-form .field-control { flex: 1; width: 100%; }
   .sheet-card { width: 100%; border-radius: 24px 24px 20px 20px; }
   .sheet-actions { flex-direction: column-reverse; }
+  .detail-edit-actions { flex-direction: column-reverse; }
   .mobile-nav { width: calc(100% - 20px); }
 }

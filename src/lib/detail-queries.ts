@@ -14,15 +14,14 @@ export type TimelineItem = {
 export async function getCompanyDetail(id: string) {
   const supabase = await createClient();
 
-  const [{ data: company }, { data: contacts }, { data: opportunities }, { data: projects }, { data: notes }] = await Promise.all([
+  const [{ data: company }, { data: contacts }, { data: opportunities }, { data: notes }] = await Promise.all([
     supabase.from('companies').select('*').eq('id', id).single(),
     supabase.from('contacts').select('id, full_name, email, role, last_contact_at').eq('company_id', id).order('full_name'),
     supabase.from('opportunities').select('id, title, stage, value_estimate, probability, next_action_due_at').eq('company_id', id).order('created_at', { ascending: false }),
-    supabase.from('projects').select('id, title, status, budget, start_date, end_date').eq('company_id', id).order('created_at', { ascending: false }),
     supabase.from('notes').select('id, title, body, created_at').eq('entity_type', 'company').eq('entity_id', id).order('created_at', { ascending: false }).limit(10),
   ]);
 
-  return { company, contacts: contacts ?? [], opportunities: opportunities ?? [], projects: projects ?? [], notes: notes ?? [] };
+  return { company, contacts: contacts ?? [], opportunities: opportunities ?? [], notes: notes ?? [] };
 }
 
 export async function getContactDetail(id: string) {
@@ -41,13 +40,12 @@ export async function getContactDetail(id: string) {
 export async function getOpportunityDetail(id: string) {
   const supabase = await createClient();
 
-  const [{ data: opportunity }, { data: projects }, { data: notes }] = await Promise.all([
+  const [{ data: opportunity }, { data: notes }] = await Promise.all([
     supabase.from('opportunities').select('*, company:companies(id, name), primary_contact:contacts(id, full_name, email)').eq('id', id).single(),
-    supabase.from('projects').select('id, title, status, budget, start_date, end_date').eq('opportunity_id', id).order('created_at', { ascending: false }),
     supabase.from('notes').select('id, title, body, created_at').eq('entity_type', 'opportunity').eq('entity_id', id).order('created_at', { ascending: false }).limit(10),
   ]);
 
-  return { opportunity, projects: projects ?? [], notes: notes ?? [] };
+  return { opportunity, notes: notes ?? [] };
 }
 
 export async function getProjectDetail(id: string) {

@@ -6,6 +6,7 @@ import { useFormStatus } from 'react-dom'
 import { createCompany, deleteCompany, updateCompanyStatus } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
 import { CompanyAvatar } from '@/components/ui/company-avatar'
+import { COMPANY_INDUSTRY_OPTIONS } from '@/lib/crm-options'
 
 const companyStatuses = ['lead', 'prospect', 'client', 'partner', 'inactive']
 
@@ -135,6 +136,8 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                 <label className="field-stack"><span>Città</span><input className="field-control" name="city" /></label>
                 <label className="field-stack"><span>Provincia</span><input className="field-control" name="province" /></label>
                 <label className="field-stack"><span>Stato</span><select className="field-control" name="status" defaultValue="lead">{companyStatuses.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+                <label className="field-stack"><span>Settore</span><select className="field-control" name="industry" defaultValue=""><option value="">Seleziona</option>{COMPANY_INDUSTRY_OPTIONS.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+                <label className="field-stack"><span>Fonte</span><input className="field-control" name="source" /></label>
               </div>
               <label className="field-stack"><span>Note</span><textarea className="field-control field-area" name="notes_summary" /></label>
               <div className="sheet-actions">
