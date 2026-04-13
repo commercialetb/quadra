@@ -434,3 +434,16 @@ input:focus, select:focus, textarea:focus {
 @media (max-width: 780px) {
   .detail-edit-actions > * { width: 100%; }
 }
+
+
+@media (max-width: 780px) {
+  .app-topbar-title { display: none; }
+  .app-topbar { justify-content: flex-end; }
+  .page-hero.page-hero-compact { min-height: 72px; padding: 12px 14px; }
+  .page-hero.page-hero-compact .page-eyebrow { display: none; }
+  .page-hero.page-hero-compact .page-title { font-size: 1.55rem; margin-top: 0; }
+  .page-hero.page-hero-compact .page-subtitle { margin-top: 4px; font-size: .94rem; line-height: 1.45; }
+  .page-wrap > .page-hero + .panel-card .list-head h2 { display: none; }
+  .page-wrap > .page-hero + .panel-card .list-head p { margin-top: 0; }
+  .page-wrap > .page-hero + .panel-card .list-head { gap: 12px; }
+}
