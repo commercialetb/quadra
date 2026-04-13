@@ -4,6 +4,7 @@ import { OpportunityEditCard } from '@/components/detail/opportunity-edit-card'
 import { EntityListCard } from '@/components/detail/entity-list-card'
 import { InfoCard, InfoRow } from '@/components/detail/info-card'
 import { TimelineCard } from '@/components/detail/timeline-card'
+import { OpportunityAiCard } from '@/components/ai/opportunity-ai-card'
 import { getOpportunityDetail, getTimelineForEntity } from '@/lib/detail-queries'
 import { getCompanies, getContacts, getFollowups } from '@/lib/data'
 import { formatCurrency, formatDateTime } from '@/lib/format'
@@ -38,6 +39,8 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
             <InfoRow label="Chiusura prevista" value={opportunity.expected_close_date ? new Date(opportunity.expected_close_date).toLocaleDateString('it-IT') : '—'} />
             <InfoRow label="Descrizione" value={opportunity.description} />
           </InfoCard>
+
+          <OpportunityAiCard opportunityId={id} />
 
           <EntityListCard
             title="Follow-up collegati"

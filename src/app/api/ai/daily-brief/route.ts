@@ -1,19 +1,31 @@
 import { NextResponse } from 'next/server';
 import { buildDailyBrief } from '@/lib/ai';
+import { getDashboardData } from '@/lib/dashboard-queries';
 
-export async function POST(request: Request) {
+export async function POST() {
   try {
-    const body = await request.json();
+    const dashboard = await getDashboardData();
+
+    const highlights = [
+      ...dashboard.todayFollowups.slice(0, 4).map((item) => `Follow-up oggi: ${item.title}`),
+      ...dashboard.overdueFollowups.slice(0, 4).map((item) => `In ritardo: ${item.title}`),
+      ...dashboard.staleOpportunities.slice(0, 4).map((item) => `Deal fermo: ${item.title}`),
+    ];
 
     const result = await buildDailyBrief({
-      overdueFollowups: Number(body?.overdueFollowups || 0),
-      dueToday: Number(body?.dueToday || 0),
-      openOpportunities: Number(body?.openOpportunities || 0),
-      pipelineValue: Number(body?.pipelineValue || 0),
-      highlights: Array.isArray(body?.highlights) ? body.highlights : [],
+      overdueFollowups: dashboard.kpis.overdueCount,
+      dueToday: dashboard.kpis.todayCount,
+      openOpportunities: dashboard.kpis.openCount,
+      pipelineValue: dashboard.kpis.pipelineValue,
+      staleOpportunities: dashboard.staleOpportunities,
+      highlights,
     });
 
-    return NextResponse.json({ brief: result.text });
+    return NextResponse.json({
+      brief: result.text,
+      provider: result.provider,
+      model: result.model,
+    });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Unknown error' },
