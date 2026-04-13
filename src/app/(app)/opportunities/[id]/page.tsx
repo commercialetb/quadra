@@ -26,7 +26,7 @@ function dateValue(value?: string | null) {
 
 export default async function OpportunityDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const { opportunity, notes } = await getOpportunityDetail(id)
+  const { opportunity, projects, notes } = await getOpportunityDetail(id)
   const timeline = await getTimelineForEntity({ opportunityId: id })
 
   if (!opportunity) notFound()
@@ -76,6 +76,20 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
           />
         </div>
 
+        <div className="stack-lg">
+          <EntityListCard
+            title="Progetti collegati"
+            empty="Nessun progetto collegato."
+            ctaLabel="+ Crea progetto"
+            ctaHref="/projects"
+            items={projects.map((project) => ({
+              id: project.id,
+              label: project.title,
+              meta: [project.status, project.budget ? `€ ${Number(project.budget).toLocaleString('it-IT')}` : null].filter(Boolean).join(' · '),
+              href: `/projects/${project.id}`,
+            }))}
+          />
+        </div>
       </div>
     </DetailShell>
   )

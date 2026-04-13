@@ -1,9 +1,11 @@
+import Link from 'next/link'
+
 export function DashboardShell({ data }: { data: any }) {
   const recentCompanies = (data.recentCompanies || []).slice(0, 4)
   const recentActivities = (data.recentActivities || []).slice(0, 4)
 
   return (
-    <div className="page-stack">
+    <div className="page-stack dashboard-page-stack">
       <section className="dashboard-hero dashboard-hero-compact">
         <div>
           <p className="page-eyebrow">Workspace</p>
@@ -12,9 +14,18 @@ export function DashboardShell({ data }: { data: any }) {
             Oggi conta soprattutto questo: follow-up da chiudere e trattative da sbloccare.
           </p>
         </div>
+        <div className="dashboard-hero-actions hide-mobile">
+          <Link href="/import" className="secondary-button">Import dati</Link>
+        </div>
       </section>
 
-      <section className="today-grid">
+      <section className="dashboard-mobile-shortcuts" aria-label="Azioni rapide dashboard">
+        <Link href="/companies" className="dashboard-shortcut">Nuova azienda</Link>
+        <Link href="/contacts" className="dashboard-shortcut">Nuovo contatto</Link>
+        <Link href="/import" className="dashboard-shortcut dashboard-shortcut-accent">Import</Link>
+      </section>
+
+      <section className="today-grid today-grid-priority">
         <article className="metric-card metric-primary">
           <span className="metric-label">Follow-up oggi</span>
           <strong className="metric-value">{data.kpis.todayCount}</strong>
@@ -25,12 +36,12 @@ export function DashboardShell({ data }: { data: any }) {
           <strong className="metric-value">{data.kpis.overdueCount}</strong>
           <span className="metric-note">Scaduti o in ritardo.</span>
         </article>
-        <article className="metric-card">
+        <article className="metric-card kpi-secondary-mobile">
           <span className="metric-label">Opportunita attive</span>
           <strong className="metric-value">{data.kpis.openCount}</strong>
           <span className="metric-note">Pipeline viva e in movimento.</span>
         </article>
-        <article className="metric-card">
+        <article className="metric-card kpi-secondary-mobile">
           <span className="metric-label">Valore pipeline</span>
           <strong className="metric-value">
             {new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(data.kpis.pipelineValue || 0)}
@@ -39,7 +50,7 @@ export function DashboardShell({ data }: { data: any }) {
         </article>
       </section>
 
-      <div className="dashboard-grid">
+      <div className="dashboard-grid dashboard-grid-main">
         <section className="panel-card panel-card-accent">
           <div className="panel-head">
             <div>
@@ -72,7 +83,7 @@ export function DashboardShell({ data }: { data: any }) {
           </div>
         </section>
 
-        <section className="panel-card quick-add-panel">
+        <section className="panel-card quick-add-panel dashboard-desktop-only">
           <div className="panel-head">
             <div>
               <h2>Quick add</h2>
@@ -89,7 +100,7 @@ export function DashboardShell({ data }: { data: any }) {
         </section>
       </div>
 
-      <div className="dashboard-grid two-up dashboard-two-up-mobile-order">
+      <div className="dashboard-grid two-up dashboard-recents dashboard-desktop-only">
         <section className="panel-card mobile-priority-second">
           <div className="panel-head"><div><h2>Aziende recenti</h2><p>Le anagrafiche appena toccate.</p></div></div>
           <div className="simple-list compact-list">

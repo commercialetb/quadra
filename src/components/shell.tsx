@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import type { ReactNode } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, type ReactNode } from 'react'
 import { LogoutButton } from '@/components/auth/logout-button'
 
 const primaryNav = [
@@ -28,6 +28,12 @@ function currentTitle(pathname: string) {
 
 export default function Shell({ children }: { children: ReactNode }) {
   const pathname = usePathname()
+  const router = useRouter()
+
+  useEffect(() => {
+    for (const item of primaryNav) router.prefetch(item.href)
+    router.prefetch('/import')
+  }, [router])
 
   return (
     <div className="app-shell">
@@ -50,9 +56,6 @@ export default function Shell({ children }: { children: ReactNode }) {
               <span>{item.desktop ?? item.label}</span>
             </Link>
           ))}
-          <Link href="/import" className={`sidebar-link ${active(pathname, '/import') ? 'is-active' : ''}`}>
-            <span>Import</span>
-          </Link>
         </nav>
 
         <div className="sidebar-section">
@@ -77,7 +80,7 @@ export default function Shell({ children }: { children: ReactNode }) {
 
       <div className="app-main">
         <header className="app-topbar">
-          <div>
+          <div className="app-topbar-brand">
             <div className="app-topbar-kicker">Quadra</div>
             <div className="app-topbar-title">{currentTitle(pathname)}</div>
           </div>
