@@ -22,7 +22,7 @@ export default async function ShortcutFollowupPage({
         <div>
           <p className="page-eyebrow">Shortcut</p>
           <h1 className="page-title">Cattura follow-up rapida</h1>
-          <p className="page-subtitle dashboard-subtitle-compact">Questa pagina è pronta per essere aperta da Siri / Comandi Rapidi con campi già precompilati.</p>
+          <p className="page-subtitle dashboard-subtitle-compact">Questa pagina è pronta per essere aperta da Siri / Comandi Rapidi con campi già precompilati. Per il dettato usa anche la nuova cattura vocale guidata.</p>
         </div>
       </section>
 
@@ -43,7 +43,8 @@ export default async function ShortcutFollowupPage({
           <label className="field-stack"><span>Descrizione</span><textarea className="field-control field-area" name="description" defaultValue={description} /></label>
           <div className="sheet-actions">
             <button className="primary-button" type="submit">Salva follow-up</button>
-            <a href="/followups" className="secondary-button">Apri agenda</a>
+            <a href="/capture/voice" className="secondary-button">Apri cattura vocale</a>
+            <a href="/followups" className="ghost-button">Apri agenda</a>
           </div>
         </form>
       </section>
