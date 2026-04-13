@@ -16,7 +16,6 @@ export default async function FollowupsPage() {
         title="Follow-up"
         subtitle="Agenda operativa chiara: capisci cosa è urgente, poi apri il form solo quando ti serve."
         eyebrow="CRM core"
-        compact
       />
       <FollowupsCrud followups={followups} companies={companies} contacts={contacts} opportunities={opportunities} />
     </div>

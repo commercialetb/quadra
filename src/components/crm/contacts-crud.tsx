@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react'
 import { createContact, deleteContact, updateContact } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
 import { ContactAvatar } from '@/components/ui/contact-avatar'
+import { CONTACT_METHOD_OPTIONS } from '@/lib/crm-options'
 
 export function ContactsCrud({ contacts, companies }: { contacts: any[]; companies: any[] }) {
   const [query, setQuery] = useState('')
@@ -96,7 +97,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
                 <label className="field-stack"><span>Email</span><input className="field-control" name="email" type="email" /></label>
                 <label className="field-stack"><span>Telefono</span><input className="field-control" name="phone" /></label>
                 <label className="field-stack"><span>WhatsApp</span><input className="field-control" name="whatsapp" /></label>
-                <label className="field-stack"><span>Metodo preferito</span><input className="field-control" name="preferred_contact_method" /></label>
+                <label className="field-stack"><span>Metodo preferito</span><select className="field-control" name="preferred_contact_method" defaultValue=""><option value="">Seleziona</option>{CONTACT_METHOD_OPTIONS.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
               </div>
               <label className="field-stack"><span>Note</span><textarea className="field-control field-area" name="notes_summary" /></label>
               <div className="sheet-actions">
