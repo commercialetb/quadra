@@ -20,6 +20,41 @@ type ParsedVoiceFollowup = {
   reminderNotes: string
 }
 
+type MatchResult = {
+  match: Candidate
+  score: number
+  ambiguous: boolean
+  alternatives: Candidate[]
+} | null
+
+type ProcessedVoiceResult = {
+  parsed: ParsedVoiceFollowup
+  canAutoCreate: boolean
+  createdFollowupId: string | null
+  reminder: {
+    title: string
+    dueDateISO: string | null
+    notes: string
+  }
+  links: {
+    companyId: string | null
+    contactId: string | null
+    opportunityId: string | null
+  }
+  needsConfirmation: boolean
+  question: string | null
+  matches: {
+    contact: MatchResult
+    opportunity: MatchResult
+    company: MatchResult
+  }
+  options: {
+    contacts: Array<{ id: string; label: string }>
+    opportunities: Array<{ id: string; label: string }>
+    companies: Array<{ id: string; label: string }>
+  }
+}
+
 function normalize(value: string | null | undefined) {
   return (value || '').trim().toLowerCase()
 }
@@ -37,7 +72,7 @@ function scoreCandidate(target: string, candidate: string) {
   return overlap * 20
 }
 
-function bestMatch(target: string | null | undefined, candidates: Candidate[]) {
+function bestMatch(target: string | null | undefined, candidates: Candidate[]): MatchResult {
   if (!target) return null
   const scored = candidates
     .map((candidate) => ({ candidate, score: scoreCandidate(target, candidate.name) }))
@@ -65,10 +100,11 @@ function toDueAt(input: string | null) {
   return parsed.toISOString()
 }
 
-export async function processVoiceFollowup(note: string) {
-  const parsed = (await extractSiriFollowup(note)).parsed as ParsedVoiceFollowup
-  const dueAt = toDueAt(parsed.dueDateISO)
+function makeLabel(name: string, companyName?: string | null) {
+  return companyName ? `${name} - ${companyName}` : name
+}
 
+async function getContext() {
   const supabase = await createClient()
   const { data: auth } = await supabase.auth.getUser()
   const user = auth.user
@@ -80,17 +116,115 @@ export async function processVoiceFollowup(note: string) {
     supabase.from('companies').select('id, name').eq('owner_id', user.id).limit(200),
   ])
 
+  return {
+    supabase,
+    user,
+    contacts: contacts ?? [],
+    opportunities: opportunities ?? [],
+    companies: companies ?? [],
+  }
+}
+
+async function createFollowupAndNote(params: {
+  userId: string
+  supabase: Awaited<ReturnType<typeof createClient>>
+  note: string
+  parsed: ParsedVoiceFollowup
+  companyId: string | null
+  contactId: string | null
+  opportunityId: string | null
+}) {
+  const { supabase, userId, note, parsed, companyId, contactId, opportunityId } = params
+  const dueAt = toDueAt(parsed.dueDateISO)
+  if (!dueAt) throw new Error('Data follow-up non valida')
+
+  const description = [
+    parsed.summary,
+    parsed.statusSignal ? `Segnale stato: ${parsed.statusSignal}` : null,
+    `Dettato originale: ${note}`,
+  ]
+    .filter(Boolean)
+    .join('\n\n')
+
+  const { data: followup, error: followupError } = await supabase
+    .from('followups')
+    .insert({
+      owner_id: userId,
+      company_id: companyId,
+      contact_id: contactId,
+      opportunity_id: opportunityId,
+      title: parsed.followUpTitle,
+      description,
+      due_at: dueAt,
+      status: 'pending',
+      priority: parsed.priority,
+      created_by: userId,
+    })
+    .select('id')
+    .single()
+
+  if (followupError) throw new Error(followupError.message)
+
+  if (opportunityId) {
+    await supabase.from('notes').insert({
+      owner_id: userId,
+      entity_type: 'opportunity',
+      entity_id: opportunityId,
+      title: 'Nota da Siri',
+      body: `${parsed.summary}\n\nDettato originale: ${note}`,
+      created_by: userId,
+    })
+  } else if (contactId) {
+    await supabase.from('notes').insert({
+      owner_id: userId,
+      entity_type: 'contact',
+      entity_id: contactId,
+      title: 'Nota da Siri',
+      body: `${parsed.summary}\n\nDettato originale: ${note}`,
+      created_by: userId,
+    })
+  } else if (companyId) {
+    await supabase.from('notes').insert({
+      owner_id: userId,
+      entity_type: 'company',
+      entity_id: companyId,
+      title: 'Nota da Siri',
+      body: `${parsed.summary}\n\nDettato originale: ${note}`,
+      created_by: userId,
+    })
+  }
+
+  return followup.id as string
+}
+
+function buildQuestion(result: {
+  contact: MatchResult
+  opportunity: MatchResult
+  company: MatchResult
+}) {
+  if (result.contact?.ambiguous) return 'Ho trovato piu contatti compatibili. Quale contatto intendi?'
+  if (result.opportunity?.ambiguous) return 'Ho trovato piu opportunita compatibili. Quale opportunita intendi?'
+  if (result.company?.ambiguous) return 'Ho trovato piu aziende compatibili. Quale azienda intendi?'
+  if (!result.contact && !result.opportunity && !result.company) return 'Non ho trovato un collegamento chiaro. Scegli tu il record corretto.'
+  return 'Mi serve una conferma rapida prima di salvare.'
+}
+
+export async function processVoiceFollowup(note: string): Promise<ProcessedVoiceResult> {
+  const parsed = (await extractSiriFollowup(note)).parsed as ParsedVoiceFollowup
+  const dueAt = toDueAt(parsed.dueDateISO)
+  const { supabase, user, contacts, opportunities, companies } = await getContext()
+
   const contactMatch = bestMatch(
     parsed.personName,
-    (contacts ?? []).map((item) => ({ id: item.id, name: item.full_name, companyId: item.company_id }))
+    contacts.map((item) => ({ id: item.id, name: item.full_name, companyId: item.company_id }))
   )
   const opportunityMatch = bestMatch(
     parsed.projectName,
-    (opportunities ?? []).map((item) => ({ id: item.id, name: item.title, companyId: item.company_id }))
+    opportunities.map((item) => ({ id: item.id, name: item.title, companyId: item.company_id }))
   )
   const companyMatch = bestMatch(
     parsed.companyName,
-    (companies ?? []).map((item) => ({ id: item.id, name: item.name }))
+    companies.map((item) => ({ id: item.id, name: item.name }))
   )
 
   const companyId = opportunityMatch?.match.companyId || contactMatch?.match.companyId || companyMatch?.match.id || null
@@ -102,64 +236,16 @@ export async function processVoiceFollowup(note: string) {
   const canAutoCreate = Boolean(hasLink && dueAt && !ambiguous)
 
   let createdFollowupId: string | null = null
-
   if (canAutoCreate) {
-    const description = [
-      parsed.summary,
-      parsed.statusSignal ? `Segnale stato: ${parsed.statusSignal}` : null,
-      `Dettato originale: ${note}`,
-    ]
-      .filter(Boolean)
-      .join('\n\n')
-
-    const { data: followup, error: followupError } = await supabase
-      .from('followups')
-      .insert({
-        owner_id: user.id,
-        company_id: companyId,
-        contact_id: contactId,
-        opportunity_id: opportunityId,
-        title: parsed.followUpTitle,
-        description,
-        due_at: dueAt,
-        status: 'pending',
-        priority: parsed.priority,
-        created_by: user.id,
-      })
-      .select('id')
-      .single()
-
-    if (followupError) throw new Error(followupError.message)
-    createdFollowupId = followup.id
-
-    if (opportunityId) {
-      await supabase.from('notes').insert({
-        owner_id: user.id,
-        entity_type: 'opportunity',
-        entity_id: opportunityId,
-        title: 'Nota da Siri',
-        body: `${parsed.summary}\n\nDettato originale: ${note}`,
-        created_by: user.id,
-      })
-    } else if (contactId) {
-      await supabase.from('notes').insert({
-        owner_id: user.id,
-        entity_type: 'contact',
-        entity_id: contactId,
-        title: 'Nota da Siri',
-        body: `${parsed.summary}\n\nDettato originale: ${note}`,
-        created_by: user.id,
-      })
-    } else if (companyId) {
-      await supabase.from('notes').insert({
-        owner_id: user.id,
-        entity_type: 'company',
-        entity_id: companyId,
-        title: 'Nota da Siri',
-        body: `${parsed.summary}\n\nDettato originale: ${note}`,
-        created_by: user.id,
-      })
-    }
+    createdFollowupId = await createFollowupAndNote({
+      supabase,
+      userId: user.id,
+      note,
+      parsed,
+      companyId,
+      contactId,
+      opportunityId,
+    })
   }
 
   return {
@@ -176,10 +262,68 @@ export async function processVoiceFollowup(note: string) {
       contactId,
       opportunityId,
     },
+    needsConfirmation: !canAutoCreate,
+    question: canAutoCreate ? null : buildQuestion({ contact: contactMatch, opportunity: opportunityMatch, company: companyMatch }),
     matches: {
       contact: contactMatch,
       opportunity: opportunityMatch,
       company: companyMatch,
+    },
+    options: {
+      contacts: contacts.slice(0, 10).map((item) => ({
+        id: item.id,
+        label: makeLabel(item.full_name, companies.find((company) => company.id === item.company_id)?.name),
+      })),
+      opportunities: opportunities.slice(0, 10).map((item) => ({
+        id: item.id,
+        label: makeLabel(item.title, companies.find((company) => company.id === item.company_id)?.name),
+      })),
+      companies: companies.slice(0, 10).map((item) => ({ id: item.id, label: item.name })),
+    },
+  }
+}
+
+export async function confirmVoiceFollowup(input: {
+  note: string
+  parsed: ParsedVoiceFollowup
+  selectedContactId?: string | null
+  selectedOpportunityId?: string | null
+  selectedCompanyId?: string | null
+}) {
+  const { note, parsed, selectedContactId, selectedOpportunityId, selectedCompanyId } = input
+  const { supabase, user, contacts, opportunities } = await getContext()
+
+  const selectedContact = selectedContactId ? contacts.find((item) => item.id === selectedContactId) ?? null : null
+  const selectedOpportunity = selectedOpportunityId
+    ? opportunities.find((item) => item.id === selectedOpportunityId) ?? null
+    : null
+
+  const companyId = selectedOpportunity?.company_id || selectedContact?.company_id || selectedCompanyId || null
+  const contactId = selectedContact?.id || null
+  const opportunityId = selectedOpportunity?.id || null
+
+  const createdFollowupId = await createFollowupAndNote({
+    supabase,
+    userId: user.id,
+    note,
+    parsed,
+    companyId,
+    contactId,
+    opportunityId,
+  })
+
+  return {
+    createdFollowupId,
+    reminder: {
+      title: parsed.reminderTitle || parsed.followUpTitle,
+      dueDateISO: parsed.dueDateISO,
+      notes: parsed.reminderNotes || parsed.summary,
+    },
+    spokenResponse: `Ho creato il follow-up in Quadra e puoi aggiungere il promemoria per ${parsed.dueDateISO || 'la data indicata'}.`,
+    links: {
+      companyId,
+      contactId,
+      opportunityId,
     },
   }
 }
