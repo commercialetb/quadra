@@ -142,3 +142,54 @@ export async function generateAssistedMessage(context: {
     ],
   });
 }
+
+type SiriFollowupExtract = {
+  personName: string | null
+  projectName: string | null
+  companyName: string | null
+  summary: string
+  followUpTitle: string
+  dueDateISO: string | null
+  priority: 'low' | 'medium' | 'high'
+  statusSignal: string | null
+  reminderTitle: string
+  reminderNotes: string
+}
+
+export async function extractSiriFollowup(note: string) {
+  const today = new Date().toISOString().slice(0, 10)
+  const result = await runAiCompletion({
+    task: 'extract_siri_followup',
+    maxTokens: 420,
+    jsonMode: true,
+    messages: [
+      {
+        role: 'system',
+        content:
+          `Sei Quadra. Estrai da questa nota vocale un JSON valido con le chiavi: personName, projectName, companyName, summary, followUpTitle, dueDateISO, priority, statusSignal, reminderTitle, reminderNotes. priority deve essere low, medium o high. dueDateISO deve essere in formato YYYY-MM-DD quando la data e chiara, altrimenti null. Oggi e ${today}. Non inventare dati. Rispondi solo con JSON.`,
+      },
+      {
+        role: 'user',
+        content: note,
+      },
+    ],
+  })
+
+  const parsed = safeJsonParse<SiriFollowupExtract>(result.text)
+
+  return {
+    result,
+    parsed: parsed ?? {
+      personName: null,
+      projectName: null,
+      companyName: null,
+      summary: note,
+      followUpTitle: 'Richiamare il contatto',
+      dueDateISO: null,
+      priority: 'medium',
+      statusSignal: null,
+      reminderTitle: 'Follow-up da verificare',
+      reminderNotes: note,
+    },
+  }
+}

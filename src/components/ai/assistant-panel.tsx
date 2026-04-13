@@ -82,6 +82,7 @@ export function AssistantPanel({ data }: { data: DashboardData }) {
         </button>
         <a href="/assistant" className="ghost-button">Apri assistente</a>
         <a href="/capture/voice" className="ghost-button">Cattura vocale</a>
+        <a href="/capture/siri" className="ghost-button">Siri flow</a>
       </div>
 
       {answer ? <div className="assistant-brief" style={{ marginTop: 14 }}>{answer}</div> : null}

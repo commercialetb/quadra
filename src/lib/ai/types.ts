@@ -6,7 +6,8 @@ export type AiTask =
   | 'daily_brief'
   | 'parse_note'
   | 'generate_message'
-  | 'query_crm';
+  | 'query_crm'
+  | 'extract_siri_followup';
 
 export interface AiMessage {
   role: 'system' | 'user' | 'assistant';
