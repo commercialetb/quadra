@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation'
-import { CompanyEditCard } from '@/components/detail/company-edit-card'
 import { DetailShell } from '@/components/detail/detail-shell'
 import { EntityListCard } from '@/components/detail/entity-list-card'
 import { InfoCard, InfoRow } from '@/components/detail/info-card'
@@ -8,14 +7,13 @@ import { getCompanyDetail, getTimelineForEntity } from '@/lib/detail-queries'
 
 export default async function CompanyDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const { company, contacts, opportunities, notes } = await getCompanyDetail(id)
+  const { company, contacts, opportunities, projects, notes } = await getCompanyDetail(id)
   const timeline = await getTimelineForEntity({ companyId: id })
 
   if (!company) notFound()
 
   return (
     <DetailShell title={company.name} subtitle={company.legal_name} backHref="/companies" backLabel="Aziende">
-      <CompanyEditCard company={company} />
       <div className="detail-grid">
         <div className="stack-lg">
           <InfoCard title="Panoramica azienda">
@@ -64,6 +62,18 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
             }))}
           />
 
+          <EntityListCard
+            title="Progetti"
+            empty="Nessun progetto collegato."
+            ctaLabel="+ Aggiungi progetto"
+            ctaHref="/projects"
+            items={projects.map((project) => ({
+              id: project.id,
+              label: project.title,
+              meta: [project.status, project.budget ? `€ ${Number(project.budget).toLocaleString('it-IT')}` : null].filter(Boolean).join(' · '),
+              href: `/projects/${project.id}`,
+            }))}
+          />
         </div>
       </div>
     </DetailShell>

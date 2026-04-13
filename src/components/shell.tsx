@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { ReactNode } from 'react'
@@ -33,7 +34,9 @@ export default function Shell({ children }: { children: ReactNode }) {
     <div className="app-shell">
       <aside className="app-sidebar">
         <div className="sidebar-brand">
-          <img src="/icons/brand-mark-v18.png" alt="Quadra" className="sidebar-brand-mark sidebar-brand-mark-image" />
+          <div className="sidebar-brand-mark sidebar-brand-mark-image">
+            <Image src="/icons/brand-app.png" alt="Quadra" width={52} height={52} priority />
+          </div>
           <div>
             <div className="sidebar-brand-title">Quadra</div>
             <div className="sidebar-brand-subtitle">CRM personale</div>

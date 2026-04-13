@@ -1,25 +1,19 @@
 import { notFound } from 'next/navigation'
-import { ContactEditCard } from '@/components/detail/contact-edit-card'
 import { DetailShell } from '@/components/detail/detail-shell'
 import { EntityListCard } from '@/components/detail/entity-list-card'
 import { InfoCard, InfoRow } from '@/components/detail/info-card'
 import { TimelineCard } from '@/components/detail/timeline-card'
 import { getContactDetail, getTimelineForEntity } from '@/lib/detail-queries'
-import { getCompanies } from '@/lib/data'
 
 export default async function ContactDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const [{ contact, phones, opportunities, notes }, companies, timeline] = await Promise.all([
-    getContactDetail(id),
-    getCompanies(),
-    getTimelineForEntity({ contactId: id }),
-  ])
+  const { contact, phones, opportunities, notes } = await getContactDetail(id)
+  const timeline = await getTimelineForEntity({ contactId: id })
 
   if (!contact) notFound()
 
   return (
     <DetailShell title={contact.full_name} subtitle={contact.role} backHref="/contacts" backLabel="Contatti">
-      <ContactEditCard contact={contact} companies={companies} primaryPhone={phones.find((item) => item.is_primary)?.phone_number ?? phones[0]?.phone_number ?? ''} />
       <div className="detail-grid">
         <div className="stack-lg">
           <InfoCard title="Panoramica contatto">

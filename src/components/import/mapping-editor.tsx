@@ -1,15 +1,14 @@
 'use client'
 
 import { IMPORT_TARGET_FIELDS } from '@/lib/import/field-catalog'
-import type { ImportColumnMapping, ImportSheetPreview } from '@/types/import'
+import type { ImportSheetPreview } from '@/types/import'
 
 type MappingEditorProps = {
   sheet: ImportSheetPreview
-  mappings: ImportColumnMapping[]
-  onChange: (sourceColumn: string, targetField: string | null) => void
+  onConfirm: () => void
 }
 
-export function MappingEditor({ sheet, mappings, onChange }: MappingEditorProps) {
+export function MappingEditor({ sheet, onConfirm }: MappingEditorProps) {
   const availableFields = IMPORT_TARGET_FIELDS[sheet.suggestedType] ?? []
 
   return (
@@ -17,11 +16,11 @@ export function MappingEditor({ sheet, mappings, onChange }: MappingEditorProps)
       <div className="section-heading">
         <div>
           <h2>Mapping colonne</h2>
-          <p>Controlla i suggerimenti automatici e correggi dove serve.</p>
+          <p>Controlla i suggerimenti automatici prima di procedere.</p>
         </div>
       </div>
       <div className="import-mapping-list">
-        {mappings.map((mapping) => (
+        {sheet.mappings.map((mapping) => (
           <div key={mapping.sourceColumn} className="import-mapping-row">
             <div>
               <div className="entity-title" style={{ fontSize: '1rem' }}>{mapping.sourceColumn}</div>
@@ -29,11 +28,7 @@ export function MappingEditor({ sheet, mappings, onChange }: MappingEditorProps)
             </div>
             <div className="entity-muted" style={{ textAlign: 'center' }}>→</div>
             <div>
-              <select
-                value={mapping.targetField ?? ''}
-                onChange={(event) => onChange(mapping.sourceColumn, event.target.value || null)}
-                style={{ borderRadius: 16, height: 46, padding: '0 14px' }}
-              >
+              <select defaultValue={mapping.targetField ?? ''} style={{ borderRadius: 16, height: 46, padding: '0 14px' }}>
                 <option value="">Ignora colonna</option>
                 {availableFields.map((field) => (
                   <option key={field} value={field}>{field}</option>
@@ -42,6 +37,10 @@ export function MappingEditor({ sheet, mappings, onChange }: MappingEditorProps)
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="import-actions">
+        <button type="button" onClick={onConfirm} className="button-primary">Conferma mapping</button>
       </div>
     </div>
   )

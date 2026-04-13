@@ -1,26 +1,19 @@
 import { notFound } from 'next/navigation'
 import { DetailShell } from '@/components/detail/detail-shell'
-import { OpportunityEditCard } from '@/components/detail/opportunity-edit-card'
 import { EntityListCard } from '@/components/detail/entity-list-card'
 import { InfoCard, InfoRow } from '@/components/detail/info-card'
 import { TimelineCard } from '@/components/detail/timeline-card'
 import { getOpportunityDetail, getTimelineForEntity } from '@/lib/detail-queries'
-import { getCompanies, getContacts } from '@/lib/data'
 
 export default async function OpportunityDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const [{ opportunity, notes }, companies, contacts, timeline] = await Promise.all([
-    getOpportunityDetail(id),
-    getCompanies(),
-    getContacts(),
-    getTimelineForEntity({ opportunityId: id }),
-  ])
+  const { opportunity, projects, notes } = await getOpportunityDetail(id)
+  const timeline = await getTimelineForEntity({ opportunityId: id })
 
   if (!opportunity) notFound()
 
   return (
     <DetailShell title={opportunity.title} subtitle={opportunity.company?.name} backHref="/opportunities" backLabel="Opportunità">
-      <OpportunityEditCard opportunity={opportunity} companies={companies} contacts={contacts} />
       <div className="detail-grid">
         <div className="stack-lg">
           <InfoCard title="Panoramica opportunità">
@@ -43,6 +36,20 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
           />
         </div>
 
+        <div className="stack-lg">
+          <EntityListCard
+            title="Progetti collegati"
+            empty="Nessun progetto collegato."
+            ctaLabel="+ Crea progetto"
+            ctaHref="/projects"
+            items={projects.map((project) => ({
+              id: project.id,
+              label: project.title,
+              meta: [project.status, project.budget ? `€ ${Number(project.budget).toLocaleString('it-IT')}` : null].filter(Boolean).join(' · '),
+              href: `/projects/${project.id}`,
+            }))}
+          />
+        </div>
       </div>
     </DetailShell>
   )
