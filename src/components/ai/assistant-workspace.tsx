@@ -28,6 +28,9 @@ export function AssistantWorkspace() {
   const [nextAction, setNextAction] = useState('')
   const [parseInput, setParseInput] = useState('')
   const [parsed, setParsed] = useState<ParsedNote | null>(null)
+  const [crmQuestion, setCrmQuestion] = useState('')
+  const [crmAnswer, setCrmAnswer] = useState('')
+  const [crmMeta, setCrmMeta] = useState('')
   const [messageForm, setMessageForm] = useState<MessageForm>({
     messageType: 'email',
     tone: 'commerciale',
@@ -38,7 +41,7 @@ export function AssistantWorkspace() {
     notes: '',
   })
   const [generatedMessage, setGeneratedMessage] = useState('')
-  const [busy, setBusy] = useState<'summary' | 'action' | 'parse' | 'message' | ''>('')
+  const [busy, setBusy] = useState<'summary' | 'action' | 'parse' | 'message' | 'crm' | ''>('')
 
   async function summarize() {
     setBusy('summary')
@@ -100,17 +103,53 @@ export function AssistantWorkspace() {
     }
   }
 
+  async function askCrm() {
+    setBusy('crm')
+    try {
+      const response = await fetch('/api/ai/query-crm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: crmQuestion }),
+      })
+      const result = await response.json()
+      setCrmAnswer(result.answer || result.error || 'Nessun output disponibile.')
+      setCrmMeta(result.provider ? `${result.provider} · ${result.model}` : '')
+    } finally {
+      setBusy('')
+    }
+  }
+
   return (
     <div className="page-stack">
       <section className="dashboard-hero dashboard-hero-compact">
         <div>
           <p className="page-eyebrow">Quadra AI</p>
           <h1 className="page-title">Assistente operativo</h1>
-          <p className="page-subtitle dashboard-subtitle-compact">Riassumi, struttura note CRM, suggerisci next action e genera messaggi pronti.</p>
+          <p className="page-subtitle dashboard-subtitle-compact">Query sul CRM, riassunti, next action, parsing note e messaggi pronti.</p>
         </div>
       </section>
 
       <div className="dashboard-grid two-up assistant-grid">
+        <section className="panel-card">
+          <div className="panel-head">
+            <div>
+              <h2>Interroga il CRM</h2>
+              <p>Usa linguaggio naturale per ottenere priorità, recap e deal da sbloccare.</p>
+            </div>
+          </div>
+          <label className="field-stack">
+            <span>Domanda</span>
+            <textarea className="field-control field-area assistant-textarea" value={crmQuestion} onChange={(e) => setCrmQuestion(e.target.value)} placeholder="Es. Chi devo sentire oggi? Quali opportunità sopra 10k sono ferme? Fammi il recap di Rossi." />
+          </label>
+          <div className="sheet-actions assistant-actions">
+            <button type="button" className="primary-button" onClick={askCrm} disabled={!crmQuestion.trim() || busy === 'crm'}>
+              {busy === 'crm' ? 'Analisi...' : 'Interroga'}
+            </button>
+          </div>
+          <div className="assistant-output">{crmAnswer || 'La risposta sul CRM comparirà qui.'}</div>
+          {crmMeta ? <div className="helper-text">{crmMeta}</div> : null}
+        </section>
+
         <section className="panel-card">
           <div className="panel-head">
             <div>
@@ -120,11 +159,11 @@ export function AssistantWorkspace() {
           </div>
           <label className="field-stack">
             <span>Nota</span>
-            <textarea className="field-control field-area assistant-textarea" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Incolla una nota, una call recap o un appunto vocale trascritto..." />
+            <textarea className="field-control field-area assistant-textarea" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Incolla la nota libera o una trascrizione vocale..." />
           </label>
           <div className="sheet-actions assistant-actions">
             <button type="button" className="primary-button" onClick={summarize} disabled={!note.trim() || busy === 'summary'}>
-              {busy === 'summary' ? 'Elaborazione...' : 'Riassumi'}
+              {busy === 'summary' ? 'Sintesi...' : 'Riassumi'}
             </button>
           </div>
           <div className="assistant-output">{summary || 'La sintesi comparirà qui.'}</div>
@@ -134,7 +173,7 @@ export function AssistantWorkspace() {
           <div className="panel-head">
             <div>
               <h2>Suggerisci next action</h2>
-              <p>Usa il contesto del deal per scegliere la prossima mossa.</p>
+              <p>Usa contesto commerciale per ottenere la prossima mossa più sensata.</p>
             </div>
           </div>
           <div className="form-grid two-col">
@@ -144,8 +183,8 @@ export function AssistantWorkspace() {
             <label className="field-stack"><span>Fase</span><input className="field-control" value={context.stage} onChange={(e) => setContext({ ...context, stage: e.target.value })} /></label>
           </div>
           <label className="field-stack">
-            <span>Contesto</span>
-            <textarea className="field-control field-area assistant-textarea" value={context.note} onChange={(e) => setContext({ ...context, note: e.target.value })} placeholder="Esito call, obiezioni, segnali positivi, scadenze..." />
+            <span>Contesto / nota</span>
+            <textarea className="field-control field-area assistant-textarea" value={context.note} onChange={(e) => setContext({ ...context, note: e.target.value })} />
           </label>
           <div className="sheet-actions assistant-actions">
             <button type="button" className="primary-button" onClick={suggest} disabled={busy === 'action'}>

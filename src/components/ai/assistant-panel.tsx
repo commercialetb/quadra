@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 type DashboardData = {
   kpis: {
@@ -9,29 +9,47 @@ type DashboardData = {
     openCount: number
     pipelineValue: number
   }
-  todayFollowups: Array<{ title: string; priority?: string | null }>
-  staleOpportunities: Array<{ title: string; next_action?: string | null }>
 }
 
 export function AssistantPanel({ data }: { data: DashboardData }) {
   const [brief, setBrief] = useState('')
-  const [loading, setLoading] = useState(false)
-  const highlights = useMemo(() => {
-    const today = data.todayFollowups.slice(0, 3).map((item) => `Follow-up: ${item.title}`)
-    const stale = data.staleOpportunities.slice(0, 3).map((item) => `Deal fermo: ${item.title}${item.next_action ? ` · ${item.next_action}` : ''}`)
-    return [...today, ...stale]
-  }, [data])
+  const [query, setQuery] = useState('')
+  const [answer, setAnswer] = useState('')
+  const [loading, setLoading] = useState<'brief' | 'query' | ''>('')
+  const [meta, setMeta] = useState('')
 
   async function generateBrief() {
-    setLoading(true)
+    setLoading('brief')
     try {
       const response = await fetch('/api/ai/daily-brief', { method: 'POST' })
       const result = await response.json()
       setBrief(result.brief || result.error || 'Nessun brief disponibile.')
+      setMeta(result.provider ? `${result.provider} · ${result.model}` : '')
     } catch {
       setBrief('Impossibile generare il brief in questo momento.')
+      setMeta('')
     } finally {
-      setLoading(false)
+      setLoading('')
+    }
+  }
+
+  async function runQuery() {
+    if (!query.trim()) return
+    setLoading('query')
+    try {
+      const response = await fetch('/api/ai/query-crm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: query }),
+      })
+      const result = await response.json()
+      setAnswer(result.answer || result.error || 'Nessun risultato disponibile.')
+      setMeta(result.provider ? `${result.provider} · ${result.model}` : '')
+    } catch {
+      setAnswer('Impossibile interrogare il CRM in questo momento.')
+      setMeta('')
+    } finally {
+      setLoading('')
     }
   }
 
@@ -40,18 +58,36 @@ export function AssistantPanel({ data }: { data: DashboardData }) {
       <div className="panel-head">
         <div>
           <h2>Copilota AI</h2>
-          <p>Brief giornaliero e accesso rapido a suggerimenti operativi.</p>
+          <p>Brief giornaliero e query naturali sui dati reali del CRM.</p>
         </div>
-        <button type="button" className="primary-button" onClick={generateBrief} disabled={loading}>
-          {loading ? 'Generazione...' : 'Genera brief'}
+        <button type="button" className="primary-button" onClick={generateBrief} disabled={loading === 'brief'}>
+          {loading === 'brief' ? 'Generazione...' : 'Genera brief'}
         </button>
       </div>
 
       {brief ? <div className="assistant-brief">{brief}</div> : <div className="empty-block">Genera un brief veloce sulle priorità di oggi.</div>}
 
-      <div className="assistant-links">
-        <a href="/assistant" className="secondary-button">Apri assistente</a>
-        <a href="/capture/followup" className="ghost-button">Shortcut follow-up</a>
+      <div className="field-stack" style={{ marginTop: 14 }}>
+        <span>Chiedi a Quadra</span>
+        <textarea
+          className="field-control field-area assistant-textarea"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Es. Chi devo sentire oggi? Oppure: quali opportunità sopra 10k sono ferme?"
+        />
+      </div>
+      <div className="assistant-links" style={{ marginTop: 12 }}>
+        <button type="button" className="secondary-button" onClick={runQuery} disabled={loading === 'query' || !query.trim()}>
+          {loading === 'query' ? 'Analisi...' : 'Interroga il CRM'}
+        </button>
+        <a href="/assistant" className="ghost-button">Apri assistente</a>
+      </div>
+
+      {answer ? <div className="assistant-brief" style={{ marginTop: 14 }}>{answer}</div> : null}
+      {meta ? <div className="helper-text">{meta}</div> : null}
+
+      <div className="helper-text" style={{ marginTop: 10 }}>
+        Oggi: {data.kpis.todayCount} follow-up · {data.kpis.overdueCount} in ritardo · {data.kpis.openCount} opportunità aperte.
       </div>
     </section>
   )

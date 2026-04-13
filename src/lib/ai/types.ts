@@ -5,7 +5,8 @@ export type AiTask =
   | 'suggest_next_action'
   | 'daily_brief'
   | 'parse_note'
-  | 'generate_message';
+  | 'generate_message'
+  | 'query_crm';
 
 export interface AiMessage {
   role: 'system' | 'user' | 'assistant';
