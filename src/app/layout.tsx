@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next'
 
 export const metadata: Metadata = {
   title: 'Quadra CRM',
-  description: 'CRM personale, chiaro e operativo.',
+  description: 'CRM personale.',
   icons: {
     icon: [
       { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },

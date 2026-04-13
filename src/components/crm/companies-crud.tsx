@@ -83,7 +83,7 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                     </div>
                     <span className={`tone-badge ${badgeTone(company.status)}`}>{company.status}</span>
                   </div>
-                  <div className="entity-inline-meta">
+                  <div className="entity-inline-meta wrap">
                     {company.website ? (
                       <a href={company.website.startsWith('http') ? company.website : `https://${company.website}`} target="_blank" rel="noreferrer">
                         {sanitizeWebsite(company.website)}
