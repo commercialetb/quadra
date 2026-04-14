@@ -1,52 +1,61 @@
 {
-  "version": "v21",
+  "version": "v23",
   "title": "Quadra Apple Shortcuts Pack",
-  "description": "Shortcut ufficiali per iPhone collegati al layer Shortcut di Quadra, compreso il flusso Gmail con etichetta CRM e la sincronizzazione batch v21 con auto-triage.",
+  "description": "Shortcut ufficiali per iPhone collegati a Quadra. La pagina installazione puo usare link iCloud reali per far installare i comandi con un tap.",
   "items": [
     {
       "key": "create_followup",
       "title": "Crea follow-up",
-      "file": "/shortcuts/create-followup.json"
+      "file": "/shortcuts/create-followup.json",
+      "install_env": "NEXT_PUBLIC_SHORTCUT_LINK_CREATE_FOLLOWUP"
     },
     {
       "key": "search_record",
       "title": "Cerca record",
-      "file": "/shortcuts/search-record.json"
+      "file": "/shortcuts/search-record.json",
+      "install_env": "NEXT_PUBLIC_SHORTCUT_LINK_SEARCH_RECORD"
     },
     {
       "key": "today_agenda",
       "title": "Mostra oggi",
-      "file": "/shortcuts/today-agenda.json"
+      "file": "/shortcuts/today-agenda.json",
+      "install_env": "NEXT_PUBLIC_SHORTCUT_LINK_TODAY_AGENDA"
     },
     {
       "key": "add_note",
       "title": "Aggiungi nota",
-      "file": "/shortcuts/add-note.json"
+      "file": "/shortcuts/add-note.json",
+      "install_env": "NEXT_PUBLIC_SHORTCUT_LINK_ADD_NOTE"
     },
     {
       "key": "log_call_outcome",
       "title": "Registra esito chiamata",
-      "file": "/shortcuts/log-call-outcome.json"
+      "file": "/shortcuts/log-call-outcome.json",
+      "install_env": "NEXT_PUBLIC_SHORTCUT_LINK_LOG_CALL_OUTCOME"
     },
     {
       "key": "log_interaction",
       "title": "Registra interazione",
-      "file": "/shortcuts/log-interaction.json"
+      "file": "/shortcuts/log-interaction.json",
+      "install_env": "NEXT_PUBLIC_SHORTCUT_LINK_LOG_INTERACTION"
     },
     {
       "key": "ingest_email",
       "title": "Leggi email",
-      "file": "/shortcuts/ingest-email.json"
+      "file": "/shortcuts/ingest-email.json",
+      "install_env": "NEXT_PUBLIC_SHORTCUT_LINK_INGEST_EMAIL"
     },
     {
       "key": "ingest_gmail_crm",
       "title": "Gmail CRM",
-      "file": "/shortcuts/ingest-gmail-crm.json"
+      "file": "/shortcuts/ingest-gmail-crm.json",
+      "install_env": "NEXT_PUBLIC_SHORTCUT_LINK_INGEST_GMAIL_CRM"
     },
     {
       "key": "sync_gmail_crm",
       "title": "Sync Gmail CRM",
-      "file": "/shortcuts/sync-gmail-crm.json"
+      "file": "/shortcuts/sync-gmail-crm.json",
+      "install_env": "NEXT_PUBLIC_SHORTCUT_LINK_SYNC_GMAIL_CRM"
     }
   ]
 }
