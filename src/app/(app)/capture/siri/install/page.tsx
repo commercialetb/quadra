@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { buildShortcutManifest } from '@/lib/shortcut/shortcut-manifest'
-import { getShortcutInstallLinks } from '@/lib/shortcut/shortcut-install-links'
 
 const officialKeys = new Set([
   'create_followup',
@@ -12,6 +11,31 @@ const officialKeys = new Set([
 ])
 
 const primaryKeys = new Set(['log_call_outcome', 'create_followup', 'today_agenda'])
+
+
+type ShortcutInstallLink = {
+  key: string
+  icloudUrl: string | null
+}
+
+function readShortcutLink(envName: string): string | null {
+  const value = process.env[envName]?.trim()
+  return value || null
+}
+
+function getShortcutInstallLinks(): ShortcutInstallLink[] {
+  return [
+    { key: 'create_followup', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_CREATE_FOLLOWUP') },
+    { key: 'search_record', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_SEARCH_RECORD') },
+    { key: 'today_agenda', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_TODAY_AGENDA') },
+    { key: 'add_note', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_ADD_NOTE') },
+    { key: 'log_call_outcome', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_LOG_CALL_OUTCOME') },
+    { key: 'log_interaction', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_LOG_INTERACTION') },
+    { key: 'ingest_email', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_INGEST_EMAIL') },
+    { key: 'ingest_gmail_crm', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_INGEST_GMAIL_CRM') },
+    { key: 'sync_gmail_crm', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_SYNC_GMAIL_CRM') },
+  ]
+}
 
 export default function SiriInstallPage() {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') || 'https://TUO-DOMINIO'
@@ -26,7 +50,7 @@ export default function SiriInstallPage() {
       <section className="dashboard-hero dashboard-hero-compact">
         <div>
           <p className="page-eyebrow">Apple Shortcuts</p>
-          <h1 className="page-title">Installa gli shortcut ufficiali di Quadra</h1>
+          <h1 className="page-title">Installa gli shortcut iPhone di Quadra</h1>
           <p className="page-subtitle dashboard-subtitle-compact">
             Questa pagina serve per l’utente finale: deve solo toccare “Installa su iPhone”. I template tecnici restano disponibili sotto,
             ma il flusso principale e consigliato passa dai link iCloud degli shortcut Apple già pronti.
