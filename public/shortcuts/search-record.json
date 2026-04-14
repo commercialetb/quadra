@@ -1,0 +1,14 @@
+{
+  "name": "Quadra - Cerca record",
+  "method": "POST",
+  "url": "https://TUO-DOMINIO/api/shortcut/search-record",
+  "headers": {
+    "Content-Type": "application/json",
+    "x-shortcut-token": "SHORTCUT_SHARED_TOKEN"
+  },
+  "body": {
+    "query": "Rossi"
+  },
+  "readField": "spokenResponse",
+  "openField": "openUrl"
+}

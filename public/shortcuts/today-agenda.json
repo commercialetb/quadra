@@ -1,0 +1,12 @@
+{
+  "name": "Quadra - Mostra oggi",
+  "method": "POST",
+  "url": "https://TUO-DOMINIO/api/shortcut/today-agenda",
+  "headers": {
+    "Content-Type": "application/json",
+    "x-shortcut-token": "SHORTCUT_SHARED_TOKEN"
+  },
+  "body": {},
+  "readField": "spokenSummary",
+  "openField": "openUrl"
+}

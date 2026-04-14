@@ -1,0 +1,10 @@
+{
+  "query": "Mario Rossi",
+  "kind": "meeting",
+  "content": "Meeting positivo. Inviare proposta aggiornata domani.",
+  "createFollowup": true,
+  "followupTitle": "",
+  "followupDate": "",
+  "priority": "",
+  "shortcutToken": "SHORTCUT_SHARED_TOKEN"
+}
