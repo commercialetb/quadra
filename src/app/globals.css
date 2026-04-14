@@ -992,3 +992,25 @@ input:focus, select:focus, textarea:focus {
     margin: 0;
   }
 }
+
+.shortcut-callout {
+  display: grid;
+  gap: 12px;
+}
+
+@media (max-width: 780px) {
+  .shortcut-callout {
+    padding: 14px;
+  }
+
+  .app-topbar-actions {
+    gap: 8px;
+  }
+
+  .app-topbar-actions .ghost-button {
+    min-height: 42px;
+    padding: 0 14px;
+    border-radius: 14px;
+    font-size: .92rem;
+  }
+}

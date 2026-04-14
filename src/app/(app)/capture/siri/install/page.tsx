@@ -15,7 +15,8 @@ const primaryKeys = new Set(['log_call_outcome', 'create_followup', 'today_agend
 
 type ShortcutInstallLink = {
   key: string
-  icloudUrl: string | null
+  installUrl: string | null
+  source: 'icloud' | 'file' | null
 }
 
 function readShortcutLink(envName: string): string | null {
@@ -23,24 +24,34 @@ function readShortcutLink(envName: string): string | null {
   return value || null
 }
 
+function resolveShortcutInstallLink(key: string, envSuffix: string): ShortcutInstallLink {
+  const icloudUrl = readShortcutLink(`NEXT_PUBLIC_SHORTCUT_LINK_${envSuffix}`)
+  if (icloudUrl) return { key, installUrl: icloudUrl, source: 'icloud' }
+
+  const fileUrl = readShortcutLink(`NEXT_PUBLIC_SHORTCUT_FILE_${envSuffix}`)
+  if (fileUrl) return { key, installUrl: fileUrl, source: 'file' }
+
+  return { key, installUrl: null, source: null }
+}
+
 function getShortcutInstallLinks(): ShortcutInstallLink[] {
   return [
-    { key: 'create_followup', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_CREATE_FOLLOWUP') },
-    { key: 'search_record', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_SEARCH_RECORD') },
-    { key: 'today_agenda', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_TODAY_AGENDA') },
-    { key: 'add_note', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_ADD_NOTE') },
-    { key: 'log_call_outcome', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_LOG_CALL_OUTCOME') },
-    { key: 'log_interaction', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_LOG_INTERACTION') },
-    { key: 'ingest_email', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_INGEST_EMAIL') },
-    { key: 'ingest_gmail_crm', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_INGEST_GMAIL_CRM') },
-    { key: 'sync_gmail_crm', icloudUrl: readShortcutLink('NEXT_PUBLIC_SHORTCUT_LINK_SYNC_GMAIL_CRM') },
+    resolveShortcutInstallLink('create_followup', 'CREATE_FOLLOWUP'),
+    resolveShortcutInstallLink('search_record', 'SEARCH_RECORD'),
+    resolveShortcutInstallLink('today_agenda', 'TODAY_AGENDA'),
+    resolveShortcutInstallLink('add_note', 'ADD_NOTE'),
+    resolveShortcutInstallLink('log_call_outcome', 'LOG_CALL_OUTCOME'),
+    resolveShortcutInstallLink('log_interaction', 'LOG_INTERACTION'),
+    resolveShortcutInstallLink('ingest_email', 'INGEST_EMAIL'),
+    resolveShortcutInstallLink('ingest_gmail_crm', 'INGEST_GMAIL_CRM'),
+    resolveShortcutInstallLink('sync_gmail_crm', 'SYNC_GMAIL_CRM'),
   ]
 }
 
 export default function SiriInstallPage() {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') || 'https://TUO-DOMINIO'
   const actions = buildShortcutManifest(baseUrl)
-  const installLinks = new Map(getShortcutInstallLinks().map((item) => [item.key, item.icloudUrl]))
+  const installLinks = new Map(getShortcutInstallLinks().map((item) => [item.key, item]))
   const official = actions.filter((action) => officialKeys.has(action.key))
   const primary = official.filter((action) => primaryKeys.has(action.key))
   const secondary = official.filter((action) => !primaryKeys.has(action.key))
@@ -52,8 +63,8 @@ export default function SiriInstallPage() {
           <p className="page-eyebrow">Apple Shortcuts</p>
           <h1 className="page-title">Installa gli shortcut iPhone di Quadra</h1>
           <p className="page-subtitle dashboard-subtitle-compact">
-            Questa pagina serve per l’utente finale: deve solo toccare “Installa su iPhone”. I template tecnici restano disponibili sotto,
-            ma il flusso principale e consigliato passa dai link iCloud degli shortcut Apple già pronti.
+            Questa pagina serve per l’utente finale: deve solo toccare “Installa su iPhone”. Il flusso corretto usa un link iCloud Apple oppure
+            un file .shortcut già esportato. I template tecnici restano sotto solo come supporto.
           </p>
         </div>
       </section>
@@ -67,18 +78,18 @@ export default function SiriInstallPage() {
         </div>
         <div className="dashboard-grid three-up assistant-grid">
           {primary.map((action) => {
-            const icloudUrl = installLinks.get(action.key)
+            const install = installLinks.get(action.key)
             return (
               <article key={action.key} className="panel-card page-section-card">
                 <div className="panel-head"><div><h3>{action.title}</h3><p>{action.description}</p></div></div>
                 <div className="stack-sm">
                   <div><strong>Frase Siri:</strong> {action.phrase}</div>
-                  <div><strong>Installazione:</strong> {icloudUrl ? 'pronta' : 'in attesa del link iCloud'}</div>
+                  <div><strong>Installazione:</strong> {install?.installUrl ? `pronta via ${install.source === 'icloud' ? 'link iCloud' : 'file .shortcut'}` : 'non attiva: manca link Apple'}</div>
                   <div className="cluster-wrap">
-                    {icloudUrl ? (
-                      <Link href={icloudUrl} target="_blank">Installa su iPhone</Link>
+                    {install?.installUrl ? (
+                      <Link href={install.installUrl} target="_blank">Installa su iPhone</Link>
                     ) : (
-                      <span className="badge-soft">Aggiungi il link iCloud nelle env pubbliche</span>
+                      <span className="badge-soft">Installa non attiva: collega un link iCloud o un file .shortcut</span>
                     )}
                     <Link href={`/shortcuts/${action.filename}`} target="_blank">Template tecnico</Link>
                   </div>
@@ -98,19 +109,19 @@ export default function SiriInstallPage() {
         </div>
         <div className="dashboard-grid two-up assistant-grid">
           {[...primary, ...secondary].map((action) => {
-            const icloudUrl = installLinks.get(action.key)
+            const install = installLinks.get(action.key)
             return (
               <article key={action.key} className="panel-card page-section-card">
                 <div className="panel-head"><div><h3>{action.title}</h3><p>{action.description}</p></div></div>
                 <div className="stack-sm">
                   <div><strong>Frase Siri:</strong> {action.phrase}</div>
                   <div><strong>Azione:</strong> {action.path}</div>
-                  <div><strong>Stato installazione:</strong> {icloudUrl ? 'link pronto' : 'link da collegare'}</div>
+                  <div><strong>Stato installazione:</strong> {install?.installUrl ? `pronto via ${install.source === 'icloud' ? 'iCloud' : 'file'}` : 'non attivo'}</div>
                   <div className="cluster-wrap">
-                    {icloudUrl ? (
-                      <Link href={icloudUrl} target="_blank">Installa shortcut</Link>
+                    {install?.installUrl ? (
+                      <Link href={install.installUrl} target="_blank">Installa shortcut</Link>
                     ) : (
-                      <span className="badge-soft">Manca link iCloud</span>
+                      <span className="badge-soft">Manca link Apple</span>
                     )}
                     <Link href={`/shortcuts/${action.filename}`} target="_blank">Apri template</Link>
                   </div>
@@ -125,13 +136,13 @@ export default function SiriInstallPage() {
         <div className="panel-head">
           <div>
             <h2>Come si chiude davvero il flusso</h2>
-            <p>Per renderli davvero user-friendly, crea gli shortcut Apple una volta, condividili via link iCloud e inserisci quei link qui.</p>
+            <p>Per renderli davvero user-friendly, collega qui i link iCloud Apple oppure i file .shortcut già esportati. L’utente finale non deve costruire nulla a mano.</p>
           </div>
         </div>
         <div className="stack-sm">
           <div><strong>1.</strong> Crea o rifinisci il comando nell’app Comandi su iPhone.</div>
-          <div><strong>2.</strong> Condividilo come link iCloud.</div>
-          <div><strong>3.</strong> Inserisci il link nella env pubblica giusta.</div>
+          <div><strong>2.</strong> Condividilo come link iCloud oppure esportalo come file .shortcut.</div>
+          <div><strong>3.</strong> Inserisci il link pubblico nella env giusta.</div>
           <div><strong>4.</strong> Ridistribuisci: l’utente finale tocca “Installa” e basta.</div>
         </div>
         <div className="cluster-wrap">
