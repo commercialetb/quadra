@@ -33,8 +33,8 @@ function currentTitle(pathname: string) {
   if (pathname.startsWith('/import')) return 'Import dati'
   if (pathname.startsWith('/assistant')) return 'Assistente AI'
   if (pathname.startsWith('/capture/voice')) return 'Detta in Quadra'
-  if (pathname.startsWith('/capture/siri/review')) return 'Review Siri'
-  if (pathname.startsWith('/capture/siri')) return 'Shortcut ufficiale'
+  if (pathname.startsWith('/capture/siri/review')) return 'Review shortcut'
+  if (pathname.startsWith('/capture/siri')) return 'Shortcut iPhone'
   if (pathname.startsWith('/capture/followup')) return 'Shortcut follow-up'
   return 'Dashboard'
 }
@@ -119,8 +119,8 @@ export default function Shell({ children }: { children: ReactNode }) {
               <span className="sidebar-quick-copy">Anagrafica pulita e veloce.</span>
             </Link>
             <Link href="/capture/siri" className="sidebar-quick-card">
-              <span className="sidebar-quick-title">Siri layer</span>
-              <span className="sidebar-quick-copy">Follow-up, ricerca, agenda, note e review queue Siri.</span>
+              <span className="sidebar-quick-title">Shortcut iPhone</span>
+              <span className="sidebar-quick-copy">Installa i comandi ufficiali e apri la review queue.</span>
             </Link>
           </div>
         </div>
@@ -164,9 +164,7 @@ export default function Shell({ children }: { children: ReactNode }) {
               <span className="mobile-nav-icon-wrap">
                 <span className="mobile-nav-icon"><NavIcon name={item.icon} /></span>
               </span>
-              <span className="mobile-nav-label mobile-nav-label-full">{item.label}</span>
-              <span className="mobile-nav-label mobile-nav-label-short">{item.shortLabel}</span>
-              <span className="mobile-nav-label mobile-nav-label-tiny">{item.tinyLabel}</span>
+              <span className="sr-only">{item.label}</span>
             </Link>
           )
         })}
