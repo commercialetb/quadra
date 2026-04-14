@@ -7,6 +7,6 @@
     "x-shortcut-token": "SHORTCUT_SHARED_TOKEN"
   },
   "body": {},
-  "readField": "spokenSummary",
+  "readField": "spokenResponse",
   "openField": "openUrl"
 }

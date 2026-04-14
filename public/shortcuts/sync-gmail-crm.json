@@ -1,0 +1,30 @@
+{
+  "name": "Quadra - Sync Gmail CRM",
+  "method": "POST",
+  "url": "https://TUO-DOMINIO/api/shortcut/sync-gmail-crm",
+  "headers": {
+    "Content-Type": "application/json",
+    "x-shortcut-token": "SHORTCUT_SHARED_TOKEN"
+  },
+  "body": {
+    "requiredLabel": "CRM",
+    "triageMode": "smart",
+    "createCompanyIfMissing": true,
+    "createContactIfMissing": true,
+    "createFollowup": true,
+    "emails": [
+      {
+        "fromEmail": "mario.rossi@acme.it",
+        "fromName": "Mario Rossi",
+        "subject": "Richiesta informazioni",
+        "snippet": "Vorrei ricevere una proposta aggiornata.",
+        "body": "Buongiorno, vorrei ricevere una proposta aggiornata e sentirci entro venerdi.",
+        "gmailLabels": ["CRM"],
+        "threadId": "188abc123",
+        "messageId": "188abc123-msg"
+      }
+    ]
+  },
+  "readField": "spokenResponse",
+  "openField": "openUrl"
+}

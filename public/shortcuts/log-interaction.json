@@ -1,10 +1,20 @@
 {
-  "query": "Mario Rossi",
-  "kind": "meeting",
-  "content": "Meeting positivo. Inviare proposta aggiornata domani.",
-  "createFollowup": true,
-  "followupTitle": "",
-  "followupDate": "",
-  "priority": "",
-  "shortcutToken": "SHORTCUT_SHARED_TOKEN"
+  "name": "Quadra - Registra interazione",
+  "method": "POST",
+  "url": "https://TUO-DOMINIO/api/shortcut/log-interaction",
+  "headers": {
+    "Content-Type": "application/json",
+    "x-shortcut-token": "SHORTCUT_SHARED_TOKEN"
+  },
+  "body": {
+    "query": "Mario Rossi",
+    "kind": "meeting",
+    "content": "Meeting positivo. Inviare proposta aggiornata domani.",
+    "createFollowup": true,
+    "followupTitle": "",
+    "followupDate": "",
+    "priority": ""
+  },
+  "readField": "spokenResponse",
+  "openField": "openUrl"
 }

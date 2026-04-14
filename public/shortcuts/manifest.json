@@ -1,0 +1,52 @@
+{
+  "version": "v21",
+  "title": "Quadra Apple Shortcuts Pack",
+  "description": "Shortcut ufficiali per iPhone collegati al layer Shortcut di Quadra, compreso il flusso Gmail con etichetta CRM e la sincronizzazione batch v21 con auto-triage.",
+  "items": [
+    {
+      "key": "create_followup",
+      "title": "Crea follow-up",
+      "file": "/shortcuts/create-followup.json"
+    },
+    {
+      "key": "search_record",
+      "title": "Cerca record",
+      "file": "/shortcuts/search-record.json"
+    },
+    {
+      "key": "today_agenda",
+      "title": "Mostra oggi",
+      "file": "/shortcuts/today-agenda.json"
+    },
+    {
+      "key": "add_note",
+      "title": "Aggiungi nota",
+      "file": "/shortcuts/add-note.json"
+    },
+    {
+      "key": "log_call_outcome",
+      "title": "Registra esito chiamata",
+      "file": "/shortcuts/log-call-outcome.json"
+    },
+    {
+      "key": "log_interaction",
+      "title": "Registra interazione",
+      "file": "/shortcuts/log-interaction.json"
+    },
+    {
+      "key": "ingest_email",
+      "title": "Leggi email",
+      "file": "/shortcuts/ingest-email.json"
+    },
+    {
+      "key": "ingest_gmail_crm",
+      "title": "Gmail CRM",
+      "file": "/shortcuts/ingest-gmail-crm.json"
+    },
+    {
+      "key": "sync_gmail_crm",
+      "title": "Sync Gmail CRM",
+      "file": "/shortcuts/sync-gmail-crm.json"
+    }
+  ]
+}
