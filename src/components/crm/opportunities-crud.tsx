@@ -48,8 +48,8 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
       <section className="panel-card page-section-card">
         <div className="list-head">
           <div>
-            <h2>Opportunità</h2>
-            <p>Pipeline leggibile, con valore e prossima mossa in primo piano.</p>
+            <h2>Pipeline</h2>
+            <p>{items.length} opportunità visibili.</p>
           </div>
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
             + Nuova opportunità

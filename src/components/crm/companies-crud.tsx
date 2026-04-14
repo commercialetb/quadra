@@ -51,8 +51,8 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
       <section className="panel-card page-section-card">
         <div className="list-head">
           <div>
-            <h2>Aziende</h2>
-            <p>Lista pulita, riconoscibile e rapida da scorrere.</p>
+            <h2>Aziende attive</h2>
+            <p>{items.length} risultati</p>
           </div>
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
             + Nuova azienda

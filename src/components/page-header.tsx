@@ -6,15 +6,17 @@ export function PageHeader({
   actions,
   eyebrow = 'CRM core',
   compact = false,
+  mobileHidden = false,
 }: {
   title: string
   subtitle: string
   actions?: ReactNode
   eyebrow?: string
   compact?: boolean
+  mobileHidden?: boolean
 }) {
   return (
-    <section className={`page-hero ${compact ? 'page-hero-compact' : ''}`}>
+    <section className={`page-hero ${compact ? 'page-hero-compact' : ''} ${mobileHidden ? 'page-hero-mobile-hidden' : ''}`.trim()}>
       <div>
         <p className="page-eyebrow">{eyebrow}</p>
         <h1 className="page-title">{title}</h1>

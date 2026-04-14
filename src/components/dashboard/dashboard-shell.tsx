@@ -10,10 +10,8 @@ export function DashboardShell({ data }: { data: any }) {
       <section className="dashboard-hero dashboard-hero-compact">
         <div>
           <p className="page-eyebrow">Workspace</p>
-          <h1 className="page-title">Benvenuto.</h1>
-          <p className="page-subtitle dashboard-subtitle-compact">
-            Oggi conta soprattutto questo: follow-up da chiudere e trattative da sbloccare.
-          </p>
+          <h1 className="page-title">Dashboard</h1>
+          <p className="page-subtitle dashboard-subtitle-compact">Focus rapido di oggi.</p>
         </div>
       </section>
 
@@ -21,7 +19,7 @@ export function DashboardShell({ data }: { data: any }) {
         <article className="metric-card metric-primary">
           <span className="metric-label">Follow-up oggi</span>
           <strong className="metric-value">{data.kpis.todayCount}</strong>
-          <span className="metric-note">Le azioni che meritano risposta prima di sera.</span>
+          <span className="metric-note">Priorità di oggi.</span>
         </article>
         <article className="metric-card">
           <span className="metric-label">Da sbloccare</span>
@@ -31,7 +29,7 @@ export function DashboardShell({ data }: { data: any }) {
         <article className="metric-card">
           <span className="metric-label">Opportunità attive</span>
           <strong className="metric-value">{data.kpis.openCount}</strong>
-          <span className="metric-note">Pipeline viva e in movimento.</span>
+          <span className="metric-note">Trattative aperte.</span>
         </article>
         <article className="metric-card">
           <span className="metric-label">Valore pipeline</span>

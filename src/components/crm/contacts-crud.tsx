@@ -24,8 +24,8 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
       <section className="panel-card page-section-card">
         <div className="list-head">
           <div>
-            <h2>Contatti</h2>
-            <p>Persone leggibili, azienda chiara e azioni essenziali.</p>
+            <h2>Rubrica</h2>
+            <p>{items.length} risultati</p>
           </div>
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
             + Nuovo contatto

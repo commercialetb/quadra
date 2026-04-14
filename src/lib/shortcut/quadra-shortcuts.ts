@@ -4,7 +4,7 @@ export type ShortcutEntityKind = 'company' | 'contact' | 'opportunity'
 export type ShortcutPriority = 'low' | 'medium' | 'high' | 'urgent'
 export type CallOutcomeClassification = 'hot' | 'warm' | 'cold' | 'lost' | 'neutral'
 
-type CompanyRow = { id: string; name: string; status?: string | null }
+type CompanyRow = { id: string; name: string; status?: string | null; website?: string | null; email?: string | null }
 type ContactRow = { id: string; full_name: string; company_id?: string | null }
 type OpportunityRow = { id: string; title: string; company_id?: string | null; stage?: string | null }
 type TodayAgendaRow = { id: string; title: string; due_at: string; priority?: string | null; status?: string | null; company_id?: string | null; contact_id?: string | null; opportunity_id?: string | null }
@@ -303,9 +303,9 @@ export async function getShortcutContext(): Promise<ShortcutContext> {
 
   const userId = data.user.id
   const [{ data: companies }, { data: contacts }, { data: opportunities }] = await Promise.all([
-    supabase.from('companies').select('id, name, status').eq('owner_id', userId).limit(300),
-    supabase.from('contacts').select('id, full_name, company_id').eq('owner_id', userId).limit(300),
-    supabase.from('opportunities').select('id, title, company_id, stage').eq('owner_id', userId).limit(300),
+    supabase.from('companies').select('id, name, status, website, email').eq('owner_id', userId).limit(500),
+    supabase.from('contacts').select('id, full_name, company_id').eq('owner_id', userId).limit(500),
+    supabase.from('opportunities').select('id, title, company_id, stage').eq('owner_id', userId).limit(500),
   ])
 
   return {
@@ -431,6 +431,189 @@ export function resolveShortcutEntity(params: {
   }
 
   return { status: 'ambiguous', results: results.slice(0, 5) }
+}
+
+
+
+export type EmailSenderProvision = {
+  companyId: string | null
+  companyName: string | null
+  contactId: string | null
+  contactName: string | null
+  email: string
+  domain: string
+  createdCompany: boolean
+  createdContact: boolean
+}
+
+function toWordsLabel(value: string) {
+  return value
+    .split(/[._\-\s]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ')
+}
+
+function extractEmailAddress(raw: string) {
+  const value = String(raw || '').trim()
+  const match = value.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)
+  return (match?.[0] || value).trim().toLowerCase()
+}
+
+function extractDomainFromEmail(email: string) {
+  const clean = extractEmailAddress(email)
+  return clean.includes('@') ? clean.split('@')[1].toLowerCase() : ''
+}
+
+function normalizeUrlDomain(input: string | null | undefined) {
+  const value = String(input || '').trim().toLowerCase()
+  if (!value) return ''
+  return value.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0]
+}
+
+function inferCompanyNameFromDomain(domain: string) {
+  const label = domain.split('.').filter(Boolean)[0] || domain
+  return toWordsLabel(label) || 'Nuova azienda'
+}
+
+function inferNamePartsFromSender(params: { fromEmail: string; fromName?: string | null }) {
+  const fromName = String(params.fromName || '').trim().replace(/[<>]/g, '')
+  if (fromName) {
+    const cleaned = fromName.replace(/"/g, '').trim()
+    const parts = cleaned.split(/\s+/).filter(Boolean)
+    if (parts.length >= 2) {
+      return { firstName: toWordsLabel(parts[0]), lastName: toWordsLabel(parts.slice(1).join(' ')), fullName: toWordsLabel(parts.join(' ')) }
+    }
+    return { firstName: toWordsLabel(cleaned), lastName: 'Email', fullName: toWordsLabel(cleaned) }
+  }
+
+  const local = extractEmailAddress(params.fromEmail).split('@')[0] || 'contatto'
+  const localParts = local.split(/[._\-]+/).filter(Boolean)
+  if (localParts.length >= 2) {
+    return {
+      firstName: toWordsLabel(localParts[0]),
+      lastName: toWordsLabel(localParts.slice(1).join(' ')),
+      fullName: `${toWordsLabel(localParts[0])} ${toWordsLabel(localParts.slice(1).join(' '))}`.trim(),
+    }
+  }
+  const first = toWordsLabel(localParts[0] || 'Nuovo')
+  return { firstName: first, lastName: 'Contatto', fullName: `${first} Contatto` }
+}
+
+export async function findOrCreateEmailSenderEntities(params: {
+  fromEmail: string
+  fromName?: string | null
+  createCompanyIfMissing?: boolean
+  createContactIfMissing?: boolean
+}) : Promise<EmailSenderProvision> {
+  const { supabase, userId, companies } = await getShortcutContext()
+  const email = extractEmailAddress(params.fromEmail)
+  if (!email || !email.includes('@')) throw new Error('Email mittente non valida')
+  const domain = extractDomainFromEmail(email)
+
+  const { data: existingContact, error: contactLookupError } = await supabase
+    .from('contacts')
+    .select('id, full_name, company_id')
+    .eq('owner_id', userId)
+    .ilike('email', email)
+    .limit(1)
+    .maybeSingle()
+
+  if (contactLookupError) throw new Error(contactLookupError.message)
+
+  let companyId = (existingContact?.company_id as string | null | undefined) || null
+  let companyName = companyId ? (companies.find((item) => item.id === companyId)?.name || null) : null
+  let createdCompany = false
+
+  if (!companyId) {
+    const matchedCompany = companies.find((company) => {
+      const websiteDomain = normalizeUrlDomain(company.website)
+      const companyEmailDomain = extractDomainFromEmail(company.email || '')
+      return (domain && websiteDomain === domain) || (domain && companyEmailDomain === domain) || normalize(company.name) === normalize(inferCompanyNameFromDomain(domain))
+    })
+
+    if (matchedCompany) {
+      companyId = matchedCompany.id
+      companyName = matchedCompany.name
+    }
+  }
+
+  if (!companyId && params.createCompanyIfMissing !== false) {
+    companyName = inferCompanyNameFromDomain(domain)
+    const { data: insertedCompany, error: companyInsertError } = await supabase
+      .from('companies')
+      .insert({
+        owner_id: userId,
+        name: companyName,
+        website: domain ? `https://${domain}` : null,
+        email,
+        source: 'email_inbox',
+        status: 'lead',
+        notes_summary: 'Creata automaticamente da email in ingresso',
+      })
+      .select('id, name')
+      .single()
+
+    if (companyInsertError || !insertedCompany) throw new Error(companyInsertError?.message || 'Impossibile creare l’azienda da email')
+    companyId = insertedCompany.id as string
+    companyName = insertedCompany.name as string
+    createdCompany = true
+  }
+
+  if (existingContact) {
+    return {
+      companyId,
+      companyName,
+      contactId: existingContact.id as string,
+      contactName: (existingContact.full_name as string) || null,
+      email,
+      domain,
+      createdCompany,
+      createdContact: false,
+    }
+  }
+
+  if (params.createContactIfMissing === false) {
+    return {
+      companyId,
+      companyName,
+      contactId: null,
+      contactName: null,
+      email,
+      domain,
+      createdCompany,
+      createdContact: false,
+    }
+  }
+
+  const inferred = inferNamePartsFromSender({ fromEmail: email, fromName: params.fromName })
+  const { data: insertedContact, error: contactInsertError } = await supabase
+    .from('contacts')
+    .insert({
+      owner_id: userId,
+      company_id: companyId,
+      first_name: inferred.firstName,
+      last_name: inferred.lastName,
+      email,
+      preferred_contact_method: 'email',
+      status: 'active',
+      notes_summary: 'Creato automaticamente da email in ingresso',
+    })
+    .select('id, full_name')
+    .single()
+
+  if (contactInsertError || !insertedContact) throw new Error(contactInsertError?.message || 'Impossibile creare il contatto da email')
+
+  return {
+    companyId,
+    companyName,
+    contactId: insertedContact.id as string,
+    contactName: (insertedContact.full_name as string) || inferred.fullName,
+    email,
+    domain,
+    createdCompany,
+    createdContact: true,
+  }
 }
 
 export async function createShortcutNote(params: {

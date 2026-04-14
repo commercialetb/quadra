@@ -51,8 +51,8 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
       <section className="panel-card page-section-card">
         <div className="list-head">
           <div>
-            <h2>Follow-up</h2>
-            <p>Agenda operativa più chiara, con urgenza e stato leggibili al volo.</p>
+            <h2>Agenda operativa</h2>
+            <p>{items.length} attività</p>
           </div>
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
             + Nuovo follow-up
