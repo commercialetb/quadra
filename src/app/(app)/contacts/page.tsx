@@ -11,6 +11,7 @@ export default async function ContactsPage() {
         title="Contatti"
         subtitle="Le persone devono essere subito leggibili: ruolo, azienda e canale principale, senza editing sempre aperto."
         eyebrow="CRM core"
+        mobileHidden
       />
       <ContactsCrud contacts={contacts} companies={companies} />
     </div>

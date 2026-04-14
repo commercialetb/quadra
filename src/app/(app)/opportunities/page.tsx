@@ -11,6 +11,7 @@ export default async function OpportunitiesPage() {
         title="Opportunità"
         subtitle="Pipeline commerciale più utile: listato pulito, focus sulla fase e niente mini-form sempre aperte."
         eyebrow="CRM core"
+        mobileHidden
       />
       <OpportunitiesCrud opportunities={opportunities} companies={companies} contacts={contacts} />
     </div>

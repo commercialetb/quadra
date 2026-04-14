@@ -1,9 +1,16 @@
 import './globals.css'
 import type { Metadata, Viewport } from 'next'
+import { PwaRegister } from '@/components/pwa-register'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://quadra-alpha.vercel.app'),
+  applicationName: 'Quadra',
   title: 'Quadra CRM',
   description: 'CRM personale.',
+  manifest: '/manifest.webmanifest',
+  formatDetection: {
+    telephone: false,
+  },
   icons: {
     icon: [
       { url: '/icons/icon-192-v21.png', sizes: '192x192', type: 'image/png' },
@@ -16,7 +23,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: 'Quadra',
-    statusBarStyle: 'default',
+    statusBarStyle: 'black-translucent',
   },
 }
 
@@ -24,7 +31,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: '#0f172a',
+  themeColor: '#684EFF',
 }
 
 export default function RootLayout({
