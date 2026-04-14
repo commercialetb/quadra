@@ -15,6 +15,14 @@ export function DashboardShell({ data }: { data: any }) {
         </div>
       </section>
 
+      <section className="panel-card shortcut-callout">
+        <div className="panel-head"><div><h2>Shortcut iPhone</h2><p>Installa i 6 comandi ufficiali di Quadra e apri la review queue quando serve.</p></div></div>
+        <div className="cluster-wrap">
+          <a href="/capture/siri/install" className="secondary-button">Installa shortcut</a>
+          <a href="/capture/siri/review" className="ghost-button">Apri review</a>
+        </div>
+      </section>
+
       <section className="today-grid">
         <article className="metric-card metric-primary">
           <span className="metric-label">Follow-up oggi</span>
@@ -79,17 +87,6 @@ export function DashboardShell({ data }: { data: any }) {
 
 
       <div className="dashboard-grid two-up dashboard-two-up-mobile-order">
-        <section className="panel-card mobile-priority-first">
-          <div className="panel-head"><div><h2>Shortcut iPhone</h2><p>Installa i comandi ufficiali e usa Quadra con Siri e Comandi.</p></div></div>
-          <div className="stack-sm">
-            <div className="empty-block empty-block-left">6 shortcut pronti: follow-up, cerca record, agenda di oggi, nota, esito chiamata e interazione.</div>
-            <div className="cluster-wrap">
-              <a href="/capture/siri/install" className="secondary-button">Installa shortcut</a>
-              <a href="/capture/siri/review" className="ghost-button">Apri review</a>
-            </div>
-          </div>
-        </section>
-
         <section className="panel-card mobile-priority-second">
           <div className="panel-head"><div><h2>Aziende recenti</h2><p>Le anagrafiche appena toccate.</p></div></div>
           <div className="simple-list compact-list">

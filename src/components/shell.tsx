@@ -138,6 +138,9 @@ export default function Shell({ children }: { children: ReactNode }) {
             <div className="app-topbar-title">{currentTitle(pathname)}</div>
           </div>
           <div className="app-topbar-actions">
+            <Link href="/capture/siri/install" className="ghost-button">
+              Shortcut
+            </Link>
             <Link href="/assistant" className="ghost-button hide-mobile">
               Assistente AI
             </Link>
