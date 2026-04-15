@@ -14,7 +14,7 @@ export default async function FollowupsPage() {
     <div className="page-wrap">
       <PageHeader
         title="Agenda (Appuntamenti & Task)"
-        subtitle="Un’evoluzione del tuo CRM con Voice UX di Siri+GPT-4."
+        subtitle="Un'evoluzione del tuo CRM con Voice UX di Siri+GPT-4."
         eyebrow="CRM core"
         mobileHidden
       />

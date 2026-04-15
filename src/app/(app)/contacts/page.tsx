@@ -9,7 +9,7 @@ export default async function ContactsPage() {
     <div className="page-wrap">
       <PageHeader
         title="Contacts (Anagrafica & Cronologia)"
-        subtitle="Un’evoluzione del tuo CRM con Voice UX di Siri+GPT-4."
+        subtitle="Un'evoluzione del tuo CRM con Voice UX di Siri+GPT-4."
         eyebrow="CRM core"
         mobileHidden
       />
