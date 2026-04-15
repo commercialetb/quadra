@@ -1,139 +1,186 @@
-import { AssistantPanel } from '@/components/ai/assistant-panel'
 import { followupStatusLabel, priorityLabel, stageLabel } from '@/lib/crm-labels'
+import { formatCurrency } from '@/lib/format'
 
-function DashboardVoicePreview() {
+function MobileDashboard({ data }: { data: any }) {
+  const dailyFocus = [...(data.todayFollowups || []), ...(data.staleOpportunities || [])].slice(0, 3)
+
   return (
-    <div className="dashboard-hero-mobile-tools" aria-hidden="true">
-      <div className="dashboard-hero-mobile-pill dashboard-hero-mobile-pill-clean">
-        <span className="voice-mic">
-          <svg viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 0 0 3.5-3.5V8a3.5 3.5 0 1 0-7 0v4a3.5 3.5 0 0 0 3.5 3.5Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /><path d="M6.5 11.5a5.5 5.5 0 1 0 11 0M12 17v3M9 20h6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-        </span>
-        <span className="voice-wave voice-wave-live" />
-        <span className="voice-more">•••</span>
+    <section className="dashboard-mobile-reference" aria-label="Dashboard mobile ispirata al mockup">
+      <div className="dashboard-mobile-banner">Oggi hai {data.kpis.todayCount} appuntamenti e {data.kpis.overdueCount} task critici</div>
+
+      <div className="dashboard-mobile-heading">
+        <h1>Bentornato,</h1>
+        <p>User Name</p>
       </div>
-      <div className="dashboard-hero-mobile-chip-row">
-        <span className="brand-badge">Siri</span>
-        <span className="brand-badge">Gemini</span>
-        <span className="brand-badge">GPT-4</span>
+
+      <article className="dashboard-mobile-status-card">
+        <span>Pipeline Status</span>
+        <strong>{data.kpis.openCount} Trattative Aperte</strong>
+        <b>{formatCurrency(data.kpis.pipelineValue || 0)}</b>
+        <div className="dashboard-mini-line" />
+      </article>
+
+      <article className="dashboard-mobile-focus-card">
+        <div className="dashboard-mobile-card-head">
+          <span>Daily Focus</span>
+          <span>›</span>
+        </div>
+        <div className="dashboard-mobile-focus-list">
+          {dailyFocus.length ? dailyFocus.map((item: any) => {
+            const isDeal = Object.prototype.hasOwnProperty.call(item, 'stage')
+            return (
+              <div key={item.id} className={`dashboard-mobile-focus-item ${isDeal ? 'is-note' : ''}`}>
+                <span className="dashboard-mobile-focus-icon">{isDeal ? '✎' : item.status === 'overdue' ? '⚠' : '✅'}</span>
+                <div>
+                  <strong>{item.title}</strong>
+                  <p>{isDeal ? `${stageLabel(item.stage)} · trattativa ferma` : `${followupStatusLabel(item.status)} · ${priorityLabel(item.priority)}`}</p>
+                </div>
+              </div>
+            )
+          }) : <div className="dashboard-mobile-focus-empty">Nessun promemoria urgente.</div>}
+        </div>
+      </article>
+    </section>
+  )
+}
+
+function DesktopDashboard({ data }: { data: any }) {
+  const focusItems = [...(data.todayFollowups || []), ...(data.staleOpportunities || [])].slice(0, 3)
+  const openDeals = (data.openOpportunities || []).slice(0, 5)
+  const recentCompanies = (data.recentCompanies || []).slice(0, 6)
+
+  return (
+    <section className="dashboard-reference-desktop" aria-label="Dashboard desktop ispirata al mockup">
+      <div className="dashboard-reference-device">
+        <div className="dashboard-reference-device-topbar">
+          <span className="dashboard-reference-corner-brand">Q</span>
+          <div className="dashboard-reference-voice-pill">
+            <span className="voice-mic" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 0 0 3.5-3.5V8a3.5 3.5 0 1 0-7 0v4a3.5 3.5 0 0 0 3.5 3.5Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /><path d="M6.5 11.5a5.5 5.5 0 1 0 11 0M12 17v3M9 20h6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </span>
+            <span className="voice-wave voice-wave-live" />
+            <span className="voice-more">•••</span>
+          </div>
+          <div className="dashboard-reference-utility-icons">⌂ ⌕ ⦿</div>
+        </div>
+
+        <div className="dashboard-reference-grid">
+          <div className="dashboard-column dashboard-column-left">
+            <article className="dashboard-reference-panel dashboard-reference-welcome">
+              <h1>Bentornato,</h1>
+              <p>User Name</p>
+            </article>
+
+            <article className="dashboard-reference-panel dashboard-reference-kpi">
+              <span>Pipeline Status</span>
+              <strong>{data.kpis.openCount} Trattative Aperte</strong>
+              <b>{formatCurrency(data.kpis.pipelineValue || 0)}</b>
+              <div className="dashboard-mini-line" />
+            </article>
+
+            <article className="dashboard-reference-panel dashboard-reference-list">
+              <div className="dashboard-reference-panel-head">
+                <span>Daily Focus</span>
+                <span>›</span>
+              </div>
+              <div className="dashboard-reference-focus-list">
+                {focusItems.length ? focusItems.map((item: any) => {
+                  const isDeal = Object.prototype.hasOwnProperty.call(item, 'stage')
+                  return (
+                    <div key={item.id} className="dashboard-reference-focus-item">
+                      <span className="dashboard-reference-dot">{isDeal ? '✎' : item.status === 'overdue' ? '⚠' : '✅'}</span>
+                      <div>
+                        <strong>{item.title}</strong>
+                        <p>{isDeal ? `${stageLabel(item.stage)} · trattativa ferma` : `${priorityLabel(item.priority)} · ${followupStatusLabel(item.status)}`}</p>
+                      </div>
+                    </div>
+                  )
+                }) : <div className="dashboard-reference-empty">Nessun allarme. Ottimo segnale.</div>}
+              </div>
+            </article>
+          </div>
+
+          <div className="dashboard-column dashboard-column-center">
+            <article className="dashboard-reference-panel dashboard-reference-welcome second">
+              <h1>Bentornato,</h1>
+              <p>User Name</p>
+            </article>
+
+            <article className="dashboard-reference-panel dashboard-reference-kpi">
+              <span>Pipeline Status</span>
+              <strong>{data.kpis.openCount} Trattative Aperte</strong>
+              <b>{formatCurrency(data.kpis.pipelineValue || 0)}</b>
+              <div className="dashboard-mini-line" />
+            </article>
+
+            <article className="dashboard-reference-panel dashboard-reference-table-panel">
+              <div className="dashboard-reference-panel-head">
+                <span>Pipeline Deals</span>
+              </div>
+              <div className="dashboard-reference-table">
+                <div className="dashboard-reference-table-row dashboard-reference-table-head-row">
+                  <span>Pipeline</span>
+                  <span>Fase</span>
+                  <span>Valore</span>
+                </div>
+                {openDeals.length ? openDeals.map((item: any) => (
+                  <div key={item.id} className="dashboard-reference-table-row">
+                    <span>{item.title}</span>
+                    <span>{stageLabel(item.stage)}</span>
+                    <span>{formatCurrency(item.value_estimate || 0)}</span>
+                  </div>
+                )) : <div className="dashboard-reference-empty">Nessuna trattativa aperta.</div>}
+              </div>
+            </article>
+          </div>
+
+          <div className="dashboard-column dashboard-column-right">
+            <article className="dashboard-reference-panel dashboard-reference-contacts">
+              <div className="dashboard-reference-panel-head">
+                <span>Contacts</span>
+                <span>›</span>
+              </div>
+              <div className="dashboard-reference-contact-list">
+                {recentCompanies.length ? recentCompanies.map((item: any) => (
+                  <div key={item.id} className="dashboard-reference-contact-row">
+                    <span className="dashboard-reference-avatar">{item.name?.slice(0, 1) || 'A'}</span>
+                    <div>
+                      <strong>{item.name}</strong>
+                      <p>{item.city || 'User Name Presence'}</p>
+                    </div>
+                  </div>
+                )) : <div className="dashboard-reference-empty">Nessuna anagrafica recente.</div>}
+              </div>
+            </article>
+
+            <article className="dashboard-reference-panel dashboard-reference-chart-panel">
+              <div className="dashboard-reference-panel-head"><span>Meeting Analytics</span></div>
+              <div className="dashboard-reference-chart-value">60%</div>
+              <div className="dashboard-reference-bars"><span /><span /><span /><span /></div>
+            </article>
+
+            <article className="dashboard-reference-panel dashboard-reference-chart-panel">
+              <div className="dashboard-reference-panel-head"><span>Posting Insights</span></div>
+              <div className="dashboard-reference-linechart" />
+              <div className="dashboard-reference-chart-footer">
+                <span>Jan</span>
+                <span>Feb</span>
+                <span>Mar</span>
+                <span>Apr</span>
+              </div>
+            </article>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
   )
 }
 
 export function DashboardShell({ data }: { data: any }) {
-  const recentCompanies = (data.recentCompanies || []).slice(0, 4)
-  const recentActivities = (data.recentActivities || []).slice(0, 4)
-
   return (
-    <div className="page-stack">
-      <section className="dashboard-hero dashboard-hero-compact dashboard-hero-mobile-card">
-        <div>
-          <p className="page-eyebrow">Dashboard CRM Predittiva e Vocale</p>
-          <h1 className="page-title">Bentornato,</h1>
-          <p className="page-subtitle dashboard-subtitle-compact">Una dashboard più visiva, più vocale e meno tradizionale per contatti, agenda e trattative.</p>
-        </div>
-        <DashboardVoicePreview />
-      </section>
-
-      <section className="panel-card shortcut-callout">
-        <div className="panel-head"><div><h2>Voice Control Bar</h2><p>Gestisci agenda, deal e contatti da un solo layer vocale.</p></div></div>
-        <div className="cluster-wrap dashboard-shortcut-grid">
-          <a href="/capture/siri/install" className="secondary-button">Installa shortcuts</a>
-          <a href="/capture/siri/review" className="ghost-button">Apri review</a>
-        </div>
-      </section>
-
-      <section className="today-grid dashboard-kpi-grid">
-        <article className="metric-card metric-primary">
-          <span className="metric-label">Daily Focus</span>
-          <strong className="metric-value">{data.kpis.todayCount}</strong>
-          <span className="metric-note">Priorità di oggi.</span>
-        </article>
-        <article className="metric-card">
-          <span className="metric-label">Meeting Insights</span>
-          <strong className="metric-value">{data.kpis.overdueCount}</strong>
-          <span className="metric-note">Scaduti o in ritardo.</span>
-        </article>
-        <article className="metric-card">
-          <span className="metric-label">Pipeline Deals</span>
-          <strong className="metric-value">{data.kpis.openCount}</strong>
-          <span className="metric-note">Trattative aperte.</span>
-        </article>
-        <article className="metric-card">
-          <span className="metric-label">Pipeline Status</span>
-          <strong className="metric-value">
-            {new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(data.kpis.pipelineValue || 0)}
-          </strong>
-          <span className="metric-note">Valore stimato delle opportunità aperte.</span>
-        </article>
-      </section>
-
-      <div className="dashboard-grid dashboard-main-grid">
-        <section className="panel-card panel-card-accent">
-          <div className="panel-head">
-            <div>
-              <h2>Focus Giornaliero</h2>
-              <p>Le azioni operative da tenere vicine.</p>
-            </div>
-            <a href="/followups" className="secondary-button">Apri Agenda</a>
-          </div>
-          <div className="task-list">
-            {data.todayFollowups.length === 0 && data.staleOpportunities.length === 0 ? (
-              <div className="empty-block">Nessun allarme. Ottimo segnale.</div>
-            ) : null}
-            {data.todayFollowups.map((item: any) => (
-              <a key={item.id} href="/followups" className="task-item clickable-task-item">
-                <div>
-                  <div className="task-title">{item.title}</div>
-                  <div className="task-meta">Scade oggi · {priorityLabel(item.priority)} · {followupStatusLabel(item.status)}</div>
-                </div>
-                <span className="task-badge">oggi</span>
-              </a>
-            ))}
-            {data.staleOpportunities.map((item: any) => (
-              <a key={item.id} href={`/opportunities/${item.id}`} className="task-item clickable-task-item">
-                <div>
-                  <div className="task-title">{item.title}</div>
-                  <div className="task-meta">{stageLabel(item.stage)} · trattativa ferma</div>
-                </div>
-                <span className="task-badge warning">ferma</span>
-              </a>
-            ))}
-          </div>
-        </section>
-
-        <AssistantPanel data={data} />
-      </div>
-
-      <div className="dashboard-grid two-up dashboard-two-up-mobile-order">
-        <section className="panel-card mobile-priority-first">
-          <div className="panel-head"><div><h2>Meeting Analytics</h2><p>Indicatori rapidi sulla giornata.</p></div></div>
-          <div className="simple-list compact-list">
-            {recentActivities.length === 0 ? <div className="empty-block">Nessuna attività recente.</div> : recentActivities.map((item: any) => (
-              <div key={item.id} className="simple-row static">
-                <div>
-                  <strong>{item.subject || 'Attività'}</strong>
-                  <span>{item.kind}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="panel-card mobile-priority-second">
-          <div className="panel-head"><div><h2>Contacts</h2><p>Anagrafica viva e subito azionabile.</p></div></div>
-          <div className="simple-list compact-list">
-            {recentCompanies.length === 0 ? <div className="empty-block">Nessuna azienda recente.</div> : recentCompanies.map((item: any) => (
-              <a key={item.id} href={`/companies/${item.id}`} className="simple-row">
-                <div>
-                  <strong>{item.name}</strong>
-                  <span>{item.city || 'Città non indicata'} · {item.status}</span>
-                </div>
-              </a>
-            ))}
-          </div>
-        </section>
-      </div>
+    <div className="page-stack page-stack-reference-dashboard">
+      <DesktopDashboard data={data} />
+      <MobileDashboard data={data} />
     </div>
   )
 }
