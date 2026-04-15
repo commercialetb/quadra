@@ -51,14 +51,20 @@ function NavIcon({ name }: { name: NavItem['icon'] }) {
 
 function VoiceBar() {
   return (
-    <div className="voice-bar-shell">
+    <div className="voice-bar-shell" aria-label="Voice control bar">
       <div className="voice-bar-pill">
-        <span className="voice-dot" />
-        <span className="voice-wave" />
-        <button type="button" className="voice-more" aria-label="More actions">•••</button>
+        <span className="voice-mic" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 0 0 3.5-3.5V8a3.5 3.5 0 1 0-7 0v4a3.5 3.5 0 0 0 3.5 3.5Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /><path d="M6.5 11.5a5.5 5.5 0 1 0 11 0M12 17v3M9 20h6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        </span>
+        <span className="voice-wave voice-wave-live" />
+        <span className="voice-more" aria-hidden="true">•••</span>
       </div>
     </div>
   )
+}
+
+function ModelBadge({ label }: { label: string }) {
+  return <span className="brand-badge">{label}</span>
 }
 
 export default function Shell({ children }: { children: ReactNode }) {
@@ -93,27 +99,20 @@ export default function Shell({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="sidebar-footer sidebar-footer-refresh">
-          <div className="sidebar-chip-stack">
-            <span className="voice-brand-chip">Siri</span>
-            <span className="voice-brand-chip">Gemini</span>
-            <span className="voice-brand-chip">GPT-4</span>
-          </div>
-          <div className="sidebar-status">CRM predittiva e vocale</div>
           <LogoutButton />
         </div>
       </aside>
 
       <div className="app-main">
         <header className="app-topbar quadra-topbar">
-          <div>
+          <div className="topbar-title-block">
             <div className="app-topbar-title">{currentTitle(pathname)}</div>
-            <div className="app-topbar-kicker">Voice UX con Quadra</div>
           </div>
           <div className="topbar-center"><VoiceBar /></div>
           <div className="app-topbar-actions app-topbar-actions-refresh">
-            <span className="brand-badge">Siri</span>
-            <span className="brand-badge">Gemini</span>
-            <span className="brand-badge">GPT-4</span>
+            <ModelBadge label="Siri" />
+            <ModelBadge label="Gemini" />
+            <ModelBadge label="GPT-4" />
           </div>
         </header>
 

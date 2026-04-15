@@ -4,13 +4,11 @@ import { followupStatusLabel, priorityLabel, stageLabel } from '@/lib/crm-labels
 function DashboardVoicePreview() {
   return (
     <div className="dashboard-hero-mobile-tools" aria-hidden="true">
-      <div className="dashboard-hero-mobile-pill">
-        <span className="voice-dot" />
-        <span className="dashboard-hero-mobile-orb orb-1" />
-        <span className="dashboard-hero-mobile-orb orb-2" />
-        <span className="dashboard-hero-mobile-orb orb-3" />
-        <span className="dashboard-hero-mobile-orb orb-4" />
-        <span className="dashboard-hero-mobile-orb orb-5" />
+      <div className="dashboard-hero-mobile-pill dashboard-hero-mobile-pill-clean">
+        <span className="voice-mic">
+          <svg viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 0 0 3.5-3.5V8a3.5 3.5 0 1 0-7 0v4a3.5 3.5 0 0 0 3.5 3.5Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /><path d="M6.5 11.5a5.5 5.5 0 1 0 11 0M12 17v3M9 20h6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        </span>
+        <span className="voice-wave voice-wave-live" />
         <span className="voice-more">•••</span>
       </div>
       <div className="dashboard-hero-mobile-chip-row">
@@ -32,13 +30,13 @@ export function DashboardShell({ data }: { data: any }) {
         <div>
           <p className="page-eyebrow">Dashboard CRM Predittiva e Vocale</p>
           <h1 className="page-title">Bentornato,</h1>
-          <p className="page-subtitle dashboard-subtitle-compact">Inizia la UX vocale con Quadra, Siri, Gemini e GPT.</p>
+          <p className="page-subtitle dashboard-subtitle-compact">Una dashboard più visiva, più vocale e meno tradizionale per contatti, agenda e trattative.</p>
         </div>
         <DashboardVoicePreview />
       </section>
 
       <section className="panel-card shortcut-callout">
-        <div className="panel-head"><div><h2>Voice Control Bar</h2><p>Gestisci agenda, deal e contatti con la voce.</p></div></div>
+        <div className="panel-head"><div><h2>Voice Control Bar</h2><p>Gestisci agenda, deal e contatti da un solo layer vocale.</p></div></div>
         <div className="cluster-wrap dashboard-shortcut-grid">
           <a href="/capture/siri/install" className="secondary-button">Installa shortcuts</a>
           <a href="/capture/siri/review" className="ghost-button">Apri review</a>
@@ -66,7 +64,7 @@ export function DashboardShell({ data }: { data: any }) {
           <strong className="metric-value">
             {new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(data.kpis.pipelineValue || 0)}
           </strong>
-          <span className="metric-note">Stima sulle trattative aperte.</span>
+          <span className="metric-note">Valore stimato delle opportunità aperte.</span>
         </article>
       </section>
 
