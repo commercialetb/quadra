@@ -1,29 +1,51 @@
 import { AssistantPanel } from '@/components/ai/assistant-panel'
 import { followupStatusLabel, priorityLabel, stageLabel } from '@/lib/crm-labels'
 
+function DashboardVoicePreview() {
+  return (
+    <div className="dashboard-hero-mobile-tools" aria-hidden="true">
+      <div className="dashboard-hero-mobile-pill">
+        <span className="voice-dot" />
+        <span className="dashboard-hero-mobile-orb orb-1" />
+        <span className="dashboard-hero-mobile-orb orb-2" />
+        <span className="dashboard-hero-mobile-orb orb-3" />
+        <span className="dashboard-hero-mobile-orb orb-4" />
+        <span className="dashboard-hero-mobile-orb orb-5" />
+        <span className="voice-more">•••</span>
+      </div>
+      <div className="dashboard-hero-mobile-chip-row">
+        <span className="brand-badge">Siri</span>
+        <span className="brand-badge">Gemini</span>
+        <span className="brand-badge">GPT-4</span>
+      </div>
+    </div>
+  )
+}
+
 export function DashboardShell({ data }: { data: any }) {
   const recentCompanies = (data.recentCompanies || []).slice(0, 4)
   const recentActivities = (data.recentActivities || []).slice(0, 4)
 
   return (
     <div className="page-stack">
-      <section className="dashboard-hero dashboard-hero-compact">
+      <section className="dashboard-hero dashboard-hero-compact dashboard-hero-mobile-card">
         <div>
           <p className="page-eyebrow">Dashboard CRM Predittiva e Vocale</p>
           <h1 className="page-title">Bentornato,</h1>
           <p className="page-subtitle dashboard-subtitle-compact">Inizia la UX vocale con Quadra, Siri, Gemini e GPT.</p>
         </div>
+        <DashboardVoicePreview />
       </section>
 
       <section className="panel-card shortcut-callout">
         <div className="panel-head"><div><h2>Voice Control Bar</h2><p>Gestisci agenda, deal e contatti con la voce.</p></div></div>
-        <div className="cluster-wrap">
+        <div className="cluster-wrap dashboard-shortcut-grid">
           <a href="/capture/siri/install" className="secondary-button">Installa shortcuts</a>
           <a href="/capture/siri/review" className="ghost-button">Apri review</a>
         </div>
       </section>
 
-      <section className="today-grid">
+      <section className="today-grid dashboard-kpi-grid">
         <article className="metric-card metric-primary">
           <span className="metric-label">Daily Focus</span>
           <strong className="metric-value">{data.kpis.todayCount}</strong>
@@ -48,7 +70,7 @@ export function DashboardShell({ data }: { data: any }) {
         </article>
       </section>
 
-      <div className="dashboard-grid">
+      <div className="dashboard-grid dashboard-main-grid">
         <section className="panel-card panel-card-accent">
           <div className="panel-head">
             <div>
@@ -85,23 +107,6 @@ export function DashboardShell({ data }: { data: any }) {
         <AssistantPanel data={data} />
       </div>
 
-
-      <div className="dashboard-grid two-up dashboard-two-up-mobile-order">
-        <section className="panel-card mobile-priority-second">
-          <div className="panel-head"><div><h2>Contacts</h2><p>Anagrafica viva e subito azionabile.</p></div></div>
-          <div className="simple-list compact-list">
-            {recentCompanies.length === 0 ? <div className="empty-block">Nessuna azienda recente.</div> : recentCompanies.map((item: any) => (
-              <a key={item.id} href={`/companies/${item.id}`} className="simple-row">
-                <div>
-                  <strong>{item.name}</strong>
-                  <span>{item.city || 'Città non indicata'} · {item.status}</span>
-                </div>
-              </a>
-            ))}
-          </div>
-        </section>
-      </div>
-
       <div className="dashboard-grid two-up dashboard-two-up-mobile-order">
         <section className="panel-card mobile-priority-first">
           <div className="panel-head"><div><h2>Meeting Analytics</h2><p>Indicatori rapidi sulla giornata.</p></div></div>
@@ -116,8 +121,21 @@ export function DashboardShell({ data }: { data: any }) {
             ))}
           </div>
         </section>
-      </div>
 
+        <section className="panel-card mobile-priority-second">
+          <div className="panel-head"><div><h2>Contacts</h2><p>Anagrafica viva e subito azionabile.</p></div></div>
+          <div className="simple-list compact-list">
+            {recentCompanies.length === 0 ? <div className="empty-block">Nessuna azienda recente.</div> : recentCompanies.map((item: any) => (
+              <a key={item.id} href={`/companies/${item.id}`} className="simple-row">
+                <div>
+                  <strong>{item.name}</strong>
+                  <span>{item.city || 'Città non indicata'} · {item.status}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      </div>
     </div>
   )
 }

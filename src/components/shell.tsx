@@ -9,15 +9,15 @@ type NavItem = {
   href: string
   label: string
   mobileLabel: string
-  icon: 'home' | 'agenda' | 'deals' | 'contacts' | 'tasks'
+  icon: 'home' | 'agenda' | 'deals' | 'contacts' | 'companies'
 }
 
 const primaryNav: NavItem[] = [
   { href: '/dashboard', label: 'Home', mobileLabel: 'Home', icon: 'home' },
   { href: '/followups', label: 'Agenda', mobileLabel: 'Agenda', icon: 'agenda' },
   { href: '/opportunities', label: 'Deals', mobileLabel: 'Deals', icon: 'deals' },
-  { href: '/contacts', label: 'Contacts', mobileLabel: 'Contacts', icon: 'contacts' },
-  { href: '/companies', label: 'Tasks', mobileLabel: 'Tasks', icon: 'tasks' },
+  { href: '/contacts', label: 'Contacts', mobileLabel: 'Contatti', icon: 'contacts' },
+  { href: '/companies', label: 'Aziende', mobileLabel: 'Aziende', icon: 'companies' },
 ]
 
 function active(pathname: string, href: string) {
@@ -28,8 +28,8 @@ function currentTitle(pathname: string) {
   if (pathname.startsWith('/contacts')) return 'Contacts'
   if (pathname.startsWith('/opportunities')) return 'Deals'
   if (pathname.startsWith('/followups')) return 'Agenda'
-  if (pathname.startsWith('/companies')) return 'Tasks'
-  if (pathname.startsWith('/assistant')) return 'Insight'
+  if (pathname.startsWith('/companies')) return 'Aziende'
+  if (pathname.startsWith('/assistant')) return 'Analytics'
   if (pathname.startsWith('/settings')) return 'Settings'
   return 'Dashboard'
 }
@@ -44,8 +44,8 @@ function NavIcon({ name }: { name: NavItem['icon'] }) {
       return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18.5V11m6 7.5V7m6 11.5v-5" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" /><path d="M4.5 18.5h15" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
     case 'contacts':
       return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /><path d="M5.5 19a6.5 6.5 0 0 1 13 0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-    case 'tasks':
-      return <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="5" width="15" height="14" rx="3" fill="none" stroke="currentColor" strokeWidth="1.8" /><path d="m8.5 12 2.3 2.3 4.7-5" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" /></svg>
+    case 'companies':
+      return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5h15" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /><path d="M6.5 19.5V8.5h11v11" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" /><path d="M9.5 6.5h5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /><path d="M9 11.5h.01M12 11.5h.01M15 11.5h.01M9 14.5h.01M12 14.5h.01M15 14.5h.01" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" /></svg>
   }
 }
 
@@ -71,6 +71,7 @@ export default function Shell({ children }: { children: ReactNode }) {
           <img src="/icons/brand-mark-v21.png" alt="Quadra" className="sidebar-brand-mark sidebar-brand-mark-image" />
           <div>
             <div className="sidebar-brand-title">Quadra</div>
+            <div className="sidebar-brand-subtitle">CRM predittiva e vocale</div>
           </div>
         </div>
 
@@ -78,16 +79,16 @@ export default function Shell({ children }: { children: ReactNode }) {
           {primaryNav.map((item) => (
             <Link key={item.href} href={item.href} className={`sidebar-link ${active(pathname, item.href) ? 'is-active' : ''}`}>
               <span className="sidebar-link-icon"><NavIcon name={item.icon} /></span>
-              <span>{item.label}</span>
+              <span className="sidebar-link-text">{item.label}</span>
             </Link>
           ))}
           <Link href="/assistant" className={`sidebar-link ${active(pathname, '/assistant') ? 'is-active' : ''}`}>
             <span className="sidebar-link-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 4 1.7 4.3L18 10l-4.3 1.7L12 16l-1.7-4.3L6 10l4.3-1.7L12 4Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
-            <span>Analytics</span>
+            <span className="sidebar-link-text">Analytics</span>
           </Link>
           <Link href="/settings" className={`sidebar-link ${active(pathname, '/settings') ? 'is-active' : ''}`}>
             <span className="sidebar-link-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9.2a2.8 2.8 0 1 0 0 5.6 2.8 2.8 0 0 0 0-5.6Z" fill="none" stroke="currentColor" strokeWidth="1.8" /><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.5-2.4.8a7.9 7.9 0 0 0-2-.9L14 3h-4l-.5 2.7a7.9 7.9 0 0 0-2 .9l-2.4-.8-2 3.5 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.5 2.4-.8c.6.4 1.3.7 2 .9L10 21h4l.5-2.7c.7-.2 1.4-.5 2-.9l2.4.8 2-3.5-2-1.5c.1-.4.1-.8.1-1.2Z" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
-            <span>Settings</span>
+            <span className="sidebar-link-text">Settings</span>
           </Link>
         </nav>
 
