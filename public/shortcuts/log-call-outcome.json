@@ -1,0 +1,19 @@
+{
+  "name": "Quadra - Registra esito chiamata",
+  "method": "POST",
+  "url": "https://TUO-DOMINIO/api/shortcut/log-call-outcome",
+  "headers": {
+    "Content-Type": "application/json",
+    "x-shortcut-token": "SHORTCUT_SHARED_TOKEN"
+  },
+  "body": {
+    "query": "Mario Rossi",
+    "outcome": "Interessato. Vuole proposta aggiornata entro venerdi.",
+    "createFollowup": true,
+    "followupTitle": "",
+    "followupDate": "",
+    "priority": ""
+  },
+  "readField": "spokenResponse",
+  "openField": "openUrl"
+}

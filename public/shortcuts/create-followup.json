@@ -1,0 +1,14 @@
+{
+  "name": "Quadra - Crea follow-up",
+  "method": "POST",
+  "url": "https://TUO-DOMINIO/api/shortcut/process-voice-note",
+  "headers": {
+    "Content-Type": "application/json",
+    "x-shortcut-token": "SHORTCUT_SHARED_TOKEN"
+  },
+  "body": {
+    "note": "Richiamare Mario Rossi domani per confermare demo e budget"
+  },
+  "readField": "spokenResponse",
+  "openField": "openUrl"
+}

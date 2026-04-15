@@ -1,0 +1,16 @@
+{
+  "name": "Quadra - Aggiungi nota",
+  "method": "POST",
+  "url": "https://TUO-DOMINIO/api/shortcut/add-note",
+  "headers": {
+    "Content-Type": "application/json",
+    "x-shortcut-token": "SHORTCUT_SHARED_TOKEN"
+  },
+  "body": {
+    "query": "Mario Rossi",
+    "title": "Nota da Siri",
+    "body": "Interessato, richiamare con nuova proposta"
+  },
+  "readField": "spokenResponse",
+  "openField": "openUrl"
+}
