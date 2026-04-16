@@ -45,7 +45,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
 
   return (
     <>
-      <section className="panel-card page-section-card quadra-record-page opportunities-record-page">
+      <section className="panel-card page-section-card">
         <div className="list-head">
           <div>
             <h2>Pipeline</h2>

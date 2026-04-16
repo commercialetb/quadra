@@ -16,14 +16,13 @@ export function PageHeader({
   mobileHidden?: boolean
 }) {
   return (
-    <section className={`page-hero page-hero-reference ${compact ? 'page-hero-compact' : ''} ${mobileHidden ? 'page-hero-mobile-hidden' : ''}`.trim()}>
-      <div className="page-hero-copy">
+    <section className={`page-hero ${compact ? 'page-hero-compact' : ''} ${mobileHidden ? 'page-hero-mobile-hidden' : ''}`.trim()}>
+      <div>
         <p className="page-eyebrow">{eyebrow}</p>
         <h1 className="page-title">{title}</h1>
         <p className="page-subtitle">{subtitle}</p>
       </div>
-      <div className="page-hero-wave" aria-hidden="true" />
-      {actions ? <div className="page-hero-actions page-hero-actions-reference">{actions}</div> : null}
+      {actions ? <div className="page-hero-actions">{actions}</div> : null}
     </section>
   )
 }
