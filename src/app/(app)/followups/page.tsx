@@ -13,10 +13,9 @@ export default async function FollowupsPage() {
   return (
     <div className="page-wrap">
       <PageHeader
-        title="Agenda"
-        subtitle="Appuntamenti e task in una vista operativa più fluida."
+        title="Follow-up"
+        subtitle="Agenda operativa chiara: capisci cosa è urgente, poi apri il form solo quando ti serve."
         eyebrow="CRM core"
-        compact
         mobileHidden
       />
       <FollowupsCrud followups={followups} companies={companies} contacts={contacts} opportunities={opportunities} />

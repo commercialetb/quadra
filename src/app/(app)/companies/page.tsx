@@ -9,9 +9,8 @@ export default async function CompaniesPage() {
     <div className="page-wrap">
       <PageHeader
         title="Aziende"
-        subtitle="Anagrafiche snelle, rapide da scorrere e aggiornare."
+        subtitle="Le aziende devono essere riconoscibili e rapide da scorrere. Niente form sparsi: crei solo quando premi Nuovo."
         eyebrow="CRM core"
-        compact
         mobileHidden
       />
       <CompaniesCrud companies={companies} />

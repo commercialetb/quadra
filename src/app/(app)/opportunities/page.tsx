@@ -8,10 +8,9 @@ export default async function OpportunitiesPage() {
   return (
     <div className="page-wrap">
       <PageHeader
-        title="Pipeline"
-        subtitle="Trattative e next step in una board più visiva e voice-first."
+        title="Opportunità"
+        subtitle="Pipeline commerciale più utile: listato pulito, focus sulla fase e niente mini-form sempre aperte."
         eyebrow="CRM core"
-        compact
         mobileHidden
       />
       <OpportunitiesCrud opportunities={opportunities} companies={companies} contacts={contacts} />

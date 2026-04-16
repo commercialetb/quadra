@@ -8,10 +8,9 @@ export default async function ContactsPage() {
   return (
     <div className="page-wrap">
       <PageHeader
-        title="Contacts"
-        subtitle="Anagrafica e cronologia in un unico flusso più visivo."
+        title="Contatti"
+        subtitle="Le persone devono essere subito leggibili: ruolo, azienda e canale principale, senza editing sempre aperto."
         eyebrow="CRM core"
-        compact
         mobileHidden
       />
       <ContactsCrud contacts={contacts} companies={companies} />
