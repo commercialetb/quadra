@@ -39,7 +39,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
         <div className="cards-stack">
           {items.map((contact) => (
             <article key={contact.id} className="entity-card">
-              <div className="entity-card-main">
+              <Link href={`/contacts/${contact.id}`} className="entity-card-main entity-card-main-link">
                 <ContactAvatar firstName={contact.first_name} lastName={contact.last_name} />
                 <div className="entity-card-copy stretch">
                   <div className="entity-card-top compact-gap">
@@ -54,7 +54,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
                     {contact.preferred_contact_method ? <span>{labelize(contact.preferred_contact_method)}</span> : null}
                   </div>
                 </div>
-              </div>
+              </Link>
 
               <div className="entity-card-actions cleaner-actions">
                 <Link href={`/contacts/${contact.id}`} className="secondary-button">Apri scheda</Link>

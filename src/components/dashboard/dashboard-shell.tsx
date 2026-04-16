@@ -1,8 +1,11 @@
+import Link from 'next/link'
 import { AssistantPanel } from '@/components/ai/assistant-panel'
+import { VoiceControlBar } from '@/components/voice-control-bar'
 import { followupStatusLabel, priorityLabel, stageLabel } from '@/lib/crm-labels'
 
 export function DashboardShell({ data }: { data: any }) {
-  const recentCompanies = (data.recentCompanies || []).slice(0, 5)
+  const recentCompanies = (data.recentCompanies || []).slice(0, 4)
+  const recentContacts = (data.recentContacts || []).slice(0, 4)
   const recentActivities = (data.recentActivities || []).slice(0, 5)
   const todayFollowups = (data.todayFollowups || []).slice(0, 3)
   const staleOpportunities = (data.staleOpportunities || []).slice(0, 3)
@@ -27,9 +30,9 @@ export function DashboardShell({ data }: { data: any }) {
             <span className="hero-chip ghost">Siri · Gemini · GPT-4</span>
           </div>
           <p className="page-eyebrow">Bentornato</p>
-          <h1 className="page-title">Una UX più vicina ai mockup che hai disegnato.</h1>
+          <h1 className="page-title">Quadra deve essere chiara, tappabile e davvero utile.</h1>
           <p className="page-subtitle dashboard-subtitle-compact">
-            Voice control in primo piano, card leggere, gerarchia forte e una scena desktop più pulita. Il CRM deve sembrare un prodotto premium, non una tabella travestita.
+            Ho ripulito la scena: meno sovrapposizioni, card più leggibili, collegamenti reali ai record e una barra vocale che apre subito il workflow giusto.
           </p>
 
           <div className="showcase-mini-metrics">
@@ -49,17 +52,13 @@ export function DashboardShell({ data }: { data: any }) {
         </div>
 
         <div className="dashboard-showcase-stage">
-          <div className="stage-voice-bar">
-            <span className="stage-voice-mic">●</span>
-            <div className="stage-voice-wave" aria-hidden="true"><span /><span /><span /><span /><span /></div>
-            <span className="stage-voice-more">···</span>
-          </div>
+          <VoiceControlBar compact />
 
           <div className="stage-screen glass-panel">
             <div className="stage-screen-main">
               <div className="stage-card stage-card-welcome">
                 <span className="stage-card-label">Bentornato</span>
-                <strong>User Name</strong>
+                <strong>Workspace commerciale</strong>
                 <div className="stage-metric-inline">
                   <span>Pipeline Status</span>
                   <b>{pipelineValue}</b>
@@ -75,10 +74,10 @@ export function DashboardShell({ data }: { data: any }) {
                   {todayFollowups.length === 0 ? (
                     <div className="stage-list-item muted">Nessun follow-up urgente.</div>
                   ) : todayFollowups.map((item: any) => (
-                    <div key={item.id} className="stage-list-item">
+                    <Link key={item.id} href="/followups" className="stage-list-item stage-link-card">
                       <strong>{item.title}</strong>
                       <span>{priorityLabel(item.priority)} · {followupStatusLabel(item.status)}</span>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -99,35 +98,41 @@ export function DashboardShell({ data }: { data: any }) {
             <aside className="stage-screen-side">
               <div className="stage-card stage-card-contacts">
                 <div className="stage-card-head">
-                  <span>Contacts</span>
+                  <span>Contatti</span>
+                  <span>apri scheda</span>
+                </div>
+                <div className="contact-rail">
+                  {recentContacts.length === 0 ? (
+                    <div className="stage-list-item muted">Nessun contatto recente.</div>
+                  ) : recentContacts.map((item: any) => (
+                    <Link key={item.id} href={`/contacts/${item.id}`} className="contact-rail-row stage-link-card">
+                      <span className="contact-rail-avatar">{(item.first_name || item.full_name || 'Q').slice(0, 1).toUpperCase()}</span>
+                      <div>
+                        <strong>{item.full_name || `${item.first_name || ''} ${item.last_name || ''}`.trim()}</strong>
+                        <span>{item.companies?.name || 'Azienda non assegnata'}</span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              <div className="stage-card stage-card-companies">
+                <div className="stage-card-head">
+                  <span>Aziende</span>
                   <span>CRM live</span>
                 </div>
                 <div className="contact-rail">
                   {recentCompanies.length === 0 ? (
-                    <div className="stage-list-item muted">Nessun contatto recente.</div>
+                    <div className="stage-list-item muted">Nessuna azienda recente.</div>
                   ) : recentCompanies.map((item: any) => (
-                    <div key={item.id} className="contact-rail-row">
+                    <Link key={item.id} href={`/companies/${item.id}`} className="contact-rail-row stage-link-card">
                       <span className="contact-rail-avatar">{(item.name || 'Q').slice(0, 1).toUpperCase()}</span>
                       <div>
                         <strong>{item.name}</strong>
                         <span>{item.city || 'Località'} · {item.status}</span>
                       </div>
-                    </div>
+                    </Link>
                   ))}
-                </div>
-              </div>
-
-              <div className="stage-card stage-card-chart">
-                <div className="stage-card-head">
-                  <span>Meeting Insights</span>
-                  <span>60%</span>
-                </div>
-                <div className="fake-chart" aria-hidden="true">
-                  <span />
-                  <span />
-                  <span />
-                  <span />
-                  <span />
                 </div>
               </div>
             </aside>
@@ -147,13 +152,13 @@ export function DashboardShell({ data }: { data: any }) {
           <span className="metric-note">Elementi in ritardo o scoperti.</span>
         </article>
         <article className="metric-card">
-          <span className="metric-label">Opportunita attive</span>
+          <span className="metric-label">Opportunità attive</span>
           <strong className="metric-value">{data.kpis.openCount}</strong>
           <span className="metric-note">Trattative in lavorazione.</span>
         </article>
         <article className="metric-card metric-soft-accent">
           <span className="metric-label">Contesto rapido</span>
-          <strong className="metric-value">{recentCompanies.length + recentActivities.length}</strong>
+          <strong className="metric-value">{recentCompanies.length + recentActivities.length + recentContacts.length}</strong>
           <span className="metric-note">Aggiornamenti recenti del CRM.</span>
         </article>
       </section>
@@ -163,9 +168,9 @@ export function DashboardShell({ data }: { data: any }) {
           <div className="panel-head panel-head-spacious">
             <div>
               <h2>Focus giornaliero</h2>
-              <p>La vista operativa da tenere davanti: task di oggi, trattative ferme e priorità chiare.</p>
+              <p>Task di oggi e trattative ferme, senza rumore visivo e con CTA immediate.</p>
             </div>
-            <a href="/followups" className="secondary-button">Apri agenda</a>
+            <Link href="/followups" className="secondary-button">Apri agenda</Link>
           </div>
 
           <div className="focus-columns">
@@ -173,13 +178,13 @@ export function DashboardShell({ data }: { data: any }) {
               <div className="focus-column-title">Today</div>
               {todayFollowups.length === 0 ? <div className="empty-block">Nessuna azione urgente per oggi.</div> : null}
               {todayFollowups.map((item: any) => (
-                <a key={item.id} href="/followups" className="task-item clickable-task-item">
+                <Link key={item.id} href="/followups" className="task-item clickable-task-item">
                   <div>
                     <div className="task-title">{item.title}</div>
                     <div className="task-meta">Scade oggi · {priorityLabel(item.priority)} · {followupStatusLabel(item.status)}</div>
                   </div>
                   <span className="task-badge">oggi</span>
-                </a>
+                </Link>
               ))}
             </div>
 
@@ -187,13 +192,13 @@ export function DashboardShell({ data }: { data: any }) {
               <div className="focus-column-title">Pipeline ferma</div>
               {staleOpportunities.length === 0 ? <div className="empty-block">Nessuna opportunità bloccata.</div> : null}
               {staleOpportunities.map((item: any) => (
-                <a key={item.id} href={`/opportunities/${item.id}`} className="task-item clickable-task-item">
+                <Link key={item.id} href={`/opportunities/${item.id}`} className="task-item clickable-task-item">
                   <div>
                     <div className="task-title">{item.title}</div>
                     <div className="task-meta">{stageLabel(item.stage)} · trattativa ferma</div>
                   </div>
                   <span className="task-badge warning">ferma</span>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -206,7 +211,7 @@ export function DashboardShell({ data }: { data: any }) {
         <section className="panel-card mobile-priority-first panel-card-elevated">
           <div className="panel-head compact">
             <div>
-              <h2>Attivita recenti</h2>
+              <h2>Attività recenti</h2>
               <p>Gli ultimi tocchi nel CRM, letti come una timeline pulita.</p>
             </div>
           </div>
@@ -226,17 +231,17 @@ export function DashboardShell({ data }: { data: any }) {
           <div className="panel-head compact">
             <div>
               <h2>Aziende recenti</h2>
-              <p>Le anagrafiche appena toccate, con una presentazione più ordinata.</p>
+              <p>Le anagrafiche appena toccate, con navigazione diretta alla scheda.</p>
             </div>
           </div>
           <div className="simple-list compact-list">
             {recentCompanies.length === 0 ? <div className="empty-block">Nessuna azienda recente.</div> : recentCompanies.map((item: any) => (
-              <a key={item.id} href={`/companies/${item.id}`} className="simple-row">
+              <Link key={item.id} href={`/companies/${item.id}`} className="simple-row">
                 <div>
                   <strong>{item.name}</strong>
                   <span>{item.city || 'Città non indicata'} · {item.status}</span>
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
         </section>

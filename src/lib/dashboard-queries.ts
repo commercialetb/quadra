@@ -20,6 +20,7 @@ export async function getDashboardData() {
     upcomingFollowupsRes,
     recentActivitiesRes,
     recentCompaniesRes,
+    recentContactsRes,
     staleOpportunitiesRes,
   ] = await Promise.all([
     supabase
@@ -72,6 +73,12 @@ export async function getDashboardData() {
       .limit(8),
 
     supabase
+      .from('contacts')
+      .select('id, first_name, last_name, full_name, company_id, companies(name), created_at')
+      .order('created_at', { ascending: false })
+      .limit(8),
+
+    supabase
       .from('opportunities')
       .select('id, title, stage, updated_at, next_action, next_action_due_at, company_id, value_estimate')
       .in('stage', ['new_lead', 'contacted', 'qualified', 'proposal', 'negotiation'])
@@ -120,6 +127,7 @@ export async function getDashboardData() {
     upcomingFollowups: upcomingFollowupsRes.data ?? [],
     recentActivities: recentActivitiesRes.data ?? [],
     recentCompanies: recentCompaniesRes.data ?? [],
+    recentContacts: recentContactsRes.data ?? [],
     staleOpportunities: staleOpportunitiesRes.data ?? [],
     pipelineCounts,
   };

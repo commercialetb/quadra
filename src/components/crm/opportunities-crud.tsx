@@ -70,7 +70,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
         <div className="cards-stack">
           {items.map((item) => (
             <article key={item.id} className="entity-card opportunity-card">
-              <div className="entity-card-copy stretch">
+              <Link href={`/opportunities/${item.id}`} className="entity-card-copy stretch entity-card-main-link">
                 <div className="entity-card-top">
                   <div>
                     <h3>{item.title}</h3>
@@ -83,7 +83,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
                   {item.next_action ? <span>Prossimo passo: {item.next_action}</span> : null}
                   {item.primary_contact?.full_name ? <span>{item.primary_contact.full_name}</span> : null}
                 </div>
-              </div>
+              </Link>
               <div className="entity-card-actions cleaner-actions">
                 <Link href={`/opportunities/${item.id}`} className="secondary-button">Apri scheda</Link>
                 <form action={updateOpportunityStage} className="inline-mini-form compact-inline-form">

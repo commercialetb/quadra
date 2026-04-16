@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { LogoutButton } from '@/components/auth/logout-button'
+import { VoiceControlBar } from '@/components/voice-control-bar'
 
 type NavItem = {
   href: string
@@ -157,10 +158,8 @@ export default function Shell({ children }: { children: React.ReactNode }) {
             <div className="app-topbar-title">{currentTitle(pathname)}</div>
           </div>
 
-          <div className="topbar-voice-pill hide-mobile" aria-hidden="true">
-            <span className="topbar-voice-dot" />
-            <span className="topbar-voice-wave"><i /><i /><i /></span>
-            <span>Voice Control Bar</span>
+          <div className="hide-mobile topbar-voice-slot">
+            <VoiceControlBar compact />
           </div>
 
           <div className="app-topbar-actions">
