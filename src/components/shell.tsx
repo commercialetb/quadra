@@ -13,16 +13,11 @@ type NavItem = {
 }
 
 const primaryNav: NavItem[] = [
-  { href: '/dashboard', label: 'Home', shortLabel: 'Home', tinyLabel: 'Home', icon: 'home' },
-  { href: '/followups', label: 'Agenda', shortLabel: 'Agenda', tinyLabel: 'Ag', icon: 'check' },
-  { href: '/opportunities', label: 'Deals', shortLabel: 'Deals', tinyLabel: 'Deals', icon: 'sparkles' },
-  { href: '/contacts', label: 'Contatti', shortLabel: 'Cont.', tinyLabel: 'Cont', icon: 'person' },
+  { href: '/dashboard', label: 'Dashboard', shortLabel: 'Home', tinyLabel: 'Home', icon: 'home' },
   { href: '/companies', label: 'Aziende', shortLabel: 'Az.', tinyLabel: 'Az', icon: 'building' },
-]
-
-const secondaryNav = [
-  { href: '/assistant', label: 'Insight' },
-  { href: '/settings', label: 'Settings' },
+  { href: '/contacts', label: 'Contatti', shortLabel: 'Cont.', tinyLabel: 'Cont', icon: 'person' },
+  { href: '/opportunities', label: 'Opportunita', shortLabel: 'Opp.', tinyLabel: 'Opp', icon: 'sparkles' },
+  { href: '/followups', label: 'Follow-up', shortLabel: 'Task', tinyLabel: 'Task', icon: 'check' },
 ]
 
 function active(pathname: string, href: string) {
@@ -32,16 +27,16 @@ function active(pathname: string, href: string) {
 function currentTitle(pathname: string) {
   if (pathname.startsWith('/companies')) return 'Aziende'
   if (pathname.startsWith('/contacts')) return 'Contatti'
-  if (pathname.startsWith('/opportunities')) return 'Deals'
-  if (pathname.startsWith('/followups')) return 'Agenda'
+  if (pathname.startsWith('/opportunities')) return 'Opportunita'
+  if (pathname.startsWith('/followups')) return 'Follow-up'
   if (pathname.startsWith('/import')) return 'Import dati'
-  if (pathname.startsWith('/assistant')) return 'Insight'
+  if (pathname.startsWith('/assistant')) return 'Assistente AI'
   if (pathname.startsWith('/capture/voice')) return 'Detta in Quadra'
   if (pathname.startsWith('/capture/siri/review')) return 'Review shortcut'
   if (pathname.startsWith('/capture/siri')) return 'Shortcut iPhone'
   if (pathname.startsWith('/capture/followup')) return 'Shortcut follow-up'
-  if (pathname.startsWith('/settings')) return 'Settings'
-  return 'Home'
+  if (pathname.startsWith('/settings')) return 'Strumenti'
+  return 'Dashboard'
 }
 
 function NavIcon({ name }: { name: NavItem['icon'] }) {
@@ -88,17 +83,30 @@ export default function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
   return (
-    <div className="app-shell">
-      <aside className="app-sidebar">
-        <div className="sidebar-brand">
-          <div className="sidebar-brand-mark" aria-hidden="true">Q</div>
+    <div className="app-shell quadra-shell-refresh quadra-shell-phase2">
+      <div className="quadra-ambient quadra-ambient-a" aria-hidden="true" />
+      <div className="quadra-ambient quadra-ambient-b" aria-hidden="true" />
+
+      <aside className="app-sidebar" aria-label="Quadra navigation">
+        <div className="sidebar-brand sidebar-brand-phase2">
+          <div className="sidebar-brand-mark">Q</div>
           <div>
-            <div className="sidebar-brand-title">Quadra</div>
-            <div className="sidebar-brand-subtitle">CRM predittiva e vocale</div>
+            <p>Quadra</p>
+            <span>CRM predittivo e vocale</span>
           </div>
         </div>
 
-        <nav className="sidebar-nav" aria-label="Navigazione primaria desktop">
+        <div className="sidebar-voice-pod">
+          <span className="sidebar-pod-label">Voice Control</span>
+          <strong>Siri, Gemini e GPT in un solo spazio.</strong>
+          <div className="sidebar-pod-wave" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+        </div>
+
+        <nav className="sidebar-nav">
           {primaryNav.map((item) => {
             const isActive = active(pathname, item.href)
             return (
@@ -108,43 +116,60 @@ export default function Shell({ children }: { children: React.ReactNode }) {
                 className={`sidebar-link ${isActive ? 'is-active' : ''}`}
                 aria-current={isActive ? 'page' : undefined}
               >
-                <span className="mobile-nav-icon"><NavIcon name={item.icon} /></span>
+                <span className="sidebar-link-icon"><NavIcon name={item.icon} /></span>
                 <span>{item.label}</span>
               </Link>
             )
           })}
         </nav>
 
-        <div className="sidebar-footer">
-          {secondaryNav.map((item) => {
-            const isActive = active(pathname, item.href)
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`sidebar-link ${isActive ? 'is-active' : ''}`}
-                aria-current={isActive ? 'page' : undefined}
-              >
-                <span>{item.label}</span>
-              </Link>
-            )
-          })}
-          <div className="sidebar-status">Esperienza desktop allineata ai mockup: sidebar stabile, contenuto centrale e dock mobile separato.</div>
+        <div className="sidebar-secondary">
+          <Link href="/assistant" className={`sidebar-link secondary ${active(pathname, '/assistant') ? 'is-active' : ''}`}>
+            <span className="sidebar-link-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3.5a6.5 6.5 0 0 0-6.5 6.5v2.2c0 .9-.3 1.8-.9 2.5l-1 1.2c-.7.9-.1 2.3 1.1 2.3h14.6c1.2 0 1.8-1.4 1.1-2.3l-1-1.2c-.6-.7-.9-1.6-.9-2.5V10A6.5 6.5 0 0 0 12 3.5Z" fill="none" stroke="currentColor" strokeWidth="1.7" />
+                <path d="M9.5 19a2.5 2.5 0 0 0 5 0" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+              </svg>
+            </span>
+            <span>Assistente AI</span>
+          </Link>
+          <Link href="/settings" className={`sidebar-link secondary ${active(pathname, '/settings') ? 'is-active' : ''}`}>
+            <span className="sidebar-link-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M10.5 2.75a1.5 1.5 0 0 1 3 0v1.34a7.5 7.5 0 0 1 1.93.8l.95-.95a1.5 1.5 0 0 1 2.12 2.12l-.95.95c.35.6.63 1.25.8 1.93h1.34a1.5 1.5 0 0 1 0 3h-1.34a7.5 7.5 0 0 1-.8 1.93l.95.95a1.5 1.5 0 1 1-2.12 2.12l-.95-.95a7.5 7.5 0 0 1-1.93.8v1.34a1.5 1.5 0 0 1-3 0v-1.34a7.5 7.5 0 0 1-1.93-.8l-.95.95a1.5 1.5 0 1 1-2.12-2.12l.95-.95a7.5 7.5 0 0 1-.8-1.93H2.75a1.5 1.5 0 0 1 0-3h1.34a7.5 7.5 0 0 1 .8-1.93l-.95-.95a1.5 1.5 0 1 1 2.12-2.12l.95.95c.6-.35 1.25-.63 1.93-.8V2.75Z" fill="currentColor" />
+              </svg>
+            </span>
+            <span>Strumenti</span>
+          </Link>
+        </div>
+
+        <div className="sidebar-card sidebar-card-phase2">
+          <div className="sidebar-card-label">Quadra OS</div>
+          <strong>Più scena, più gerarchia, meno rumore.</strong>
+          <p>Desktop con sidebar vera, contenuto centrale ampio e dock mobile separato.</p>
         </div>
       </aside>
 
       <div className="app-main">
-        <header className="app-topbar">
+        <header className="app-topbar app-topbar-phase2">
           <div>
-            <div className="app-topbar-kicker">Quadra</div>
+            <div className="app-topbar-kicker">Quadra workspace</div>
             <div className="app-topbar-title">{currentTitle(pathname)}</div>
           </div>
+
+          <div className="topbar-voice-pill hide-mobile" aria-hidden="true">
+            <span className="topbar-voice-dot" />
+            <span className="topbar-voice-wave"><i /><i /><i /></span>
+            <span>Voice Control Bar</span>
+          </div>
+
           <div className="app-topbar-actions">
-            <Link href="/assistant" className="ghost-button hide-mobile">Insight</Link>
-            <Link href="/capture/voice" className="ghost-button hide-mobile">Voice</Link>
+            <Link href="/assistant" className="ghost-button hide-mobile">Assistente AI</Link>
+            <Link href="/settings" className="ghost-button hide-mobile">Strumenti</Link>
             <LogoutButton />
           </div>
         </header>
+
         <main className="page-shell">{children}</main>
       </div>
 
@@ -161,9 +186,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
               <span className="mobile-nav-icon-wrap">
                 <span className="mobile-nav-icon"><NavIcon name={item.icon} /></span>
               </span>
-              <span className="mobile-nav-label mobile-nav-label-full">{item.label}</span>
-              <span className="mobile-nav-label mobile-nav-label-short">{item.shortLabel}</span>
-              <span className="mobile-nav-label mobile-nav-label-tiny">{item.tinyLabel}</span>
+              <span className="mobile-nav-label">{item.tinyLabel}</span>
             </Link>
           )
         })}
