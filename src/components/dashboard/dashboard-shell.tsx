@@ -9,17 +9,9 @@ export function DashboardShell({ data }: { data: any }) {
     <div className="page-stack">
       <section className="dashboard-hero dashboard-hero-compact">
         <div>
-          <p className="page-eyebrow">Workspace</p>
-          <h1 className="page-title">Dashboard</h1>
-          <p className="page-subtitle dashboard-subtitle-compact">Focus rapido di oggi.</p>
-        </div>
-      </section>
-
-      <section className="panel-card shortcut-callout">
-        <div className="panel-head"><div><h2>Siri / Shortcuts</h2><p>Tieni pronto il capitolo shortcut: installazione, review e flussi rapidi, senza farne il centro dell’app.</p></div></div>
-        <div className="cluster-wrap">
-          <a href="/capture/siri/install" className="secondary-button">Installa shortcuts</a>
-          <a href="/capture/siri/review" className="ghost-button">Apri review</a>
+          <p className="page-eyebrow">Benvenuto</p>
+          <h1 className="page-title">Bentornato!</h1>
+          <p className="page-subtitle dashboard-subtitle-compact">Ecco una sintesi rapida della tua giornata.</p>
         </div>
       </section>
 
