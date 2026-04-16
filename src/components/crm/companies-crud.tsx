@@ -134,11 +134,12 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                 <label className="field-stack"><span>Sito web</span><input className="field-control" name="website" placeholder="https://" /></label>
                 <label className="field-stack"><span>Email</span><input className="field-control" name="email" type="email" /></label>
                 <label className="field-stack"><span>Telefono</span><input className="field-control" name="phone" /></label>
+                <label className="field-stack field-span-2"><span>Indirizzo</span><input className="field-control" name="address_line1" placeholder="Via, numero civico" /></label>
                 <label className="field-stack"><span>Città</span><input className="field-control" name="city" /></label>
                 <label className="field-stack"><span>Provincia</span><input className="field-control" name="province" /></label>
                 <label className="field-stack"><span>Stato</span><select className="field-control" name="status" defaultValue="lead">{companyStatuses.map((item) => <option key={item} value={item}>{labelize(item)}</option>)}</select></label>
                 <label className="field-stack"><span>Settore</span><select className="field-control" name="industry" defaultValue=""><option value="">Seleziona</option>{COMPANY_INDUSTRY_OPTIONS.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
-                <label className="field-stack"><span>Fonte</span><input className="field-control" name="source" /></label>
+                <label className="field-stack field-span-2"><span>Fonte</span><input className="field-control" name="source" /></label>
               </div>
               <label className="field-stack"><span>Note</span><textarea className="field-control field-area" name="notes_summary" /></label>
               <div className="sheet-actions">
