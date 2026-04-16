@@ -284,6 +284,7 @@ export async function createCompany(formData: FormData) {
     status: text(formData, 'status') || 'lead',
     phone: nullable(formData, 'phone'),
     email: nullable(formData, 'email'),
+    address_line1: nullable(formData, 'address_line1'),
     industry: nullable(formData, 'industry'),
     source: nullable(formData, 'source'),
     notes_summary: nullable(formData, 'notes_summary'),

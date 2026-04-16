@@ -2547,3 +2547,147 @@ body::after {
     grid-template-columns: 1fr;
   }
 }
+
+/* v44 layout correction: fix desktop shell overflow and oversized dashboard stage */
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 {
+  grid-template-columns: 264px minmax(0, 1fr);
+  gap: 18px;
+  padding: 12px;
+  align-items: start;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-sidebar {
+  top: 12px;
+  min-height: auto;
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  gap: 14px;
+  padding: 16px;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .sidebar-brand {
+  align-items: flex-start;
+  padding: 2px 2px 6px;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .sidebar-brand > div {
+  min-width: 0;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .sidebar-brand span {
+  display: block;
+  line-height: 1.35;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .sidebar-nav,
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .sidebar-secondary {
+  gap: 6px;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .sidebar-link {
+  min-height: 46px;
+  padding: 0 12px;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .sidebar-link-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .sidebar-card,
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .sidebar-card-phase2 {
+  margin-top: 0;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-main {
+  gap: 14px;
+  align-content: start;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-topbar {
+  top: 12px;
+  padding: 12px 18px;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .page-shell {
+  gap: 14px;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .dashboard-phase2 {
+  gap: 14px;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .dashboard-showcase {
+  gap: 16px;
+  padding: 18px;
+  align-items: stretch;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .dashboard-showcase-copy {
+  gap: 14px;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .page-title {
+  font-size: clamp(2rem, 3.2vw, 2.9rem);
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .page-subtitle {
+  max-width: 50ch;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .dashboard-showcase-stage {
+  padding: 14px;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .stage-voice-bar {
+  width: min(320px, calc(100% - 24px));
+  margin-bottom: -12px;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .stage-screen {
+  grid-template-columns: minmax(0, 1fr) 210px;
+  min-height: 360px;
+  padding: 16px;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .stage-screen-main,
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .stage-screen-side,
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .focus-columns,
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .dashboard-grid-phase2,
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .dashboard-lower-grid-phase2 {
+  gap: 12px;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .stage-card,
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .panel-card,
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .metric-card,
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .assistant-panel {
+  border-radius: 24px;
+}
+
+@media (max-width: 1400px) {
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 {
+    grid-template-columns: 248px minmax(0, 1fr);
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .stage-screen {
+    grid-template-columns: minmax(0, 1fr) 196px;
+    min-height: 330px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-sidebar {
+    display: none;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-main {
+    padding-bottom: 116px;
+  }
+}
