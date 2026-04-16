@@ -1432,3 +1432,235 @@ input:focus, select:focus, textarea:focus {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* ===== v40 UX alignment hotfix ===== */
+:root {
+  --shell-max: 1480px;
+  --sidebar-width: 284px;
+}
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: auto;
+  border-radius: 999px;
+  pointer-events: none;
+  filter: blur(8px);
+  z-index: -1;
+}
+body::before {
+  top: 4%;
+  left: -80px;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(181, 145, 255, 0.22) 0%, rgba(181, 145, 255, 0) 72%);
+}
+body::after {
+  right: -120px;
+  top: 18%;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(129, 230, 217, 0.18) 0%, rgba(129, 230, 217, 0) 72%);
+}
+
+.app-shell {
+  width: min(var(--shell-max), 100%);
+  margin: 0 auto;
+  grid-template-columns: minmax(250px, var(--sidebar-width)) minmax(0, 1fr);
+  gap: 22px;
+  align-items: stretch;
+}
+
+.app-sidebar,
+.app-topbar,
+.page-hero,
+.panel-card,
+.mobile-nav {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: var(--shadow-md);
+}
+
+.app-topbar,
+.page-hero,
+.panel-card {
+  display: block;
+}
+
+.app-sidebar {
+  display: flex;
+  gap: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,.84) 0%, rgba(248,247,255,.72) 100%);
+}
+
+.sidebar-link {
+  gap: 12px;
+  padding: 0 16px;
+}
+
+.sidebar-link .mobile-nav-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.app-main {
+  min-width: 0;
+  padding-bottom: 0;
+}
+
+.app-topbar {
+  display: flex;
+  min-height: 78px;
+  padding: 14px 18px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255,255,255,.92) 0%, rgba(249,247,255,.82) 100%);
+}
+
+.page-shell {
+  gap: 20px;
+}
+
+.dashboard-hero {
+  min-height: 164px;
+  border-radius: 34px;
+  padding: 28px;
+  background: linear-gradient(135deg, rgba(255,255,255,.96) 0%, rgba(245,239,255,.98) 58%, rgba(233,249,247,.95) 100%);
+}
+
+.dashboard-hero .page-title {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+}
+
+.dashboard-subtitle-compact {
+  max-width: 42rem;
+}
+
+.today-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.metric-card {
+  min-height: 148px;
+  border-radius: 28px;
+  padding: 22px;
+}
+
+.metric-value {
+  font-size: clamp(1.7rem, 2vw, 2.35rem);
+}
+
+.dashboard-grid {
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr);
+  align-items: stretch;
+}
+
+.dashboard-grid.two-up {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.panel-card {
+  padding: 24px;
+  border-radius: 30px;
+}
+
+.task-item,
+.simple-row {
+  min-height: 84px;
+  border-radius: 22px;
+}
+
+.mobile-nav {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .app-sidebar {
+    display: none;
+  }
+
+  .mobile-nav {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    width: min(760px, calc(100% - 24px));
+  }
+
+  .app-main {
+    padding-bottom: 118px;
+  }
+}
+
+@media (max-width: 780px) {
+  .app-shell {
+    padding: max(env(safe-area-inset-top), 10px) 10px max(env(safe-area-inset-bottom), 10px);
+    gap: 14px;
+  }
+
+  .app-topbar {
+    min-height: 64px;
+    border-radius: 22px;
+    padding: 10px 12px;
+  }
+
+  .app-topbar-actions .ghost-button.hide-mobile {
+    display: none;
+  }
+
+  .dashboard-hero,
+  .panel-card,
+  .metric-card {
+    border-radius: 24px;
+  }
+
+  .dashboard-hero {
+    min-height: auto;
+    padding: 22px 18px;
+  }
+
+  .today-grid,
+  .dashboard-grid,
+  .dashboard-grid.two-up,
+  .detail-grid,
+  .toolbar-row,
+  .form-grid.two-col,
+  .auth-grid,
+  .auth-row,
+  .quick-grid-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-card {
+    min-height: 122px;
+    padding: 18px;
+  }
+
+  .panel-card {
+    padding: 18px;
+  }
+
+  .mobile-nav {
+    bottom: calc(max(env(safe-area-inset-bottom), 10px) + 4px);
+  }
+}
+
+@media (max-width: 480px) {
+  .app-main {
+    padding-bottom: 104px;
+  }
+
+  .mobile-nav {
+    width: calc(100% - 12px);
+    border-radius: 24px;
+  }
+
+  .mobile-nav-link {
+    min-height: 56px;
+  }
+}
