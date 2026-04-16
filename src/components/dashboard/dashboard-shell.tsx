@@ -1,45 +1,68 @@
 import { followupStatusLabel, priorityLabel, stageLabel } from '@/lib/crm-labels'
 import { formatCurrency } from '@/lib/format'
 
+function focusText(item: any) {
+  const isDeal = Object.prototype.hasOwnProperty.call(item, 'stage')
+  if (isDeal) return `${stageLabel(item.stage)} · trattativa ferma`
+  return `${followupStatusLabel(item.status)} · ${priorityLabel(item.priority)}`
+}
+
+function focusIcon(item: any) {
+  const isDeal = Object.prototype.hasOwnProperty.call(item, 'stage')
+  if (isDeal) return '✎'
+  if (item.status === 'overdue') return '⚠'
+  return '✅'
+}
+
+function VoiceMiniBar() {
+  return (
+    <div className="quadra-inline-voicebar" aria-label="Voice control bar">
+      <span className="quadra-inline-mic">🎙</span>
+      <span className="quadra-inline-wave"><i /><i /><i /><i /><i /><i /></span>
+    </div>
+  )
+}
+
 function MobileDashboard({ data }: { data: any }) {
   const dailyFocus = [...(data.todayFollowups || []), ...(data.staleOpportunities || [])].slice(0, 3)
 
   return (
-    <section className="dashboard-mobile-reference" aria-label="Dashboard mobile ispirata al mockup">
+    <section className="dashboard-mobile-faithful" aria-label="Dashboard mobile mockup">
       <div className="dashboard-mobile-banner">Oggi hai {data.kpis.todayCount} appuntamenti e {data.kpis.overdueCount} task critici</div>
 
-      <div className="dashboard-mobile-heading">
-        <h1>Bentornato,</h1>
-        <p>User Name</p>
-      </div>
-
-      <article className="dashboard-mobile-status-card">
-        <span>Pipeline Status</span>
-        <strong>{data.kpis.openCount} Trattative Aperte</strong>
-        <b>{formatCurrency(data.kpis.pipelineValue || 0)}</b>
-        <div className="dashboard-mini-line" />
-      </article>
-
-      <article className="dashboard-mobile-focus-card">
-        <div className="dashboard-mobile-card-head">
-          <span>Daily Focus</span>
-          <span>›</span>
+      <div className="dashboard-mobile-phone-card dashboard-mobile-reference-card">
+        <div className="dashboard-mobile-reference-head">
+          <div>
+            <h1>Bentornato,</h1>
+            <p>User Name</p>
+          </div>
         </div>
-        <div className="dashboard-mobile-focus-list">
-          {dailyFocus.length ? dailyFocus.map((item: any) => {
-            const isDeal = Object.prototype.hasOwnProperty.call(item, 'stage')
-            return (
-              <div key={item.id} className={`dashboard-mobile-focus-item ${isDeal ? 'is-note' : ''}`}>
-                <span className="dashboard-mobile-focus-icon">{isDeal ? '✎' : item.status === 'overdue' ? '⚠' : '✅'}</span>
+
+        <article className="dashboard-mobile-status-card faithful reference-tight">
+          <span>Pipeline Status</span>
+          <strong>{data.kpis.openCount} Trattative Aperte</strong>
+          <b>{formatCurrency(data.kpis.pipelineValue || 0)}</b>
+          <div className="dashboard-mini-line" />
+        </article>
+
+        <article className="dashboard-mobile-focus-card faithful reference-tight">
+          <div className="dashboard-mobile-card-head">
+            <span>Daily Focus</span>
+            <span>›</span>
+          </div>
+          <div className="dashboard-mobile-focus-list">
+            {dailyFocus.length ? dailyFocus.map((item: any) => (
+              <div key={item.id} className="dashboard-mobile-focus-item faithful soft-item">
+                <span className="dashboard-mobile-focus-icon">{focusIcon(item)}</span>
                 <div>
                   <strong>{item.title}</strong>
-                  <p>{isDeal ? `${stageLabel(item.stage)} · trattativa ferma` : `${followupStatusLabel(item.status)} · ${priorityLabel(item.priority)}`}</p>
+                  <p>{focusText(item)}</p>
                 </div>
               </div>
-            )
-          }) : <div className="dashboard-mobile-focus-empty">Nessun promemoria urgente.</div>}
-        </div>
-      </article>
+            )) : <div className="dashboard-mobile-focus-empty">Nessun promemoria urgente.</div>}
+          </div>
+        </article>
+      </div>
     </section>
   )
 }
@@ -47,76 +70,58 @@ function MobileDashboard({ data }: { data: any }) {
 function DesktopDashboard({ data }: { data: any }) {
   const focusItems = [...(data.todayFollowups || []), ...(data.staleOpportunities || [])].slice(0, 3)
   const openDeals = (data.openOpportunities || []).slice(0, 5)
-  const recentCompanies = (data.recentCompanies || []).slice(0, 6)
+  const contacts = (data.recentContacts || data.recentCompanies || []).slice(0, 6)
 
   return (
-    <section className="dashboard-reference-desktop" aria-label="Dashboard desktop ispirata al mockup">
-      <div className="dashboard-reference-device">
-        <div className="dashboard-reference-device-topbar">
+    <section className="dashboard-desktop-faithful" aria-label="Dashboard desktop mockup">
+      <div className="dashboard-tablet-board">
+        <div className="dashboard-tablet-topchrome">
           <span className="dashboard-reference-corner-brand">Q</span>
-          <div className="dashboard-reference-voice-pill">
-            <span className="voice-mic" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 0 0 3.5-3.5V8a3.5 3.5 0 1 0-7 0v4a3.5 3.5 0 0 0 3.5 3.5Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /><path d="M6.5 11.5a5.5 5.5 0 1 0 11 0M12 17v3M9 20h6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </span>
-            <span className="voice-wave voice-wave-live" />
-            <span className="voice-more">•••</span>
-          </div>
-          <div className="dashboard-reference-utility-icons">⌂ ⌕ ⦿</div>
+          <VoiceMiniBar />
+          <div className="dashboard-topchrome-tools">⌕ ⦿</div>
         </div>
 
-        <div className="dashboard-reference-grid">
-          <div className="dashboard-column dashboard-column-left">
-            <article className="dashboard-reference-panel dashboard-reference-welcome">
-              <h1>Bentornato,</h1>
+        <div className="dashboard-tablet-grid">
+          <div className="dashboard-tablet-left">
+            <article className="dashboard-reference-panel faithful-panel compact-panel">
+              <h2>Bentornato,</h2>
               <p>User Name</p>
             </article>
-
-            <article className="dashboard-reference-panel dashboard-reference-kpi">
+            <article className="dashboard-reference-panel faithful-panel compact-panel lilac-panel">
               <span>Pipeline Status</span>
               <strong>{data.kpis.openCount} Trattative Aperte</strong>
               <b>{formatCurrency(data.kpis.pipelineValue || 0)}</b>
               <div className="dashboard-mini-line" />
             </article>
-
-            <article className="dashboard-reference-panel dashboard-reference-list">
-              <div className="dashboard-reference-panel-head">
-                <span>Daily Focus</span>
-                <span>›</span>
-              </div>
+            <article className="dashboard-reference-panel faithful-panel compact-panel">
+              <div className="dashboard-reference-panel-head"><span>Daily Focus</span><span>›</span></div>
               <div className="dashboard-reference-focus-list">
-                {focusItems.length ? focusItems.map((item: any) => {
-                  const isDeal = Object.prototype.hasOwnProperty.call(item, 'stage')
-                  return (
-                    <div key={item.id} className="dashboard-reference-focus-item">
-                      <span className="dashboard-reference-dot">{isDeal ? '✎' : item.status === 'overdue' ? '⚠' : '✅'}</span>
-                      <div>
-                        <strong>{item.title}</strong>
-                        <p>{isDeal ? `${stageLabel(item.stage)} · trattativa ferma` : `${priorityLabel(item.priority)} · ${followupStatusLabel(item.status)}`}</p>
-                      </div>
+                {focusItems.length ? focusItems.map((item: any) => (
+                  <div key={item.id} className="dashboard-reference-focus-item faithful-item soft-item">
+                    <span className="dashboard-reference-dot">{focusIcon(item)}</span>
+                    <div>
+                      <strong>{item.title}</strong>
+                      <p>{focusText(item)}</p>
                     </div>
-                  )
-                }) : <div className="dashboard-reference-empty">Nessun allarme. Ottimo segnale.</div>}
+                  </div>
+                )) : <div className="dashboard-reference-empty">Nessun allarme. Ottimo segnale.</div>}
               </div>
             </article>
           </div>
 
-          <div className="dashboard-column dashboard-column-center">
-            <article className="dashboard-reference-panel dashboard-reference-welcome second">
-              <h1>Bentornato,</h1>
+          <div className="dashboard-tablet-center">
+            <article className="dashboard-reference-panel faithful-panel compact-panel">
+              <h2>Bentornato,</h2>
               <p>User Name</p>
             </article>
-
-            <article className="dashboard-reference-panel dashboard-reference-kpi">
+            <article className="dashboard-reference-panel faithful-panel compact-panel lilac-panel">
               <span>Pipeline Status</span>
               <strong>{data.kpis.openCount} Trattative Aperte</strong>
               <b>{formatCurrency(data.kpis.pipelineValue || 0)}</b>
               <div className="dashboard-mini-line" />
             </article>
-
-            <article className="dashboard-reference-panel dashboard-reference-table-panel">
-              <div className="dashboard-reference-panel-head">
-                <span>Pipeline Deals</span>
-              </div>
+            <article className="dashboard-reference-panel faithful-panel compact-panel">
+              <div className="dashboard-reference-panel-head"><span>Pipeline Deals</span></div>
               <div className="dashboard-reference-table">
                 <div className="dashboard-reference-table-row dashboard-reference-table-head-row">
                   <span>Pipeline</span>
@@ -134,40 +139,30 @@ function DesktopDashboard({ data }: { data: any }) {
             </article>
           </div>
 
-          <div className="dashboard-column dashboard-column-right">
-            <article className="dashboard-reference-panel dashboard-reference-contacts">
-              <div className="dashboard-reference-panel-head">
-                <span>Contacts</span>
-                <span>›</span>
-              </div>
+          <div className="dashboard-tablet-right">
+            <article className="dashboard-reference-panel faithful-panel compact-panel">
+              <div className="dashboard-reference-panel-head"><span>Contacts</span><span>›</span></div>
               <div className="dashboard-reference-contact-list">
-                {recentCompanies.length ? recentCompanies.map((item: any) => (
-                  <div key={item.id} className="dashboard-reference-contact-row">
-                    <span className="dashboard-reference-avatar">{item.name?.slice(0, 1) || 'A'}</span>
+                {contacts.length ? contacts.map((item: any) => (
+                  <div key={item.id} className="dashboard-reference-contact-row faithful-item soft-item">
+                    <span className="dashboard-reference-avatar">{(item.full_name || item.name || 'A').slice(0, 1)}</span>
                     <div>
-                      <strong>{item.name}</strong>
-                      <p>{item.city || 'User Name Presence'}</p>
+                      <strong>{item.full_name || item.name}</strong>
+                      <p>{item.role || item.city || 'Presenza CRM'}</p>
                     </div>
                   </div>
                 )) : <div className="dashboard-reference-empty">Nessuna anagrafica recente.</div>}
               </div>
             </article>
-
-            <article className="dashboard-reference-panel dashboard-reference-chart-panel">
+            <article className="dashboard-reference-panel faithful-panel compact-panel mint-panel">
               <div className="dashboard-reference-panel-head"><span>Meeting Analytics</span></div>
               <div className="dashboard-reference-chart-value">60%</div>
               <div className="dashboard-reference-bars"><span /><span /><span /><span /></div>
             </article>
-
-            <article className="dashboard-reference-panel dashboard-reference-chart-panel">
-              <div className="dashboard-reference-panel-head"><span>Posting Insights</span></div>
+            <article className="dashboard-reference-panel faithful-panel compact-panel mint-panel">
+              <div className="dashboard-reference-panel-head"><span>Meeting Insights</span></div>
               <div className="dashboard-reference-linechart" />
-              <div className="dashboard-reference-chart-footer">
-                <span>Jan</span>
-                <span>Feb</span>
-                <span>Mar</span>
-                <span>Apr</span>
-              </div>
+              <div className="dashboard-reference-chart-footer"><span>Jan</span><span>Mar</span><span>Apr</span><span>Jun</span></div>
             </article>
           </div>
         </div>

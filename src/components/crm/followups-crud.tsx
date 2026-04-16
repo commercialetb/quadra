@@ -48,7 +48,7 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
 
   return (
     <>
-      <section className="panel-card page-section-card">
+      <section className="panel-card page-section-card quadra-record-page followups-record-page">
         <div className="list-head">
           <div>
             <h2>Agenda operativa</h2>

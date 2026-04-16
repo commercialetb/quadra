@@ -21,7 +21,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
 
   return (
     <>
-      <section className="panel-card page-section-card">
+      <section className="panel-card page-section-card quadra-record-page contacts-record-page">
         <div className="list-head">
           <div>
             <h2>Rubrica</h2>

@@ -7,16 +7,15 @@ import type { ReactNode } from 'react'
 type NavItem = {
   href: string
   label: string
-  mobileLabel: string
   icon: 'home' | 'agenda' | 'deals' | 'contacts' | 'companies'
 }
 
 const primaryNav: NavItem[] = [
-  { href: '/dashboard', label: 'Home', mobileLabel: 'Home', icon: 'home' },
-  { href: '/followups', label: 'Agenda', mobileLabel: 'Agenda', icon: 'agenda' },
-  { href: '/opportunities', label: 'Deals', mobileLabel: 'Deals', icon: 'deals' },
-  { href: '/contacts', label: 'Contacts', mobileLabel: 'Contacts', icon: 'contacts' },
-  { href: '/companies', label: 'Tasks', mobileLabel: 'Tasks', icon: 'companies' },
+  { href: '/dashboard', label: 'Home', icon: 'home' },
+  { href: '/followups', label: 'Agenda', icon: 'agenda' },
+  { href: '/opportunities', label: 'Deals', icon: 'deals' },
+  { href: '/contacts', label: 'Contacts', icon: 'contacts' },
+  { href: '/companies', label: 'Aziende', icon: 'companies' },
 ]
 
 function active(pathname: string, href: string) {
@@ -25,12 +24,12 @@ function active(pathname: string, href: string) {
 
 function currentTitle(pathname: string) {
   if (pathname.startsWith('/contacts')) return 'Contacts'
-  if (pathname.startsWith('/opportunities')) return 'Pipeline Deals'
+  if (pathname.startsWith('/opportunities')) return 'Pipeline'
   if (pathname.startsWith('/followups')) return 'Agenda'
-  if (pathname.startsWith('/companies')) return 'Aziende attive'
+  if (pathname.startsWith('/companies')) return 'Aziende'
   if (pathname.startsWith('/assistant')) return 'Analytics'
   if (pathname.startsWith('/settings')) return 'Strumenti'
-  return 'Dashboard CRM Predittiva e Vocale'
+  return 'Dashboard'
 }
 
 function NavIcon({ name }: { name: NavItem['icon'] }) {
@@ -48,21 +47,16 @@ function NavIcon({ name }: { name: NavItem['icon'] }) {
   }
 }
 
-function VoiceBar() {
+function VoiceCapsule() {
   return (
-    <div className="voice-bar-shell voice-bar-shell-reference" aria-label="Voice control bar">
-      <div className="voice-bar-pill voice-bar-pill-reference">
-        <span className="voice-mic" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 0 0 3.5-3.5V8a3.5 3.5 0 1 0-7 0v4a3.5 3.5 0 0 0 3.5 3.5Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /><path d="M6.5 11.5a5.5 5.5 0 1 0 11 0M12 17v3M9 20h6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-        </span>
-        <span className="voice-orb orb-1" />
-        <span className="voice-orb orb-2" />
-        <span className="voice-orb orb-3" />
-        <span className="voice-orb orb-4" />
-        <span className="voice-orb orb-5" />
-        <span className="voice-orb orb-6" />
-        <span className="voice-more">•••</span>
-      </div>
+    <div className="quadra-voice-capsule refined" aria-label="Voice control bar">
+      <span className="quadra-voice-mic" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 0 0 3.5-3.5V8a3.5 3.5 0 1 0-7 0v4a3.5 3.5 0 0 0 3.5 3.5Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /><path d="M6.5 11.5a5.5 5.5 0 1 0 11 0M12 17v3M9 20h6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      </span>
+      <span className="quadra-voice-wave compact" aria-hidden="true">
+        <i /><i /><i /><i /><i /><i />
+      </span>
+      <span className="quadra-voice-menu" aria-hidden="true">•••</span>
     </div>
   )
 }
@@ -71,29 +65,29 @@ export default function Shell({ children }: { children: ReactNode }) {
   const pathname = usePathname()
 
   return (
-    <div className="app-shell quadra-reference-layout">
-      <div className="app-main app-main-reference">
-        <header className="app-topbar quadra-reference-topbar">
-          <div className="quadra-reference-brand">
-            <div className="quadra-reference-mark">Q</div>
+    <div className="app-shell quadra-reference-layout quadra-dock-only-layout quadra-no-sidebar-experience">
+      <div className="app-main app-main-reference app-main-dock-only app-main-fullwidth">
+        <header className="app-topbar quadra-minimal-topbar quadra-device-topbar">
+          <div className="quadra-topbar-brand-inline">
+            <span className="quadra-reference-mark compact">Q</span>
             <div>
               <div className="app-topbar-title">{currentTitle(pathname)}</div>
-              <div className="quadra-reference-subtitle">Quadra voice crm</div>
+              <div className="quadra-reference-subtitle">voice ux con quadra</div>
             </div>
           </div>
-          <div className="quadra-reference-topbar-center"><VoiceBar /></div>
+          <VoiceCapsule />
         </header>
 
-        <main className="page-shell page-shell-dock page-shell-reference">{children}</main>
+        <main className="page-shell page-shell-reference page-shell-dock-only">{children}</main>
       </div>
 
-      <nav className="mobile-nav bottom-dock-nav bottom-dock-nav-reference" aria-label="Navigazione primaria">
+      <nav className="mobile-nav bottom-dock-nav bottom-dock-nav-reference bottom-dock-nav-faithful" aria-label="Navigazione primaria">
         {primaryNav.map((item) => {
           const isActive = active(pathname, item.href)
           return (
             <Link key={item.href} href={item.href} className={`mobile-nav-link ${isActive ? 'is-active' : ''}`} aria-current={isActive ? 'page' : undefined}>
               <span className="mobile-nav-icon-wrap"><span className="mobile-nav-icon"><NavIcon name={item.icon} /></span></span>
-              <span className="mobile-nav-label">{item.mobileLabel}</span>
+              <span className="mobile-nav-label">{item.label}</span>
             </Link>
           )
         })}

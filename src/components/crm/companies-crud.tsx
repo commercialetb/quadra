@@ -48,7 +48,7 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
 
   return (
     <>
-      <section className="panel-card page-section-card">
+      <section className="panel-card page-section-card quadra-record-page companies-record-page">
         <div className="list-head">
           <div>
             <h2>Aziende attive</h2>
