@@ -187,9 +187,7 @@ export function DashboardShell({ data }: { data: DashboardData }) {
               </button>
             </div>
 
-            <div className="dashboard-copilot-brief">
-              Genera un brief veloce sulle priorità di oggi.
-            </div>
+            <div className="dashboard-copilot-brief">Genera un brief veloce sulle priorità di oggi.</div>
 
             <div className="dashboard-copilot-field">
               <label htmlFor="dashboard-copilot-query">Chiedi a Quadra</label>
