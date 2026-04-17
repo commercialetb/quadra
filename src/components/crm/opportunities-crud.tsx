@@ -56,6 +56,13 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
           </button>
         </div>
 
+        <div className="entity-summary-row" aria-label="Panoramica opportunità">
+          <div className="entity-summary-pill"><span>Totale</span><strong>{items.length}</strong></div>
+          <div className="entity-summary-pill"><span>Aperte</span><strong>{items.filter((item) => !['won', 'lost'].includes(item.stage)).length}</strong></div>
+          <div className="entity-summary-pill"><span>In proposta</span><strong>{items.filter((item) => item.stage === 'proposal').length}</strong></div>
+          <div className="entity-summary-pill"><span>Valore</span><strong>{formatCurrency(items.reduce((sum, item) => sum + Number(item.value_estimate || 0), 0))}</strong></div>
+        </div>
+
         <div className="toolbar-row">
           <SearchInput value={query} onChange={setQuery} placeholder="Cerca per titolo, azienda, fase o next action" />
           <div className="segmented-control">

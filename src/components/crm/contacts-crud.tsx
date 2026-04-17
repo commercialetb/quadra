@@ -32,6 +32,13 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
           </button>
         </div>
 
+        <div className="entity-summary-row" aria-label="Panoramica contatti">
+          <div className="entity-summary-pill"><span>Totale</span><strong>{items.length}</strong></div>
+          <div className="entity-summary-pill"><span>Con azienda</span><strong>{items.filter((contact) => contact.companies?.name).length}</strong></div>
+          <div className="entity-summary-pill"><span>Con email</span><strong>{items.filter((contact) => contact.email).length}</strong></div>
+          <div className="entity-summary-pill"><span>WhatsApp</span><strong>{items.filter((contact) => contact.whatsapp).length}</strong></div>
+        </div>
+
         <div className="toolbar-row single">
           <SearchInput value={query} onChange={setQuery} placeholder="Cerca per nome, azienda, email o ruolo" />
         </div>

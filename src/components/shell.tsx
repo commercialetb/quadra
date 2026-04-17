@@ -153,18 +153,29 @@ export default function Shell({ children }: { children: React.ReactNode }) {
 
       <div className="app-main">
         <header className="app-topbar app-topbar-phase2">
-          <div>
+          <div className="app-topbar-leading">
             <div className="app-topbar-kicker">Quadra workspace</div>
             <div className="app-topbar-title">{currentTitle(pathname)}</div>
           </div>
 
-          <div className="hide-mobile topbar-voice-slot">
+          <div className="topbar-voice-slot topbar-voice-slot-desktop">
             <VoiceControlBar compact />
           </div>
 
-          <div className="app-topbar-actions">
-            <Link href="/assistant" className="ghost-button hide-mobile">Assistente AI</Link>
-            <Link href="/settings" className="ghost-button hide-mobile">Strumenti</Link>
+          <div className="app-topbar-actions app-topbar-actions-desktop">
+            <Link href="/assistant" className="ghost-button">Assistente AI</Link>
+            <Link href="/settings" className="ghost-button">Strumenti</Link>
+            <LogoutButton />
+          </div>
+
+          <div className="app-topbar-actions app-topbar-actions-tablet">
+            <Link href="/assistant" className="ghost-button">Assistente AI</Link>
+            <Link href="/settings" className="ghost-button ghost-button-subtle">Strumenti</Link>
+            <LogoutButton />
+          </div>
+
+          <div className="app-topbar-actions app-topbar-actions-mobile">
+            <Link href="/assistant" className="ghost-button ghost-button-subtle" aria-label="Apri Assistente AI">AI</Link>
             <LogoutButton />
           </div>
         </header>

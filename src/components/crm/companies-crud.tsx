@@ -59,6 +59,13 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
           </button>
         </div>
 
+        <div className="entity-summary-row" aria-label="Panoramica aziende">
+          <div className="entity-summary-pill"><span>Totale</span><strong>{items.length}</strong></div>
+          <div className="entity-summary-pill"><span>Clienti</span><strong>{items.filter((company) => company.status === 'client').length}</strong></div>
+          <div className="entity-summary-pill"><span>Prospect</span><strong>{items.filter((company) => company.status === 'prospect').length}</strong></div>
+          <div className="entity-summary-pill"><span>Partner</span><strong>{items.filter((company) => company.status === 'partner').length}</strong></div>
+        </div>
+
         <div className="toolbar-row">
           <SearchInput value={query} onChange={setQuery} placeholder="Cerca per nome, città o stato" />
           <div className="segmented-control">
@@ -73,7 +80,7 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
         <div className="cards-stack">
           {items.map((company) => (
             <article key={company.id} className="entity-card">
-              <div className="entity-card-main">
+              <Link href={`/companies/${company.id}`} className="entity-card-main entity-card-main-link">
                 <CompanyAvatar name={company.name} website={company.website} />
                 <div className="entity-card-copy stretch">
                   <div className="entity-card-top">
@@ -85,17 +92,16 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                   </div>
                   <div className="entity-inline-meta wrap">
                     {company.website ? (
-                      <a href={company.website.startsWith('http') ? company.website : `https://${company.website}`} target="_blank" rel="noreferrer">
-                        {sanitizeWebsite(company.website)}
-                      </a>
+                      <span>{sanitizeWebsite(company.website)}</span>
                     ) : (
                       <span>Sito non indicato</span>
                     )}
                     {company.email ? <span>{company.email}</span> : null}
                     {company.phone ? <span>{company.phone}</span> : null}
+                    {company.address_line1 ? <span>{company.address_line1}</span> : null}
                   </div>
                 </div>
-              </div>
+              </Link>
 
               <div className="entity-card-actions cleaner-actions">
                 <Link href={`/companies/${company.id}`} className="secondary-button">Apri scheda</Link>

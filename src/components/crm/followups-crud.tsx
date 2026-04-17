@@ -38,12 +38,18 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
   const [showCreate, setShowCreate] = useState(false)
 
   const items = useMemo(() => {
-    return followups.filter((item) => {
-      const text = `${item.title} ${item.status ?? ''} ${item.priority ?? ''}`.toLowerCase()
-      const matchesQuery = text.includes(query.toLowerCase())
-      const matchesFilter = filter === 'all' ? true : item.status === filter
-      return matchesQuery && matchesFilter
-    })
+    return followups
+      .filter((item) => {
+        const text = `${item.title} ${item.status ?? ''} ${item.priority ?? ''}`.toLowerCase()
+        const matchesQuery = text.includes(query.toLowerCase())
+        const matchesFilter = filter === 'all' ? true : item.status === filter
+        return matchesQuery && matchesFilter
+      })
+      .sort((a, b) => {
+        const aTime = a.due_at ? new Date(a.due_at).getTime() : Number.MAX_SAFE_INTEGER
+        const bTime = b.due_at ? new Date(b.due_at).getTime() : Number.MAX_SAFE_INTEGER
+        return aTime - bTime
+      })
   }, [followups, query, filter])
 
   return (
@@ -57,6 +63,13 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
             + Nuovo follow-up
           </button>
+        </div>
+
+        <div className="entity-summary-row" aria-label="Panoramica follow-up">
+          <div className="entity-summary-pill"><span>Totale</span><strong>{items.length}</strong></div>
+          <div className="entity-summary-pill"><span>Scaduti</span><strong>{items.filter((item) => item.status === 'overdue').length}</strong></div>
+          <div className="entity-summary-pill"><span>In corso</span><strong>{items.filter((item) => item.status === 'in_progress').length}</strong></div>
+          <div className="entity-summary-pill"><span>Completati</span><strong>{items.filter((item) => item.status === 'completed').length}</strong></div>
         </div>
 
         <div className="toolbar-row">

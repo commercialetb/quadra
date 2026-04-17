@@ -120,15 +120,7 @@ export function AssistantWorkspace() {
   }
 
   return (
-    <div className="page-stack">
-      <section className="dashboard-hero dashboard-hero-compact">
-        <div>
-          <p className="page-eyebrow">Quadra AI</p>
-          <h1 className="page-title">Assistente operativo</h1>
-          <p className="page-subtitle dashboard-subtitle-compact">Query sul CRM, riassunti, next action, parsing note e messaggi pronti.</p>
-        </div>
-      </section>
-
+    <div className="page-stack utility-page-stack">
       <div className="dashboard-grid two-up assistant-grid">
       <section className="panel-card">
         <div className="panel-head">
