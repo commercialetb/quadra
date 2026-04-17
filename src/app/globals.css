@@ -3814,3 +3814,313 @@ body {
     margin-top: 0;
   }
 }
+
+/* v53 phase E - modular dashboard reset */
+.dashboard-phaseE {
+  gap: 18px;
+}
+
+.dashboard-mobile-voice {
+  display: none;
+}
+
+.dashboard-widget-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+.dashboard-widget {
+  grid-column: span 4;
+  background: linear-gradient(180deg, rgba(255,255,255,.94) 0%, rgba(249,250,255,.9) 100%);
+  border: 1px solid rgba(218, 224, 239, .9);
+  border-radius: 28px;
+  box-shadow: 0 16px 40px rgba(130, 140, 170, .12), inset 0 1px 0 rgba(255,255,255,.88);
+  padding: 20px;
+}
+
+.dashboard-widget-kpis {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.dashboard-widget-focus {
+  grid-column: span 5;
+}
+
+.dashboard-widget-pipeline {
+  grid-column: span 4;
+}
+
+.dashboard-widget-actions {
+  grid-column: span 3;
+}
+
+.dashboard-widget-contacts,
+.dashboard-widget-companies,
+.dashboard-widget-assistant {
+  grid-column: span 4;
+}
+
+.dashboard-widget-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.dashboard-widget-head h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.05;
+}
+
+.dashboard-widget-head p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  max-width: 34ch;
+}
+
+.dashboard-widget-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.dashboard-widget-empty {
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px dashed rgba(196, 205, 228, .95);
+  color: var(--muted);
+  background: rgba(251, 252, 255, .72);
+}
+
+.dashboard-metric-card {
+  min-height: 136px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  padding: 20px 22px;
+  border-radius: 24px;
+  border: 1px solid rgba(218, 224, 239, .92);
+  background: linear-gradient(180deg, rgba(255,255,255,.96) 0%, rgba(246,249,255,.9) 100%);
+  box-shadow: 0 12px 30px rgba(130, 140, 170, .10), inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+.dashboard-metric-label {
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: #79839d;
+  font-weight: 800;
+}
+
+.dashboard-metric-value {
+  font-size: clamp(1.75rem, 2.5vw, 2.4rem);
+  line-height: 1;
+}
+
+.dashboard-metric-note {
+  color: var(--muted);
+}
+
+.dashboard-entity-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 22px;
+  border: 1px solid rgba(220, 226, 241, .95);
+  background: rgba(255,255,255,.78);
+  text-decoration: none;
+  color: inherit;
+}
+
+.dashboard-entity-row.compact {
+  grid-template-columns: 1fr auto;
+}
+
+.dashboard-link-card:hover {
+  border-color: rgba(143, 125, 255, .42);
+  box-shadow: 0 10px 24px rgba(124, 92, 255, .10);
+}
+
+.dashboard-entity-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: #5b6280;
+  background: linear-gradient(180deg, rgba(238,233,255,.95) 0%, rgba(226,245,247,.95) 100%);
+  border: 1px solid rgba(220, 226, 241, .95);
+}
+
+.dashboard-entity-copy {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.dashboard-entity-copy strong {
+  font-size: 1.02rem;
+}
+
+.dashboard-entity-copy span {
+  color: var(--muted);
+}
+
+.dashboard-row-action {
+  font-size: .82rem;
+  font-weight: 800;
+  color: #69739a;
+}
+
+.dashboard-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(99, 224, 196, .14);
+  color: #1e6b5d;
+  font-size: .76rem;
+  font-weight: 800;
+}
+
+.dashboard-pill-badge.warning {
+  background: rgba(255, 174, 54, .14);
+  color: #935a00;
+}
+
+.dashboard-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.dashboard-mini-note {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(241,236,255,.92) 0%, rgba(231,247,247,.92) 100%);
+  border: 1px solid rgba(220, 226, 241, .95);
+  display: grid;
+  gap: 2px;
+}
+
+.dashboard-mini-note strong {
+  font-size: 1.3rem;
+}
+
+.dashboard-mini-note span {
+  color: #5f6782;
+}
+
+.dashboard-widget-assistant .panel-card.assistant-panel {
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+@media (max-width: 1180px) {
+  .dashboard-widget-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-widget,
+  .dashboard-widget-focus,
+  .dashboard-widget-pipeline,
+  .dashboard-widget-actions,
+  .dashboard-widget-contacts,
+  .dashboard-widget-companies,
+  .dashboard-widget-assistant {
+    grid-column: span 1;
+  }
+
+  .dashboard-widget-kpis {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-mobile-voice {
+    display: block;
+  }
+
+  .dashboard-mobile-voice .voice-control-bar {
+    width: 100%;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .mobile-nav {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .dashboard-phaseE {
+    gap: 14px;
+  }
+
+  .dashboard-widget-grid,
+  .dashboard-widget-kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-widget,
+  .dashboard-widget-kpis {
+    grid-column: 1 / -1;
+  }
+
+  .dashboard-widget {
+    padding: 16px;
+    border-radius: 24px;
+  }
+
+  .dashboard-metric-card {
+    min-height: 112px;
+    padding: 18px;
+  }
+
+  .dashboard-widget-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dashboard-widget-head h2 {
+    font-size: 1.3rem;
+  }
+
+  .dashboard-entity-row {
+    grid-template-columns: auto 1fr;
+  }
+
+  .dashboard-row-action,
+  .dashboard-pill-badge {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .dashboard-actions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 768px) {
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .mobile-nav {
+    display: none !important;
+  }
+}
