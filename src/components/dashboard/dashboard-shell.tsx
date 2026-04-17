@@ -62,26 +62,24 @@ function MetricCard({ label, value, note }: { label: string; value: string | num
 function ContactRow({ item }: { item: Item }) {
   const name = personName(item)
   return (
-    <Link href={`/contacts/${item.id}`} className="dashboard-entity-row dashboard-link-card">
+    <Link href={`/contacts/${item.id}`} className="dashboard-entity-row dashboard-link-card compact-row">
       <span className="dashboard-entity-avatar">{name.slice(0, 1).toUpperCase()}</span>
       <div className="dashboard-entity-copy">
         <strong>{name}</strong>
         <span>{statusLine([item.job_title, item.companies?.name])}</span>
       </div>
-      <span className="dashboard-row-action">Apri</span>
     </Link>
   )
 }
 
 function CompanyRow({ item }: { item: Item }) {
   return (
-    <Link href={`/companies/${item.id}`} className="dashboard-entity-row dashboard-link-card">
+    <Link href={`/companies/${item.id}`} className="dashboard-entity-row dashboard-link-card compact-row">
       <span className="dashboard-entity-avatar">{(item.name || 'A').slice(0, 1).toUpperCase()}</span>
       <div className="dashboard-entity-copy">
         <strong>{item.name || 'Azienda'}</strong>
         <span>{statusLine([item.city, item.status])}</span>
       </div>
-      <span className="dashboard-row-action">Apri</span>
     </Link>
   )
 }
@@ -91,7 +89,9 @@ function FollowupRow({ item }: { item: Item }) {
     <Link href="/followups" className="dashboard-entity-row dashboard-link-card compact">
       <div className="dashboard-entity-copy">
         <strong>{item.title || 'Follow-up'}</strong>
-        <span>{priorityLabel(item.priority)} · {followupStatusLabel(item.status)} · {formatDate(item.due_at || item.scheduled_for)}</span>
+        <span>
+          {priorityLabel(item.priority)} · {followupStatusLabel(item.status)} · {formatDate(item.due_at || item.scheduled_for)}
+        </span>
       </div>
       <span className="dashboard-pill-badge">oggi</span>
     </Link>
@@ -103,7 +103,7 @@ function OpportunityRow({ item }: { item: Item }) {
     <Link href={`/opportunities/${item.id}`} className="dashboard-entity-row dashboard-link-card compact">
       <div className="dashboard-entity-copy">
         <strong>{item.title || 'Opportunità'}</strong>
-        <span>{stageLabel(item.stage)} · {item.companies?.name || 'Senza azienda'} </span>
+        <span>{stageLabel(item.stage)} · {item.companies?.name || 'Senza azienda'}</span>
       </div>
       <span className="dashboard-pill-badge warning">ferma</span>
     </Link>
@@ -113,110 +113,131 @@ function OpportunityRow({ item }: { item: Item }) {
 export function DashboardShell({ data }: { data: DashboardData }) {
   const recentCompanies = (data.recentCompanies || []).slice(0, 4)
   const recentContacts = (data.recentContacts || []).slice(0, 4)
-  const recentActivities = (data.recentActivities || []).slice(0, 5)
   const todayFollowups = (data.todayFollowups || []).slice(0, 4)
-  const staleOpportunities = (data.staleOpportunities || []).slice(0, 4)
+  const staleOpportunities = (data.staleOpportunities || []).slice(0, 3)
 
   const pipelineValue = formatCurrency(data.kpis.pipelineValue || 0)
   const openCount = data.kpis.openCount || 0
   const todayCount = data.kpis.todayCount || 0
   const overdueCount = data.kpis.overdueCount || 0
-  const contextCount = recentCompanies.length + recentContacts.length + recentActivities.length
 
   return (
-    <div className="page-stack dashboard-phaseE">
+    <div className="page-stack dashboard-phaseE dashboard-phaseE2">
       <section className="dashboard-mobile-voice">
         <VoiceControlBar compact />
       </section>
 
-      <section className="dashboard-widget-grid" aria-label="Dashboard modulare">
-        <section className="dashboard-widget dashboard-widget-kpis" aria-label="KPI principali">
-          <MetricCard label="Pipeline" value={pipelineValue} note="Valore commerciale stimato." />
-          <MetricCard label="Trattative aperte" value={openCount} note="Opportunità attive in lavorazione." />
-          <MetricCard label="Follow-up oggi" value={todayCount} note="Azioni da chiudere entro oggi." />
-          <MetricCard label="Da sbloccare" value={overdueCount} note="Elementi in ritardo o scoperti." />
-        </section>
-
-        <section className="dashboard-widget dashboard-widget-focus">
-          <div className="dashboard-widget-head">
-            <div>
-              <h2>Focus di oggi</h2>
-              <p>Priorità chiare, senza scene duplicate.</p>
+      <section className="dashboard-e2-layout" aria-label="Dashboard predittiva">
+        <div className="dashboard-e2-main">
+          <section className="dashboard-widget dashboard-widget-priority">
+            <div className="dashboard-widget-head compact-head">
+              <div>
+                <h2>Priorità di oggi</h2>
+                <p>Subito cosa guardare, chi sentire e cosa sbloccare.</p>
+              </div>
+              <Link href="/followups" className="secondary-button">Apri agenda</Link>
             </div>
-            <Link href="/followups" className="secondary-button">Apri agenda</Link>
-          </div>
 
-          <div className="dashboard-widget-stack">
-            {todayFollowups.length === 0 ? <EmptyState text="Nessun follow-up urgente per oggi." /> : todayFollowups.map((item) => <FollowupRow key={item.id} item={item} />)}
-          </div>
-        </section>
-
-        <section className="dashboard-widget dashboard-widget-pipeline">
-          <div className="dashboard-widget-head">
-            <div>
-              <h2>Pipeline da sbloccare</h2>
-              <p>Le opportunità ferme salgono subito in alto.</p>
+            <div className="dashboard-e2-kpis">
+              <MetricCard label="Pipeline" value={pipelineValue} note="Valore stimato." />
+              <MetricCard label="Trattative" value={openCount} note="Aperte in pipeline." />
+              <MetricCard label="Follow-up oggi" value={todayCount} note="Azioni da chiudere." />
             </div>
-            <Link href="/opportunities" className="secondary-button">Vai alla pipeline</Link>
-          </div>
 
-          <div className="dashboard-widget-stack">
-            {staleOpportunities.length === 0 ? <EmptyState text="Nessuna opportunità bloccata in questo momento." /> : staleOpportunities.map((item) => <OpportunityRow key={item.id} item={item} />)}
-          </div>
-        </section>
+            <div className="dashboard-e2-priority-grid">
+              <div className="dashboard-e2-subcard">
+                <div className="dashboard-subcard-head">
+                  <h3>Focus giornaliero</h3>
+                  <span>{todayCount} oggi</span>
+                </div>
+                <div className="dashboard-widget-stack compact-stack">
+                  {todayFollowups.length === 0 ? (
+                    <EmptyState text="Nessuna azione urgente per oggi." />
+                  ) : (
+                    todayFollowups.map((item) => <FollowupRow key={item.id} item={item} />)
+                  )}
+                </div>
+              </div>
 
-        <section className="dashboard-widget dashboard-widget-contacts">
-          <div className="dashboard-widget-head">
-            <div>
-              <h2>Contatti recenti</h2>
-              <p>Tocca per aprire subito la scheda.</p>
+              <div className="dashboard-e2-subcard">
+                <div className="dashboard-subcard-head">
+                  <h3>Da sbloccare</h3>
+                  <span>{overdueCount} elementi</span>
+                </div>
+                <div className="dashboard-widget-stack compact-stack">
+                  {staleOpportunities.length === 0 ? (
+                    <EmptyState text="Nessuna opportunità bloccata." />
+                  ) : (
+                    staleOpportunities.map((item) => <OpportunityRow key={item.id} item={item} />)
+                  )}
+                </div>
+              </div>
             </div>
-            <Link href="/contacts" className="ghost-button">Contatti</Link>
-          </div>
+          </section>
 
-          <div className="dashboard-widget-stack">
-            {recentContacts.length === 0 ? <EmptyState text="Nessun contatto recente." /> : recentContacts.map((item) => <ContactRow key={item.id} item={item} />)}
-          </div>
-        </section>
-
-        <section className="dashboard-widget dashboard-widget-companies">
-          <div className="dashboard-widget-head">
-            <div>
-              <h2>Aziende recenti</h2>
-              <p>Accesso rapido alle schede principali.</p>
+          <section className="dashboard-widget dashboard-widget-copilot">
+            <div className="dashboard-widget-head compact-head">
+              <div>
+                <h2>Copilota AI</h2>
+                <p>Una domanda, una risposta utile. Niente CTA duplicate.</p>
+              </div>
             </div>
-            <Link href="/companies" className="ghost-button">Aziende</Link>
-          </div>
+            <AssistantPanel data={data} />
+          </section>
 
-          <div className="dashboard-widget-stack">
-            {recentCompanies.length === 0 ? <EmptyState text="Nessuna azienda recente." /> : recentCompanies.map((item) => <CompanyRow key={item.id} item={item} />)}
-          </div>
-        </section>
-
-        <section className="dashboard-widget dashboard-widget-actions">
-          <div className="dashboard-widget-head">
-            <div>
-              <h2>Azioni rapide</h2>
-              <p>Una dashboard operativa, non una vetrina.</p>
+          <section className="dashboard-widget dashboard-widget-actions e2-actions">
+            <div className="dashboard-widget-head compact-head">
+              <div>
+                <h2>Azioni rapide</h2>
+                <p>Solo le tre azioni che servono davvero.</p>
+              </div>
             </div>
-          </div>
 
-          <div className="dashboard-actions-grid">
-            <Link href="/capture/voice" className="primary-button">Detta in Quadra</Link>
-            <Link href="/assistant" className="secondary-button">Apri assistente</Link>
-            <Link href="/opportunities" className="secondary-button">Pipeline</Link>
-            <Link href="/followups" className="secondary-button">Task di oggi</Link>
-          </div>
+            <div className="dashboard-actions-grid dashboard-actions-grid--three">
+              <Link href="/capture/voice" className="primary-button">Detta in Quadra</Link>
+              <Link href="/assistant" className="secondary-button">Assistente AI</Link>
+              <Link href="/opportunities" className="secondary-button">Pipeline</Link>
+            </div>
+          </section>
+        </div>
 
-          <div className="dashboard-mini-note">
-            <strong>{contextCount}</strong>
-            <span>elementi recenti disponibili tra contatti, aziende e attività.</span>
-          </div>
-        </section>
+        <aside className="dashboard-e2-rail">
+          <section className="dashboard-widget dashboard-widget-contacts rail-widget">
+            <div className="dashboard-widget-head rail-head">
+              <div>
+                <h2>Contatti recenti</h2>
+                <p>Tocca e apri la scheda.</p>
+              </div>
+              <Link href="/contacts" className="ghost-button">Contatti</Link>
+            </div>
 
-        <section className="dashboard-widget dashboard-widget-assistant">
-          <AssistantPanel data={data} />
-        </section>
+            <div className="dashboard-widget-stack compact-stack">
+              {recentContacts.length === 0 ? (
+                <EmptyState text="Nessun contatto recente." />
+              ) : (
+                recentContacts.map((item) => <ContactRow key={item.id} item={item} />)
+              )}
+            </div>
+          </section>
+
+          <section className="dashboard-widget dashboard-widget-companies rail-widget">
+            <div className="dashboard-widget-head rail-head">
+              <div>
+                <h2>Aziende recenti</h2>
+                <p>Apri subito i record principali.</p>
+              </div>
+              <Link href="/companies" className="ghost-button">Aziende</Link>
+            </div>
+
+            <div className="dashboard-widget-stack compact-stack">
+              {recentCompanies.length === 0 ? (
+                <EmptyState text="Nessuna azienda recente." />
+              ) : (
+                recentCompanies.map((item) => <CompanyRow key={item.id} item={item} />)
+              )}
+            </div>
+          </section>
+        </aside>
       </section>
     </div>
   )
