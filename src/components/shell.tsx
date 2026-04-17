@@ -82,6 +82,7 @@ function NavIcon({ name }: { name: NavItem['icon'] }) {
 
 export default function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const isSettingsPage = pathname.startsWith('/settings')
 
   return (
     <div className="app-shell quadra-shell-refresh quadra-shell-phase2">
@@ -144,11 +145,13 @@ export default function Shell({ children }: { children: React.ReactNode }) {
           </Link>
         </div>
 
-        <div className="sidebar-card sidebar-card-phase2">
-          <div className="sidebar-card-label">Quadra OS</div>
-          <strong>Più scena, più gerarchia, meno rumore.</strong>
-          <p>Desktop con sidebar vera, contenuto centrale ampio e dock mobile separato.</p>
-        </div>
+        {!isSettingsPage ? (
+          <div className="sidebar-card sidebar-card-phase2">
+            <div className="sidebar-card-label">Quadra OS</div>
+            <strong>Più scena, più gerarchia, meno rumore.</strong>
+            <p>Desktop con sidebar vera, contenuto centrale ampio e dock mobile separato.</p>
+          </div>
+        ) : null}
       </aside>
 
       <div className="app-main">
@@ -163,19 +166,19 @@ export default function Shell({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="app-topbar-actions app-topbar-actions-desktop">
-            <Link href="/assistant" className="ghost-button">Assistente AI</Link>
-            <Link href="/settings" className="ghost-button">Strumenti</Link>
+            {!active(pathname, '/assistant') ? <Link href="/assistant" className="ghost-button">Assistente AI</Link> : null}
+            {!isSettingsPage ? <Link href="/settings" className="ghost-button">Strumenti</Link> : null}
             <LogoutButton />
           </div>
 
           <div className="app-topbar-actions app-topbar-actions-tablet">
-            <Link href="/assistant" className="ghost-button">Assistente AI</Link>
-            <Link href="/settings" className="ghost-button ghost-button-subtle">Strumenti</Link>
+            {!active(pathname, '/assistant') ? <Link href="/assistant" className="ghost-button">Assistente AI</Link> : null}
+            {!isSettingsPage ? <Link href="/settings" className="ghost-button ghost-button-subtle">Strumenti</Link> : null}
             <LogoutButton />
           </div>
 
           <div className="app-topbar-actions app-topbar-actions-mobile">
-            <Link href="/assistant" className="ghost-button ghost-button-subtle" aria-label="Apri Assistente AI">AI</Link>
+            {!active(pathname, '/assistant') ? <Link href="/assistant" className="ghost-button ghost-button-subtle" aria-label="Apri Assistente AI">AI</Link> : null}
             <LogoutButton />
           </div>
         </header>
