@@ -3987,3 +3987,77 @@ body {
     display: none !important;
   }
 }
+
+
+/* Copilota AI single-box fix */
+.dashboard-phaseE2 .dashboard-widget-copilot {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.dashboard-phaseE2 .dashboard-widget-copilot .compact-head {
+  align-items: flex-start;
+}
+
+.dashboard-phaseE2 .dashboard-widget-copilot .compact-head h2 {
+  margin: 0;
+}
+
+.dashboard-phaseE2 .dashboard-widget-copilot .compact-head p {
+  margin: 6px 0 0;
+  color: var(--soft);
+}
+
+.dashboard-copilot-brief {
+  margin-top: 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(170, 180, 210, 0.18);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--muted-foreground);
+  text-align: center;
+}
+
+.dashboard-copilot-field {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.dashboard-copilot-field label {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.dashboard-copilot-textarea {
+  width: 100%;
+  min-height: 150px;
+  resize: vertical;
+  border-radius: 22px;
+  border: 1px solid rgba(170, 180, 210, 0.28);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1rem 1.1rem;
+  font: inherit;
+  color: var(--foreground);
+}
+
+.dashboard-copilot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.dashboard-copilot-footer {
+  margin-top: 0;
+  font-size: 0.95rem;
+  color: var(--muted-foreground);
+}
+
+@media (min-width: 768px) {
+  .mobile-nav,
+  .quadra-mobile-nav,
+  .quadra-bottom-nav {
+    display: none !important;
+  }
+}
