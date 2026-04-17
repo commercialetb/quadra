@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { AssistantPanel } from '@/components/ai/assistant-panel'
 import { VoiceControlBar } from '@/components/voice-control-bar'
 import { followupStatusLabel, priorityLabel, stageLabel } from '@/lib/crm-labels'
 
@@ -135,7 +134,9 @@ export function DashboardShell({ data }: { data: DashboardData }) {
                 <h2>Priorità di oggi</h2>
                 <p>Subito cosa guardare, chi sentire e cosa sbloccare.</p>
               </div>
-              <Link href="/followups" className="secondary-button">Apri agenda</Link>
+              <Link href="/followups" className="secondary-button">
+                Apri agenda
+              </Link>
             </div>
 
             <div className="dashboard-e2-kpis">
@@ -181,8 +182,37 @@ export function DashboardShell({ data }: { data: DashboardData }) {
                 <h2>Copilota AI</h2>
                 <p>Una domanda, una risposta utile. Niente CTA duplicate.</p>
               </div>
+              <button type="button" className="primary-button">
+                Genera brief
+              </button>
             </div>
-            <AssistantPanel data={data} />
+
+            <div className="dashboard-copilot-brief">
+              Genera un brief veloce sulle priorità di oggi.
+            </div>
+
+            <div className="dashboard-copilot-field">
+              <label htmlFor="dashboard-copilot-query">Chiedi a Quadra</label>
+              <textarea
+                id="dashboard-copilot-query"
+                className="dashboard-copilot-textarea"
+                placeholder="Es. Chi devo sentire oggi? Oppure: quali opportunità sopra 10k sono ferme?"
+                rows={5}
+              />
+            </div>
+
+            <div className="dashboard-copilot-actions">
+              <button type="button" className="secondary-button">
+                Interroga il CRM
+              </button>
+              <Link href="/assistant" className="secondary-button">
+                Apri assistente
+              </Link>
+            </div>
+
+            <div className="dashboard-copilot-footer">
+              Oggi: {todayCount} follow-up · {overdueCount} in ritardo · {openCount} opportunità aperte.
+            </div>
           </section>
 
           <section className="dashboard-widget dashboard-widget-actions e2-actions">
@@ -194,9 +224,15 @@ export function DashboardShell({ data }: { data: DashboardData }) {
             </div>
 
             <div className="dashboard-actions-grid dashboard-actions-grid--three">
-              <Link href="/capture/voice" className="primary-button">Detta in Quadra</Link>
-              <Link href="/assistant" className="secondary-button">Assistente AI</Link>
-              <Link href="/opportunities" className="secondary-button">Pipeline</Link>
+              <Link href="/capture/voice" className="primary-button">
+                Detta in Quadra
+              </Link>
+              <Link href="/assistant" className="secondary-button">
+                Assistente AI
+              </Link>
+              <Link href="/opportunities" className="secondary-button">
+                Pipeline
+              </Link>
             </div>
           </section>
         </div>
@@ -208,7 +244,9 @@ export function DashboardShell({ data }: { data: DashboardData }) {
                 <h2>Contatti recenti</h2>
                 <p>Tocca e apri la scheda.</p>
               </div>
-              <Link href="/contacts" className="ghost-button">Contatti</Link>
+              <Link href="/contacts" className="ghost-button">
+                Contatti
+              </Link>
             </div>
 
             <div className="dashboard-widget-stack compact-stack">
@@ -226,7 +264,9 @@ export function DashboardShell({ data }: { data: DashboardData }) {
                 <h2>Aziende recenti</h2>
                 <p>Apri subito i record principali.</p>
               </div>
-              <Link href="/companies" className="ghost-button">Aziende</Link>
+              <Link href="/companies" className="ghost-button">
+                Aziende
+              </Link>
             </div>
 
             <div className="dashboard-widget-stack compact-stack">
