@@ -30,21 +30,12 @@ const exportsList = [
 
 export default function SettingsPage() {
   return (
-    <div className="page-stack">
-      <section className="page-hero settings-hero">
-        <div>
-          <p className="page-eyebrow">Tools</p>
-          <h1 className="page-title">Strumenti</h1>
-          <p className="page-subtitle">
-            Un solo posto per import, export e comandi vocali. Sempre semplice, sempre chiaro.
-          </p>
-        </div>
-        <div className="hero-pill-row">
-          <span className="hero-chip">Import CSV / Excel</span>
-          <span className="hero-chip">Shortcut Siri</span>
-          <span className="hero-chip">Google / Android</span>
-        </div>
-      </section>
+    <div className="page-stack utility-page-stack">
+      <div className="utility-tag-row">
+        <span className="hero-chip">Import CSV / Excel</span>
+        <span className="hero-chip">Shortcut Siri</span>
+        <span className="hero-chip">Google / Android</span>
+      </div>
 
       <div className="settings-grid">
         <section className="panel-card settings-panel">
