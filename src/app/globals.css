@@ -6863,3 +6863,194 @@ select.field-control:focus {
     border-radius: 28px;
   }
 }
+
+/* AI workspace refinement */
+.quadra-dashboard-ai-chips,
+.quadra-ai-suggestion-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.quadra-dashboard-ai-chip,
+.quadra-ai-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 220, 236, 0.95);
+  background: rgba(255,255,255,0.72);
+  color: var(--quadra-ink);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.quadra-ai-workspace {
+  gap: 18px;
+}
+
+.quadra-ai-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) auto;
+  gap: 18px;
+  align-items: center;
+  border-radius: 34px;
+  padding: 24px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(244,248,255,0.78) 100%),
+    linear-gradient(135deg, rgba(153,121,255,0.12), rgba(111,224,220,0.16));
+}
+
+.quadra-ai-eyebrow {
+  display: inline-block;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.78rem;
+  color: var(--quadra-muted);
+  font-weight: 800;
+}
+
+.quadra-ai-hero h1 {
+  margin: 0;
+  font-size: clamp(1.9rem, 3vw, 2.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+}
+
+.quadra-ai-hero p {
+  margin: 10px 0 0;
+  max-width: 58ch;
+  color: var(--muted);
+}
+
+.quadra-ai-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.quadra-ai-tab {
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(212, 220, 236, 0.95);
+  background: rgba(255,255,255,0.72);
+  color: var(--quadra-ink);
+  font-weight: 800;
+}
+
+.quadra-ai-tab.is-active {
+  background: linear-gradient(135deg, rgba(40, 53, 96, 0.98), rgba(70, 87, 150, 0.95));
+  color: #fff;
+  box-shadow: 0 18px 36px rgba(44, 53, 108, 0.2);
+}
+
+.quadra-ai-query-card,
+.quadra-ai-card {
+  border-radius: 30px;
+  padding: 22px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.86) 0%, rgba(246,249,255,0.74) 100%);
+}
+
+.quadra-ai-card.is-emphasis,
+.quadra-ai-query-card {
+  box-shadow: 0 18px 45px rgba(118, 131, 169, 0.12), inset 0 1px 0 rgba(255,255,255,0.92);
+}
+
+.quadra-ai-lower-grid {
+  align-items: start;
+}
+
+.quadra-ai-output {
+  margin-top: 14px;
+  min-height: 96px;
+}
+
+.assistant-textarea.compact {
+  min-height: 120px;
+}
+
+@media (max-width: 1100px) {
+  .quadra-ai-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .quadra-ai-hero-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
+  .quadra-dashboard-ai-actions,
+  .quadra-dashboard-ai-mobile-actions,
+  .quadra-dashboard-ai-chips,
+  .quadra-ai-suggestion-row,
+  .quadra-ai-hero-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .quadra-dashboard-ai-chip,
+  .quadra-ai-chip,
+  .quadra-ai-tab {
+    justify-content: center;
+  }
+
+  .quadra-ai-hero,
+  .quadra-ai-query-card,
+  .quadra-ai-card {
+    padding: 18px;
+    border-radius: 26px;
+  }
+}
+
+/* final aesthetic cleanup: crm spotlight + segmented control */
+.crm-hero-spotlight {
+  overflow: hidden;
+}
+
+.crm-hero-spotlight strong,
+.crm-hero-spotlight p {
+  position: relative;
+  z-index: 1;
+}
+
+.crm-hero-spotlight p {
+  max-width: 18ch;
+  line-height: 1.35;
+}
+
+.crm-hero-spotlight i {
+  left: 24px;
+  right: 24px;
+  bottom: 14px;
+  height: 12px;
+  opacity: .72;
+  pointer-events: none;
+}
+
+.segmented-control {
+  padding: 5px;
+  background: linear-gradient(180deg, rgba(255,255,255,.86) 0%, rgba(247,250,255,.76) 100%);
+}
+
+.segmented-control button {
+  color: #667085;
+}
+
+.segmented-control button.is-active {
+  background: linear-gradient(180deg, rgba(225,220,255,.92) 0%, rgba(226,246,243,.92) 100%);
+  color: #25314d;
+  border: 1px solid rgba(192, 198, 232, 0.95);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 8px 18px rgba(143, 132, 255, 0.12);
+}
+
+.segmented-control button:not(.is-active):hover {
+  background: rgba(255,255,255,.88);
+  color: #44506a;
+}
