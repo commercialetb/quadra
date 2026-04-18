@@ -127,13 +127,13 @@ export default function Shell({ children }: { children: React.ReactNode }) {
           <div className="sidebar-brand-mark">Q</div>
           <div>
             <p>Quadra</p>
-            <span>CRM predittivo e vocale</span>
+            <span>Workspace vocale</span>
           </div>
         </div>
 
         <div className="sidebar-voice-pod">
           <span className="sidebar-pod-label">Voice Control</span>
-          <strong>Siri, Gemini e GPT in un solo spazio.</strong>
+          <strong>Siri, Gemini e GPT dentro la stessa UX.</strong>
           <div className="sidebar-pod-wave" aria-hidden="true">
             <span />
             <span />
@@ -181,8 +181,8 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         {!isSettingsPage ? (
           <div className="sidebar-card sidebar-card-phase2">
             <div className="sidebar-card-label">Quadra OS</div>
-            <strong>Più scena, più gerarchia, meno rumore.</strong>
-            <p>Desktop con sidebar vera, contenuto centrale ampio e dock mobile separato.</p>
+            <strong>Design più vicino al concept visivo.</strong>
+            <p>Sidebar glass, topbar più pulita e card con gerarchia più morbida.</p>
           </div>
         ) : null}
       </aside>
@@ -203,7 +203,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
             <div className="sidebar-brand-mark">Q</div>
             <div>
               <p>Quadra</p>
-              <span>CRM predittivo e vocale</span>
+              <span>Workspace vocale</span>
             </div>
           </div>
           <button type="button" className="tablet-drawer-close" onClick={() => setTabletNavOpen(false)} aria-label="Chiudi menu">
