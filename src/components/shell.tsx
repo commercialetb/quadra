@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { LogoutButton } from '@/components/auth/logout-button'
 import { VoiceControlBar } from '@/components/voice-control-bar'
 
@@ -80,9 +81,23 @@ function NavIcon({ name }: { name: NavItem['icon'] }) {
   }
 }
 
+
+function MenuIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 export default function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isSettingsPage = pathname.startsWith('/settings')
+  const [tabletNavOpen, setTabletNavOpen] = useState(false)
+
+  useEffect(() => {
+    setTabletNavOpen(false)
+  }, [pathname])
 
   return (
     <div className="app-shell quadra-shell-refresh quadra-shell-phase2">
@@ -154,11 +169,84 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         ) : null}
       </aside>
 
+      <div
+        className={`tablet-drawer-backdrop ${tabletNavOpen ? 'is-open' : ''}`}
+        aria-hidden={!tabletNavOpen}
+        onClick={() => setTabletNavOpen(false)}
+      />
+
+      <aside
+        className={`tablet-drawer ${tabletNavOpen ? 'is-open' : ''}`}
+        aria-label="Navigazione iPad"
+        aria-hidden={!tabletNavOpen}
+      >
+        <div className="tablet-drawer-head">
+          <div className="sidebar-brand sidebar-brand-phase2">
+            <div className="sidebar-brand-mark">Q</div>
+            <div>
+              <p>Quadra</p>
+              <span>CRM predittivo e vocale</span>
+            </div>
+          </div>
+          <button type="button" className="tablet-drawer-close" onClick={() => setTabletNavOpen(false)} aria-label="Chiudi menu">
+            ×
+          </button>
+        </div>
+
+        <nav className="sidebar-nav tablet-drawer-nav">
+          {primaryNav.map((item) => {
+            const isActive = active(pathname, item.href)
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`sidebar-link ${isActive ? 'is-active' : ''}`}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                <span className="sidebar-link-icon"><NavIcon name={item.icon} /></span>
+                <span>{item.label}</span>
+              </Link>
+            )
+          })}
+        </nav>
+
+        <div className="sidebar-secondary tablet-drawer-secondary">
+          <Link href="/assistant" className={`sidebar-link secondary ${active(pathname, '/assistant') ? 'is-active' : ''}`}>
+            <span className="sidebar-link-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3.5a6.5 6.5 0 0 0-6.5 6.5v2.2c0 .9-.3 1.8-.9 2.5l-1 1.2c-.7.9-.1 2.3 1.1 2.3h14.6c1.2 0 1.8-1.4 1.1-2.3l-1-1.2c-.6-.7-.9-1.6-.9-2.5V10A6.5 6.5 0 0 0 12 3.5Z" fill="none" stroke="currentColor" strokeWidth="1.7" />
+                <path d="M9.5 19a2.5 2.5 0 0 0 5 0" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+              </svg>
+            </span>
+            <span>Assistente AI</span>
+          </Link>
+          <Link href="/settings" className={`sidebar-link secondary ${active(pathname, '/settings') ? 'is-active' : ''}`}>
+            <span className="sidebar-link-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M10.5 2.75a1.5 1.5 0 0 1 3 0v1.34a7.5 7.5 0 0 1 1.93.8l.95-.95a1.5 1.5 0 0 1 2.12 2.12l-.95.95c.35.6.63 1.25.8 1.93h1.34a1.5 1.5 0 0 1 0 3h-1.34a7.5 7.5 0 0 1-.8 1.93l.95.95a1.5 1.5 0 1 1-2.12 2.12l-.95-.95a7.5 7.5 0 0 1-1.93.8v1.34a1.5 1.5 0 0 1-3 0v-1.34a7.5 7.5 0 0 1-1.93-.8l-.95.95a1.5 1.5 0 1 1-2.12-2.12l.95-.95a7.5 7.5 0 0 1-.8-1.93H2.75a1.5 1.5 0 0 1 0-3h1.34a7.5 7.5 0 0 1 .8-1.93l-.95-.95a1.5 1.5 0 1 1 2.12-2.12l.95.95c.6-.35 1.25-.63 1.93-.8V2.75Z" fill="currentColor" />
+              </svg>
+            </span>
+            <span>Strumenti</span>
+          </Link>
+        </div>
+      </aside>
+
       <div className="app-main">
         <header className="app-topbar app-topbar-phase2">
           <div className="app-topbar-leading">
-            <div className="app-topbar-kicker">Quadra workspace</div>
-            <div className="app-topbar-title">{currentTitle(pathname)}</div>
+            <button
+              type="button"
+              className="app-topbar-menu"
+              onClick={() => setTabletNavOpen(true)}
+              aria-label="Apri menu"
+              aria-expanded={tabletNavOpen}
+            >
+              <MenuIcon />
+            </button>
+            <div>
+              <div className="app-topbar-kicker">Quadra workspace</div>
+              <div className="app-topbar-title">{currentTitle(pathname)}</div>
+            </div>
           </div>
 
           <div className="topbar-voice-slot topbar-voice-slot-desktop">
