@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type ParsedNote = {
   summary: string
@@ -21,14 +21,14 @@ type MessageForm = {
   notes: string
 }
 
-export function AssistantWorkspace() {
+export function AssistantWorkspace({ initialCrmQuestion = '', autoRunCrm = false }: { initialCrmQuestion?: string; autoRunCrm?: boolean }) {
   const [note, setNote] = useState('')
   const [summary, setSummary] = useState('')
   const [context, setContext] = useState({ company: '', contact: '', opportunity: '', stage: '', note: '' })
   const [nextAction, setNextAction] = useState('')
   const [parseInput, setParseInput] = useState('')
   const [parsed, setParsed] = useState<ParsedNote | null>(null)
-  const [crmQuestion, setCrmQuestion] = useState('')
+  const [crmQuestion, setCrmQuestion] = useState(initialCrmQuestion)
   const [crmAnswer, setCrmAnswer] = useState('')
   const [crmMeta, setCrmMeta] = useState('')
   const [messageForm, setMessageForm] = useState<MessageForm>({
@@ -42,6 +42,12 @@ export function AssistantWorkspace() {
   })
   const [generatedMessage, setGeneratedMessage] = useState('')
   const [busy, setBusy] = useState<'summary' | 'action' | 'parse' | 'message' | 'crm' | ''>('')
+  const autoRunRef = useRef(false)
+
+  useEffect(() => {
+    if (!initialCrmQuestion) return
+    setCrmQuestion(initialCrmQuestion)
+  }, [initialCrmQuestion])
 
   async function summarize() {
     setBusy('summary')
@@ -118,6 +124,13 @@ export function AssistantWorkspace() {
       setBusy('')
     }
   }
+
+  useEffect(() => {
+    if (!autoRunCrm || autoRunRef.current) return
+    if (!initialCrmQuestion.trim()) return
+    autoRunRef.current = true
+    void askCrm()
+  }, [autoRunCrm, initialCrmQuestion])
 
   return (
     <div className="page-stack utility-page-stack">
