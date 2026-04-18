@@ -94,5 +94,5 @@ export function getCurrentSubtitle(pathname: string) {
   if (pathname.startsWith('/capture/voice')) return 'Detta note e follow-up in modo naturale.'
   if (pathname.startsWith('/capture/siri')) return 'Shortcut rapidi per cattura e revisione.'
   if (pathname.startsWith('/settings')) return 'Strumenti, scorciatoie e setup prodotto.'
-  return 'Priorità, pipeline e attività di oggi in un colpo d'occhio.'
+  return "Priorità, pipeline e attività di oggi in un colpo d'occhio."
 }
