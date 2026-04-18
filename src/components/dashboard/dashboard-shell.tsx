@@ -128,7 +128,7 @@ export function DashboardShell({ data }: { data: DashboardData }) {
 
       <section className="dashboard-e2-layout" aria-label="Dashboard predittiva">
         <div className="dashboard-e2-main">
-          <section className="dashboard-widget dashboard-widget-priority">
+          <section className="dashboard-widget dashboard-widget-priority dashboard-widget-priority-concept">
             <div className="dashboard-widget-head compact-head">
               <div>
                 <h2>Priorità di oggi</h2>
@@ -140,15 +140,15 @@ export function DashboardShell({ data }: { data: DashboardData }) {
             </div>
 
             <div className="dashboard-e2-kpis">
-              <MetricCard label="Pipeline" value={pipelineValue} note="Valore stimato." />
-              <MetricCard label="Trattative" value={openCount} note="Aperte in pipeline." />
-              <MetricCard label="Follow-up oggi" value={todayCount} note="Azioni da chiudere." />
+              <MetricCard label="Pipeline status" value={pipelineValue} note="Valore attuale in trattativa." />
+              <MetricCard label="Trattative aperte" value={openCount} note="Deal attivi da seguire." />
+              <MetricCard label="Task oggi" value={todayCount} note="Azioni da chiudere oggi." />
             </div>
 
             <div className="dashboard-e2-priority-grid">
               <div className="dashboard-e2-subcard">
                 <div className="dashboard-subcard-head">
-                  <h3>Focus giornaliero</h3>
+                  <h3>Daily focus</h3>
                   <span>{todayCount} oggi</span>
                 </div>
                 <div className="dashboard-widget-stack compact-stack">
@@ -162,7 +162,7 @@ export function DashboardShell({ data }: { data: DashboardData }) {
 
               <div className="dashboard-e2-subcard">
                 <div className="dashboard-subcard-head">
-                  <h3>Da sbloccare</h3>
+                  <h3>Deal da sbloccare</h3>
                   <span>{overdueCount} elementi</span>
                 </div>
                 <div className="dashboard-widget-stack compact-stack">
@@ -179,42 +179,34 @@ export function DashboardShell({ data }: { data: DashboardData }) {
           <section className="dashboard-widget dashboard-widget-copilot">
             <div className="dashboard-widget-head compact-head">
               <div>
-                <h2>Copilota AI</h2>
-                <p>Una domanda, una risposta utile. Niente CTA duplicate.</p>
+                <h2>Insight AI</h2>
+                <p>Brief rapido e interrogazione CRM in stile Quadra.</p>
               </div>
-              <Link
-                href="/assistant?q=Fammi%20un%20brief%20veloce%20sulle%20priorit%C3%A0%20di%20oggi.&autorun=1"
-                className="primary-button"
-              >
+              <button type="button" className="primary-button">
                 Genera brief
-              </Link>
+              </button>
             </div>
 
-            <div className="dashboard-copilot-brief">Genera un brief veloce sulle priorità di oggi.</div>
+            <div className="dashboard-copilot-brief">Genera un brief veloce su appuntamenti, opportunità ferme e task critici.</div>
 
-            <form action="/assistant" method="get" className="dashboard-copilot-form">
-              <div className="dashboard-copilot-field">
-                <label htmlFor="dashboard-copilot-query">Chiedi a Quadra</label>
-                <textarea
-                  id="dashboard-copilot-query"
-                  name="q"
-                  className="dashboard-copilot-textarea"
-                  placeholder="Es. Chi devo sentire oggi? Oppure: quali opportunità sopra 10k sono ferme?"
-                  rows={5}
-                />
-              </div>
+            <div className="dashboard-copilot-field">
+              <label htmlFor="dashboard-copilot-query">Chiedi a Quadra</label>
+              <textarea
+                id="dashboard-copilot-query"
+                className="dashboard-copilot-textarea"
+                placeholder="Es. Chi devo sentire oggi? Oppure: quali opportunità sopra 10k sono ferme?"
+                rows={5}
+              />
+            </div>
 
-              <input type="hidden" name="autorun" value="1" />
-
-              <div className="dashboard-copilot-actions">
-                <button type="submit" className="secondary-button">
-                  Interroga il CRM
-                </button>
-                <Link href="/assistant" className="secondary-button">
-                  Apri assistente
-                </Link>
-              </div>
-            </form>
+            <div className="dashboard-copilot-actions">
+              <button type="button" className="secondary-button">
+                Interroga il CRM
+              </button>
+              <Link href="/assistant" className="secondary-button">
+                Apri assistente
+              </Link>
+            </div>
 
             <div className="dashboard-copilot-footer">
               Oggi: {todayCount} follow-up · {overdueCount} in ritardo · {openCount} opportunità aperte.
