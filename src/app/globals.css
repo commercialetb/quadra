@@ -6643,3 +6643,223 @@ select.field-control:focus {
     display: none !important;
   }
 }
+
+
+/* final layout cleanup: sidebar + rail text + single mobile voicebar */
+.quadra-shell-desktop {
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 18px;
+}
+
+.quadra-sidebar {
+  width: 104px;
+  max-width: 104px;
+  padding: 14px 10px;
+  gap: 10px;
+}
+
+.quadra-brand-card {
+  padding: 12px 8px;
+  gap: 8px;
+}
+
+.quadra-brand-card span,
+.quadra-voice-promo,
+.quadra-sidebar-note {
+  display: none;
+}
+
+.quadra-brand-card p {
+  font-size: 0.95rem;
+  line-height: 1.15;
+}
+
+.quadra-sidebar-nav {
+  gap: 10px;
+}
+
+.quadra-sidebar-link {
+  min-height: 72px;
+  padding: 10px 8px;
+  border-radius: 20px;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.quadra-sidebar-link-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.quadra-sidebar-link span:last-child {
+  display: block;
+  width: 100%;
+  font-size: 0.76rem;
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+  overflow-wrap: anywhere;
+}
+
+.quadra-dashboard-list-item > div {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: grid;
+  gap: 4px;
+}
+
+.quadra-dashboard-list-item strong,
+.quadra-dashboard-list-item span {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.quadra-dashboard-list-item.compact {
+  align-items: center;
+}
+
+.quadra-dashboard-list-item.compact strong,
+.quadra-dashboard-list-item.compact span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quadra-dashboard-list-item.compact span {
+  font-size: 0.9rem;
+}
+
+.quadra-dashboard-rail .quadra-dashboard-card {
+  min-width: 0;
+}
+
+.quadra-dashboard-rail .quadra-dashboard-card-head {
+  gap: 10px;
+}
+
+.quadra-dashboard-rail .quadra-pill-button.ghost {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 1440px) {
+  .quadra-shell-desktop {
+    grid-template-columns: 96px minmax(0, 1fr);
+  }
+
+  .quadra-sidebar {
+    width: 96px;
+    max-width: 96px;
+    padding-inline: 8px;
+  }
+
+  .quadra-sidebar-link span:last-child {
+    font-size: 0.72rem;
+  }
+}
+
+@media (max-width: 1180px) {
+  .quadra-dashboard-mobile .quadra-mobile-topbar-voice + .quadra-dashboard-mobile-voice,
+  .quadra-dashboard-mobile .quadra-dashboard-mobile-voice {
+    display: none !important;
+  }
+}
+
+
+/* portrait crm spacing fix */
+.quadra-tablet-topbar-card.is-compact {
+  gap: 12px;
+}
+
+.quadra-tablet-topbar-card.is-compact .quadra-tablet-topbar-row {
+  align-items: flex-start;
+}
+
+.quadra-tablet-topbar-card.is-compact .quadra-tablet-topbar-copy {
+  gap: 4px;
+}
+
+.quadra-tablet-topbar-card.is-compact .quadra-tablet-topbar-subtitle {
+  max-width: 52ch;
+}
+
+.quadra-tablet-topbar-secondary.is-compact {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.quadra-tablet-topbar-secondary.is-compact .quadra-tablet-quickstrip {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1179px) {
+  .crm-hero-card {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .crm-hero-spotlight {
+    justify-self: stretch;
+    max-width: none;
+    min-width: 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1179px) and (orientation: portrait) {
+  .quadra-shell-tablet {
+    gap: 12px;
+  }
+
+  .quadra-tablet-topbar-card {
+    padding: 14px 16px;
+    border-radius: 28px;
+  }
+
+  .quadra-tablet-topbar-card.is-compact {
+    gap: 10px;
+  }
+
+  .quadra-tablet-topbar-card.is-compact .quadra-tablet-topbar-subtitle {
+    margin-top: 2px;
+    font-size: 0.98rem;
+    line-height: 1.4;
+  }
+
+  .quadra-tablet-topbar-card.is-compact .quadra-tablet-topbar-secondary {
+    margin-top: 0;
+  }
+
+  .quadra-tablet-topbar-card.is-compact .quadra-mini-chip {
+    min-height: 42px;
+  }
+
+  .crm-scene,
+  .crm-scene-shell {
+    gap: 14px;
+  }
+
+  .crm-hero-card {
+    gap: 14px;
+    padding: 22px;
+    border-radius: 30px;
+  }
+
+  .crm-hero-card h1 {
+    font-size: 2.5rem;
+  }
+
+  .crm-hero-actions {
+    margin-top: 14px;
+  }
+
+  .crm-hero-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .crm-entity-panel {
+    padding: 20px;
+    border-radius: 28px;
+  }
+}
