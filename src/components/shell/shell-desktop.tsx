@@ -7,6 +7,7 @@ import { getCurrentTitle, isActive, NavIcon, primaryNav } from './nav-config'
 
 export function ShellDesktop({ pathname, children }: { pathname: string; children: React.ReactNode }) {
   const title = getCurrentTitle(pathname)
+  const isSettingsPage = pathname.startsWith('/settings')
 
   return (
     <div className="quadra-shell quadra-shell-desktop">
