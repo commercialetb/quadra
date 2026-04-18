@@ -6524,3 +6524,122 @@ select.field-control:focus {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* overlap fix: desktop and ipad sidebar containment */
+.quadra-shell-desktop {
+  grid-template-columns: 136px minmax(0, 1fr);
+  gap: 24px;
+}
+
+.quadra-sidebar {
+  width: 136px;
+  max-width: 136px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.quadra-brand-card,
+.quadra-voice-promo,
+.quadra-sidebar-note,
+.quadra-sidebar-link,
+.quadra-dashboard-list-item {
+  min-width: 0;
+}
+
+.quadra-brand-card p,
+.quadra-brand-card span,
+.quadra-voice-promo span,
+.quadra-voice-promo strong,
+.quadra-sidebar-note-label,
+.quadra-sidebar-note strong,
+.quadra-sidebar-note p,
+.quadra-sidebar-link span {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.quadra-sidebar-link {
+  align-items: flex-start;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.quadra-sidebar-link span:last-child {
+  flex: 1 1 auto;
+  line-height: 1.2;
+}
+
+.quadra-topbar,
+.quadra-main-content {
+  min-width: 0;
+}
+
+@media (max-width: 1366px) {
+  .quadra-shell-desktop {
+    grid-template-columns: 128px minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .quadra-sidebar {
+    width: 128px;
+    max-width: 128px;
+    padding-inline: 12px;
+  }
+
+  .quadra-sidebar-note {
+    display: none;
+  }
+}
+
+@media (max-width: 1180px) {
+  .quadra-shell-desktop {
+    grid-template-columns: 124px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .quadra-sidebar {
+    width: 124px;
+    max-width: 124px;
+    padding-inline: 10px;
+  }
+
+  .quadra-voice-promo strong,
+  .quadra-brand-card span {
+    font-size: 0.72rem;
+  }
+}
+
+
+/* overlap and duplicate voicebar fix */
+.dashboard-phaseE2 .dashboard-e2-rail .dashboard-entity-row,
+.dashboard-phaseE2 .dashboard-e2-rail .dashboard-link-card.compact-row {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.dashboard-phaseE2 .dashboard-e2-rail .dashboard-entity-copy {
+  min-width: 0;
+  gap: 4px;
+}
+
+.dashboard-phaseE2 .dashboard-e2-rail .dashboard-entity-copy strong,
+.dashboard-phaseE2 .dashboard-e2-rail .dashboard-entity-copy span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dashboard-phaseE2 .dashboard-e2-rail .dashboard-entity-copy strong {
+  white-space: nowrap;
+}
+
+.dashboard-phaseE2 .dashboard-e2-rail .dashboard-entity-copy span {
+  white-space: nowrap;
+}
+
+@media (max-width: 1180px) {
+  .quadra-dashboard-mobile .quadra-dashboard-mobile-voice {
+    display: none !important;
+  }
+}
