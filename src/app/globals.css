@@ -4054,7 +4054,7 @@ body {
   color: var(--muted-foreground);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 768px) and (min-height: 680px) {
   .mobile-nav,
   .quadra-mobile-nav,
   .quadra-bottom-nav {
@@ -4472,5 +4472,94 @@ body {
   .app-shell.quadra-shell-refresh.quadra-shell-phase2 > .quadra-ambient.quadra-ambient-b {
     top: 26px !important;
     right: 3% !important;
+  }
+}
+
+
+/* phone landscape rescue: do not treat short coarse-pointer devices like tablets */
+@media (orientation: landscape) and (max-height: 500px) and (hover: none) and (pointer: coarse) {
+  .app-shell {
+    padding-top: max(env(safe-area-inset-top), 8px);
+    padding-bottom: max(env(safe-area-inset-bottom), 8px);
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 {
+    gap: 10px;
+    padding-top: max(env(safe-area-inset-top), 8px);
+    padding-right: 8px;
+    padding-left: 8px;
+    padding-bottom: max(env(safe-area-inset-bottom), 8px);
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-main {
+    gap: 10px;
+    padding-bottom: 86px;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .page-shell,
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .page-stack {
+    gap: 10px;
+    padding-bottom: 86px;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-topbar {
+    position: sticky;
+    top: max(env(safe-area-inset-top), 6px);
+    min-height: 56px;
+    height: auto;
+    padding: 8px 10px;
+    border-radius: 20px;
+  }
+
+  .app-topbar-phase2 {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .app-topbar-kicker,
+  .topbar-voice-slot,
+  .topbar-voice-slot-desktop,
+  .app-topbar-actions-desktop,
+  .app-topbar-actions-tablet {
+    display: none !important;
+  }
+
+  .app-topbar-actions-mobile {
+    display: flex !important;
+    gap: 8px;
+  }
+
+  .app-topbar-title {
+    font-size: 1rem;
+  }
+
+  .mobile-nav {
+    display: grid !important;
+    width: calc(100% - 16px);
+    max-width: none;
+    bottom: calc(max(env(safe-area-inset-bottom), 8px) + 2px);
+  }
+
+  .mobile-nav-link {
+    min-height: 48px;
+    padding: 4px 2px;
+  }
+
+  .dashboard-phaseE2 .dashboard-mobile-voice {
+    display: none;
+  }
+
+  .dashboard-phaseE2 .dashboard-e2-layout,
+  .dashboard-phaseE2 .dashboard-e2-kpis,
+  .dashboard-phaseE2 .dashboard-e2-priority-grid,
+  .dashboard-phaseE2 .dashboard-e2-rail,
+  .dashboard-phaseE2 .dashboard-actions-grid--three {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dashboard-phaseE2 .dashboard-widget {
+    padding: 16px;
+    border-radius: 24px;
   }
 }
