@@ -182,31 +182,39 @@ export function DashboardShell({ data }: { data: DashboardData }) {
                 <h2>Copilota AI</h2>
                 <p>Una domanda, una risposta utile. Niente CTA duplicate.</p>
               </div>
-              <button type="button" className="primary-button">
+              <Link
+                href="/assistant?q=Fammi%20un%20brief%20veloce%20sulle%20priorit%C3%A0%20di%20oggi.&autorun=1"
+                className="primary-button"
+              >
                 Genera brief
-              </button>
+              </Link>
             </div>
 
             <div className="dashboard-copilot-brief">Genera un brief veloce sulle priorità di oggi.</div>
 
-            <div className="dashboard-copilot-field">
-              <label htmlFor="dashboard-copilot-query">Chiedi a Quadra</label>
-              <textarea
-                id="dashboard-copilot-query"
-                className="dashboard-copilot-textarea"
-                placeholder="Es. Chi devo sentire oggi? Oppure: quali opportunità sopra 10k sono ferme?"
-                rows={5}
-              />
-            </div>
+            <form action="/assistant" method="get" className="dashboard-copilot-form">
+              <div className="dashboard-copilot-field">
+                <label htmlFor="dashboard-copilot-query">Chiedi a Quadra</label>
+                <textarea
+                  id="dashboard-copilot-query"
+                  name="q"
+                  className="dashboard-copilot-textarea"
+                  placeholder="Es. Chi devo sentire oggi? Oppure: quali opportunità sopra 10k sono ferme?"
+                  rows={5}
+                />
+              </div>
 
-            <div className="dashboard-copilot-actions">
-              <button type="button" className="secondary-button">
-                Interroga il CRM
-              </button>
-              <Link href="/assistant" className="secondary-button">
-                Apri assistente
-              </Link>
-            </div>
+              <input type="hidden" name="autorun" value="1" />
+
+              <div className="dashboard-copilot-actions">
+                <button type="submit" className="secondary-button">
+                  Interroga il CRM
+                </button>
+                <Link href="/assistant" className="secondary-button">
+                  Apri assistente
+                </Link>
+              </div>
+            </form>
 
             <div className="dashboard-copilot-footer">
               Oggi: {todayCount} follow-up · {overdueCount} in ritardo · {openCount} opportunità aperte.
