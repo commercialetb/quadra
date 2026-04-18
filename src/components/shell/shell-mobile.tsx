@@ -36,7 +36,7 @@ export function ShellMobile({ pathname, children }: { pathname: string; children
         </div>
 
         {isDashboard ? (
-          <div className="quadra-mobile-topbar-voice">
+          <div className="quadra-mobile-topbar-voice quadra-mobile-topbar-voice-dashboard">
             <VoiceControlBar compact />
           </div>
         ) : null}

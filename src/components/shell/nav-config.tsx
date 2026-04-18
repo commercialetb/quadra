@@ -9,10 +9,10 @@ export type NavItem = {
 }
 
 export const primaryNav: NavItem[] = [
-  { href: '/dashboard', label: 'Dashboard', shortLabel: 'Home', tinyLabel: 'Home', icon: 'home' },
-  { href: '/companies', label: 'Aziende', shortLabel: 'Az.', tinyLabel: 'Az', icon: 'building' },
-  { href: '/contacts', label: 'Contatti', shortLabel: 'Cont.', tinyLabel: 'Cont', icon: 'person' },
-  { href: '/opportunities', label: 'Opportunita', shortLabel: 'Opp.', tinyLabel: 'Opp', icon: 'sparkles' },
+  { href: '/dashboard', label: 'Dashboard', shortLabel: 'Dashboard', tinyLabel: 'Home', icon: 'home' },
+  { href: '/companies', label: 'Aziende', shortLabel: 'Aziende', tinyLabel: 'Az', icon: 'building' },
+  { href: '/contacts', label: 'Contatti', shortLabel: 'Contatti', tinyLabel: 'Cont', icon: 'person' },
+  { href: '/opportunities', label: 'Opportunita', shortLabel: 'Deal', tinyLabel: 'Opp', icon: 'sparkles' },
   { href: '/followups', label: 'Follow-up', shortLabel: 'Task', tinyLabel: 'Task', icon: 'check' },
 ]
 

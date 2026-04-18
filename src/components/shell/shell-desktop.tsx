@@ -7,7 +7,6 @@ import { getCurrentTitle, isActive, NavIcon, primaryNav } from './nav-config'
 
 export function ShellDesktop({ pathname, children }: { pathname: string; children: React.ReactNode }) {
   const title = getCurrentTitle(pathname)
-  const isSettingsPage = pathname.startsWith('/settings')
 
   return (
     <div className="quadra-shell quadra-shell-desktop">
@@ -19,13 +18,7 @@ export function ShellDesktop({ pathname, children }: { pathname: string; childre
           <div className="quadra-brand-mark">Q</div>
           <div>
             <p>Quadra</p>
-            <span>Workspace vocale</span>
           </div>
-        </div>
-
-        <div className="quadra-voice-promo">
-          <span>Voice control</span>
-          <strong>Siri, Gemini e GPT dentro la stessa UX.</strong>
         </div>
 
         <nav className="quadra-sidebar-nav">
@@ -34,7 +27,7 @@ export function ShellDesktop({ pathname, children }: { pathname: string; childre
             return (
               <Link key={item.href} href={item.href} className={`quadra-sidebar-link ${active ? 'is-active' : ''}`} aria-current={active ? 'page' : undefined}>
                 <span className="quadra-sidebar-link-icon"><NavIcon name={item.icon} /></span>
-                <span>{item.label}</span>
+                <span>{item.shortLabel}</span>
               </Link>
             )
           })}
