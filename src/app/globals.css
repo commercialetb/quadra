@@ -4267,3 +4267,136 @@ body {
     min-height: 112px;
   }
 }
+
+
+/* iPad portrait drawer navigation */
+.app-topbar-menu {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  border: 1px solid rgba(212, 220, 238, 0.95);
+  background: rgba(255,255,255,0.82);
+  color: #44506b;
+  box-shadow: 0 8px 20px rgba(134, 144, 176, 0.10);
+  flex: 0 0 auto;
+}
+
+.app-topbar-menu svg {
+  width: 20px;
+  height: 20px;
+}
+
+.tablet-drawer-backdrop {
+  display: none;
+}
+
+.tablet-drawer {
+  display: none;
+}
+
+@media (max-width: 1100px) and (min-width: 721px) {
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-main {
+    padding-bottom: 24px;
+  }
+
+  .app-topbar-menu {
+    display: inline-flex;
+  }
+
+  .app-topbar-leading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .tablet-drawer-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(16, 24, 40, 0.18);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .22s ease;
+    z-index: 45;
+  }
+
+  .tablet-drawer-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .tablet-drawer {
+    display: grid;
+    align-content: start;
+    gap: 16px;
+    position: fixed;
+    top: max(env(safe-area-inset-top), 12px);
+    left: 12px;
+    bottom: 12px;
+    width: min(330px, calc(100vw - 56px));
+    padding: 18px;
+    border-radius: 28px;
+    background: linear-gradient(180deg, rgba(255,255,255,.95) 0%, rgba(247,249,255,.88) 100%);
+    border: 1px solid rgba(255,255,255,.78);
+    box-shadow: 0 22px 54px rgba(101, 111, 146, 0.22);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    transform: translateX(calc(-100% - 24px));
+    transition: transform .24s ease;
+    z-index: 50;
+    overflow: auto;
+  }
+
+  .tablet-drawer.is-open {
+    transform: translateX(0);
+  }
+
+  .tablet-drawer-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .tablet-drawer-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    border: 1px solid rgba(212, 220, 238, 0.95);
+    background: rgba(255,255,255,.82);
+    color: #44506b;
+    font-size: 1.6rem;
+    line-height: 1;
+    flex: 0 0 auto;
+  }
+
+  .tablet-drawer-nav,
+  .tablet-drawer-secondary {
+    gap: 8px;
+  }
+}
+
+@media (min-width: 1101px) {
+  .app-topbar-menu,
+  .tablet-drawer,
+  .tablet-drawer-backdrop {
+    display: none !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .app-topbar-menu,
+  .tablet-drawer,
+  .tablet-drawer-backdrop {
+    display: none !important;
+  }
+}
