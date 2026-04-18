@@ -94,10 +94,28 @@ export default function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isSettingsPage = pathname.startsWith('/settings')
   const [tabletNavOpen, setTabletNavOpen] = useState(false)
+  const [isTabletPortrait, setIsTabletPortrait] = useState(false)
 
   useEffect(() => {
     setTabletNavOpen(false)
   }, [pathname])
+
+  useEffect(() => {
+    const syncViewport = () => {
+      if (typeof window === 'undefined') return
+      const portraitLike = window.matchMedia('(min-width: 768px) and (max-width: 1100px) and (orientation: portrait)').matches
+      setIsTabletPortrait(portraitLike)
+      if (!portraitLike) setTabletNavOpen(false)
+    }
+
+    syncViewport()
+    window.addEventListener('resize', syncViewport)
+    window.addEventListener('orientationchange', syncViewport)
+    return () => {
+      window.removeEventListener('resize', syncViewport)
+      window.removeEventListener('orientationchange', syncViewport)
+    }
+  }, [])
 
   return (
     <div className="app-shell quadra-shell-refresh quadra-shell-phase2">
@@ -170,15 +188,15 @@ export default function Shell({ children }: { children: React.ReactNode }) {
       </aside>
 
       <div
-        className={`tablet-drawer-backdrop ${tabletNavOpen ? 'is-open' : ''}`}
-        aria-hidden={!tabletNavOpen}
+        className={`tablet-drawer-backdrop ${tabletNavOpen && isTabletPortrait ? 'is-open' : ''}`}
+        aria-hidden={!(tabletNavOpen && isTabletPortrait)}
         onClick={() => setTabletNavOpen(false)}
       />
 
       <aside
-        className={`tablet-drawer ${tabletNavOpen ? 'is-open' : ''}`}
+        className={`tablet-drawer ${tabletNavOpen && isTabletPortrait ? 'is-open' : ''}`}
         aria-label="Navigazione iPad"
-        aria-hidden={!tabletNavOpen}
+        aria-hidden={!(tabletNavOpen && isTabletPortrait)}
       >
         <div className="tablet-drawer-head">
           <div className="sidebar-brand sidebar-brand-phase2">
@@ -239,7 +257,9 @@ export default function Shell({ children }: { children: React.ReactNode }) {
               className="app-topbar-menu"
               onClick={() => setTabletNavOpen(true)}
               aria-label="Apri menu"
-              aria-expanded={tabletNavOpen}
+              aria-expanded={tabletNavOpen && isTabletPortrait}
+              aria-hidden={!isTabletPortrait}
+              tabIndex={isTabletPortrait ? 0 : -1}
             >
               <MenuIcon />
             </button>
