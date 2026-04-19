@@ -1,34 +1,41 @@
 'use client'
 
 import Link from 'next/link'
-import { LogoutButton } from '@/components/auth/logout-button'
-import { VoiceControlBar } from '@/components/voice-control-bar'
-import { getCurrentTitle, isActive, NavIcon, primaryNav } from './nav-config'
+import { usePathname } from 'next/navigation'
 
-export function ShellDesktop({ pathname, children }: { pathname: string; children: React.ReactNode }) {
-  const title = getCurrentTitle(pathname)
+import { LogoutButton } from '@/components/auth/logout-button'
+import { navItems, getPageDescription } from '@/components/shell/nav-config'
+import { VoiceControlBar } from '@/components/voice/voice-control-bar'
+
+type ShellDesktopProps = {
+  children: React.ReactNode
+}
+
+export function ShellDesktop({ children }: ShellDesktopProps) {
+  const pathname = usePathname()
   const isSettingsPage = pathname.startsWith('/settings')
 
   return (
-    <div className="quadra-shell quadra-shell-desktop">
-      <div className="quadra-ambient quadra-ambient-a" aria-hidden="true" />
-      <div className="quadra-ambient quadra-ambient-b" aria-hidden="true" />
-
-      <aside className="quadra-sidebar" aria-label="Quadra navigation">
-        <div className="quadra-brand-card">
-          <div className="quadra-brand-mark">Q</div>
-          <div>
-            <p>Quadra</p>
-          </div>
+    <div className="shell-desktop">
+      <aside className="app-sidebar quadra-sidebar">
+        <div className="sidebar-brand-phase2">
+          <div className="sidebar-brand-mark">Q</div>
+          <p>Quadra</p>
+          <span>Workspace vocale</span>
         </div>
 
-        <nav className="quadra-sidebar-nav">
-          {primaryNav.map((item) => {
-            const active = isActive(pathname, item.href)
+        <nav className="sidebar-nav">
+          {navItems.map((item) => {
+            const isActive =
+              pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
+
             return (
-              <Link key={item.href} href={item.href} className={`quadra-sidebar-link ${active ? 'is-active' : ''}`} aria-current={active ? 'page' : undefined}>
-                <span className="quadra-sidebar-link-icon"><NavIcon name={item.icon} /></span>
-                <span>{item.shortLabel}</span>
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`sidebar-link ${isActive ? 'is-active' : ''}`}
+              >
+                <span className="sidebar-link-label">{item.label}</span>
               </Link>
             )
           })}
@@ -38,26 +45,37 @@ export function ShellDesktop({ pathname, children }: { pathname: string; childre
           <div className="quadra-sidebar-note">
             <div className="quadra-sidebar-note-label">Quadra OS</div>
             <strong>Più scena, più gerarchia, meno rumore.</strong>
-            <p>Desktop con sidebar vera, contenuto centrale ampio e dashboard più ordinata.</p>
+            <p>Dashboard, AI e shortcut nello stesso flusso operativo.</p>
           </div>
         ) : null}
       </aside>
 
-      <div className="quadra-main-column">
-        <header className="quadra-topbar">
-          <div className="quadra-topbar-copy">
-            <span className="quadra-kicker">QUADRA WORKSPACE</span>
-            <h1>{title}</h1>
+      <div className="app-main">
+        <header className="app-topbar app-topbar-phase2">
+          <div className="app-topbar-leading">
+            <div className="app-topbar-copy">
+              <div className="app-topbar-kicker">Quadra</div>
+              <h1 className="app-topbar-title">Workspace</h1>
+              <p className="app-topbar-subtitle">{getPageDescription(pathname)}</p>
+            </div>
           </div>
-          <div className="quadra-topbar-voice"><VoiceControlBar compact /></div>
-          <div className="quadra-topbar-actions">
-            <Link href="/assistant" className="quadra-pill-button">Assistente AI</Link>
-            <Link href="/settings" className="quadra-pill-button">Strumenti</Link>
-            <LogoutButton className="quadra-pill-button" />
+
+          <div className="topbar-voice-slot">
+            <VoiceControlBar />
+          </div>
+
+          <div className="app-topbar-actions">
+            <Link href="/assistant" className="quadra-pill-button">
+              Assistente AI
+            </Link>
+            <Link href="/settings" className="quadra-pill-button">
+              Strumenti
+            </Link>
+            <LogoutButton />
           </div>
         </header>
 
-        <main className="quadra-main-content">{children}</main>
+        {children}
       </div>
     </div>
   )
