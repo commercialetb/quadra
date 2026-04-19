@@ -71,7 +71,7 @@ export function ShellDesktop({ children }: ShellDesktopProps) {
             <Link href="/settings" className="quadra-pill-button">
               Strumenti
             </Link>
-            <LogoutButton />
+            <LogoutButton className="quadra-pill-button" />
           </div>
         </header>
 
