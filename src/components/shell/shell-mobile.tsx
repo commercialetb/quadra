@@ -25,7 +25,7 @@ export function ShellMobile({ pathname, children }: { pathname: string; children
           <div className="quadra-mobile-topbar-actions">
             <Link href="/assistant" className="quadra-pill-button primary">AI</Link>
             <Link href="/settings" className="quadra-pill-button ghost">Tools</Link>
-            <LogoutButton className="quadra-pill-button ghost quadra-pill-button-icon" />
+            <LogoutButton />
           </div>
         </div>
 
