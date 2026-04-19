@@ -10,15 +10,13 @@ export function ShellTablet({ pathname, children }: { pathname: string; children
   const [menuOpen, setMenuOpen] = useState(false)
   const title = getCurrentTitle(pathname)
   const subtitle = getCurrentSubtitle(pathname)
-  const isDashboard = pathname.startsWith('/dashboard')
-  const compactTopbar = !isDashboard
 
   return (
     <div className="quadra-shell quadra-shell-tablet">
       <div className="quadra-ambient quadra-ambient-a" aria-hidden="true" />
       <div className="quadra-ambient quadra-ambient-b" aria-hidden="true" />
 
-      <header className={`quadra-topbar quadra-topbar-tablet quadra-tablet-topbar-card ${compactTopbar ? 'is-compact' : ''}`.trim()}>
+      <header className="quadra-topbar quadra-topbar-tablet quadra-tablet-topbar-card">
         <div className="quadra-tablet-topbar-row">
           <button type="button" className="quadra-menu-button" onClick={() => setMenuOpen(true)} aria-label="Apri menu">
             {MenuIcon()}
@@ -35,15 +33,13 @@ export function ShellTablet({ pathname, children }: { pathname: string; children
           </div>
         </div>
 
-        <div className={`quadra-tablet-topbar-secondary ${compactTopbar ? 'is-compact' : ''}`.trim()}>
+        <div className="quadra-tablet-topbar-secondary">
           <div className="quadra-tablet-quickstrip" aria-label="Azioni rapide tablet">
             <Link href="/dashboard" className="quadra-mini-chip">Panoramica</Link>
-            <Link href="/capture/voice" className="quadra-mini-chip">Voice</Link>
+            <Link href="/capture/voice" className="quadra-mini-chip">Voce</Link>
             <Link href="/followups" className="quadra-mini-chip">Agenda</Link>
           </div>
-          {!compactTopbar ? (
-            <section className="quadra-inline-voice quadra-inline-voice-tablet"><VoiceControlBar compact /></section>
-          ) : null}
+          <section className="quadra-inline-voice quadra-inline-voice-tablet"><VoiceControlBar compact /></section>
         </div>
       </header>
 

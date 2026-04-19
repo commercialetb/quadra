@@ -24,8 +24,8 @@ export function ShellMobile({ pathname, children }: { pathname: string; children
           </div>
           <div className="quadra-mobile-topbar-actions">
             <Link href="/assistant" className="quadra-pill-button primary">AI</Link>
-            <Link href="/settings" className="quadra-pill-button ghost">Tools</Link>
-            <LogoutButton />
+            <Link href="/settings" className="quadra-pill-button ghost">Strumenti</Link>
+            <LogoutButton className="quadra-pill-button ghost quadra-pill-button-icon" />
           </div>
         </div>
 
@@ -36,7 +36,7 @@ export function ShellMobile({ pathname, children }: { pathname: string; children
         </div>
 
         {isDashboard ? (
-          <div className="quadra-mobile-topbar-voice quadra-mobile-topbar-voice-dashboard">
+          <div className="quadra-mobile-topbar-voice">
             <VoiceControlBar compact />
           </div>
         ) : null}

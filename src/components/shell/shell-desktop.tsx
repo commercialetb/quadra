@@ -53,7 +53,7 @@ export function ShellDesktop({ pathname, children }: { pathname: string; childre
           <div className="quadra-topbar-actions">
             <Link href="/assistant" className="quadra-pill-button">Assistente AI</Link>
             <Link href="/settings" className="quadra-pill-button">Strumenti</Link>
-            <LogoutButton />
+            <LogoutButton className="quadra-pill-button" />
           </div>
         </header>
 
