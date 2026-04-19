@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 
 import { LogoutButton } from '@/components/auth/logout-button'
 import { navItems, getPageDescription } from '@/components/shell/nav-config'
-import { VoiceControlBar } from '@/components/voice/voice-control-bar'
+import { VoiceControlBar } from '@/components/voice-control-bar'
 
 type ShellDesktopProps = {
   children: React.ReactNode
