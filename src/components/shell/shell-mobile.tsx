@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+
 import { LogoutButton } from '@/components/auth/logout-button'
 import { VoiceControlBar } from '@/components/voice-control-bar'
 import { getCurrentSubtitle, getCurrentTitle, isActive, NavIcon, primaryNav } from './nav-config'
@@ -8,52 +9,44 @@ import { getCurrentSubtitle, getCurrentTitle, isActive, NavIcon, primaryNav } fr
 export function ShellMobile({ pathname, children }: { pathname: string; children: React.ReactNode }) {
   const title = getCurrentTitle(pathname)
   const subtitle = getCurrentSubtitle(pathname)
-  const isDashboard = pathname.startsWith('/dashboard')
+  const showVoice = pathname === '/' || pathname.startsWith('/assistant')
 
   return (
-    <div className="quadra-shell quadra-shell-mobile">
-      <div className="quadra-ambient quadra-ambient-a" aria-hidden="true" />
-      <div className="quadra-ambient quadra-ambient-b" aria-hidden="true" />
-
-      <header className="quadra-topbar quadra-topbar-mobile quadra-mobile-topbar-card">
-        <div className="quadra-mobile-topbar-main">
-          <div className="quadra-topbar-copy mobile-only quadra-mobile-topbar-copy">
-            <span className="quadra-kicker">QUADRA MOBILE</span>
-            <h1>{title}</h1>
-            <p className="quadra-mobile-topbar-subtitle">{subtitle}</p>
-          </div>
-          <div className="quadra-mobile-topbar-actions">
-            <Link href="/assistant" className="quadra-pill-button primary">AI</Link>
-            <Link href="/settings" className="quadra-pill-button ghost">Strumenti</Link>
-            <LogoutButton className="quadra-pill-button ghost quadra-pill-button-icon" />
-          </div>
+    <div className="shell-mobile">
+      <header className="shell-mobile-header">
+        <div className="shell-mobile-copy">
+          <div className="shell-mobile-kicker">Quadra</div>
+          <h1 className="shell-mobile-title">{title}</h1>
+          <p className="shell-mobile-subtitle">{subtitle}</p>
         </div>
 
-        <div className="quadra-mobile-quickstrip" aria-label="Azioni rapide">
-          <Link href="/capture/voice" className="quadra-mini-chip">Detta</Link>
-          <Link href="/followups" className="quadra-mini-chip">Oggi</Link>
-          <Link href="/opportunities" className="quadra-mini-chip">Pipeline</Link>
+        <div className="shell-mobile-actions">
+          <Link href="/assistant" className="quadra-pill-button">
+            AI
+          </Link>
+          <LogoutButton className="quadra-pill-button" />
         </div>
-
-        {isDashboard ? (
-          <div className="quadra-mobile-topbar-voice">
-            <VoiceControlBar compact />
-          </div>
-        ) : null}
       </header>
 
-      <main className="quadra-main-content quadra-main-content-mobile">{children}</main>
+      {showVoice ? (
+        <div className="shell-mobile-voice">
+          <VoiceControlBar />
+        </div>
+      ) : null}
 
-      <nav className="quadra-bottom-nav" aria-label="Navigazione principale mobile">
-        {primaryNav.map((item) => {
-          const active = isActive(pathname, item.href)
-          return (
-            <Link key={item.href} href={item.href} className={`quadra-bottom-nav-link ${active ? 'is-active' : ''}`} aria-current={active ? 'page' : undefined}>
-              <span className="quadra-bottom-nav-icon"><NavIcon name={item.icon} /></span>
-              <span>{item.tinyLabel}</span>
-            </Link>
-          )
-        })}
+      <main className="shell-mobile-main">{children}</main>
+
+      <nav className="mobile-nav quadra-bottom-nav">
+        {primaryNav.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`mobile-nav-link ${isActive(pathname, item.href) ? 'is-active' : ''}`}
+          >
+            <NavIcon name={item.icon} className="mobile-nav-icon" />
+            <span>{item.shortLabel ?? item.label}</span>
+          </Link>
+        ))}
       </nav>
     </div>
   )
