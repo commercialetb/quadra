@@ -4519,3 +4519,152 @@ body {
     grid-template-columns: 1fr !important;
   }
 }
+/* Definitive shell spacing fix for iPad portrait and iPhone landscape */
+
+/* 1) Tablet portrait: remove excessive top dead space */
+@media (min-width: 768px) and (max-width: 1180px) and (orientation: portrait) {
+  .shell-tablet,
+  .device-shell-tablet .shell-tablet,
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 {
+    padding-top: max(env(safe-area-inset-top), 10px) !important;
+  }
+
+  .shell-tablet-header,
+  .device-shell-tablet .shell-tablet-header,
+  .app-topbar,
+  .app-topbar-phase2 {
+    margin-top: 0 !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    min-height: unset !important;
+  }
+
+  .shell-tablet-copy,
+  .app-topbar-copy {
+    gap: 4px !important;
+  }
+
+  .shell-tablet-title,
+  .app-topbar-title {
+    margin: 0 !important;
+    line-height: 1.02 !important;
+  }
+
+  .shell-tablet-subtitle,
+  .app-topbar-subtitle {
+    margin: 0 !important;
+  }
+
+  .shell-tablet-voice,
+  .topbar-voice-slot {
+    margin-top: 8px !important;
+  }
+
+  .page-shell,
+  .page-stack,
+  .dashboard-phaseE2,
+  .crm-scene,
+  .crm-scene-main {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .crm-hero,
+  .crm-hero-shell,
+  .crm-hero-grid,
+  .dashboard-widget-hero {
+    margin-top: 0 !important;
+  }
+}
+
+/* 2) iPhone landscape / low-height phones: compact header and remove top void */
+@media (orientation: landscape) and (max-height: 500px) and (hover: none) and (pointer: coarse) {
+  .shell-mobile,
+  .device-shell-mobile .shell-mobile,
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 {
+    padding-top: max(env(safe-area-inset-top), 6px) !important;
+    padding-bottom: calc(86px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .shell-mobile-header {
+    padding: 8px 12px !important;
+    min-height: unset !important;
+    gap: 8px !important;
+  }
+
+  .shell-mobile-copy {
+    gap: 2px !important;
+  }
+
+  .shell-mobile-title {
+    margin: 0 !important;
+    line-height: 1.02 !important;
+    font-size: 1.2rem !important;
+  }
+
+  .shell-mobile-subtitle {
+    display: none !important;
+  }
+
+  .shell-mobile-kicker {
+    margin: 0 !important;
+  }
+
+  .shell-mobile-voice,
+  .dashboard-mobile-voice {
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .page-shell,
+  .page-stack,
+  .dashboard-phaseE2,
+  .crm-scene,
+  .crm-scene-main {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .mobile-nav,
+  .quadra-bottom-nav {
+    padding-top: 6px !important;
+    padding-bottom: calc(6px + env(safe-area-inset-bottom)) !important;
+    min-height: unset !important;
+  }
+
+  .mobile-nav-link {
+    min-height: 42px !important;
+  }
+}
+
+/* 3) Small mobile portrait safeguard against stacked overlap */
+@media (max-width: 640px) {
+  .dashboard-e2-kpis,
+  .dashboard-phaseE2 .dashboard-e2-kpis,
+  .dashboard-kpi-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .dashboard-metric-card,
+  .dashboard-phaseE2 .dashboard-metric-card {
+    min-height: 112px !important;
+  }
+
+  .dashboard-metric-value,
+  .dashboard-phaseE2 .dashboard-metric-value {
+    font-size: clamp(1.7rem, 7vw, 2.15rem) !important;
+    overflow-wrap: anywhere !important;
+  }
+}
+
+/* 4) Prevent lingering page top offsets from legacy layers */
+.page-shell,
+.page-stack,
+.crm-scene,
+.crm-scene-main,
+.dashboard-phaseE2,
+.dashboard-widget-hero,
+.crm-hero,
+.crm-hero-shell {
+  scroll-margin-top: 0 !important;
+}
