@@ -14,7 +14,7 @@ export function DeviceShell({ children }: DeviceShellProps) {
   const pathname = usePathname()
 
   if (pathname.startsWith('/capture')) {
-    return <ShellMobile>{children}</ShellMobile>
+    return <ShellMobile pathname={pathname}>{children}</ShellMobile>
   }
 
   return (
@@ -24,11 +24,11 @@ export function DeviceShell({ children }: DeviceShellProps) {
       </div>
 
       <div className="device-shell device-shell-tablet">
-        <ShellTablet>{children}</ShellTablet>
+        <ShellTablet pathname={pathname}>{children}</ShellTablet>
       </div>
 
       <div className="device-shell device-shell-mobile">
-        <ShellMobile>{children}</ShellMobile>
+        <ShellMobile pathname={pathname}>{children}</ShellMobile>
       </div>
     </>
   )
