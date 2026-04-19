@@ -19,6 +19,8 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
     })
   }, [contacts, query])
 
+  const sortedCompanies = useMemo(() => [...companies].sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '', 'it', { sensitivity: 'base' })), [companies])
+
   return (
     <>
       <section className="panel-card page-section-card">
@@ -69,7 +71,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
                   <input type="hidden" name="id" value={contact.id} />
                   <select name="company_id" defaultValue={contact.company_id ?? ''} className="field-control compact-control">
                     <option value="">Nessuna</option>
-                    {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
+                    {sortedCompanies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
                   </select>
                   <input name="role" defaultValue={contact.role ?? ''} placeholder="Ruolo" className="field-control compact-control" />
                   <button className="ghost-button" type="submit">Aggiorna</button>
@@ -100,7 +102,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
               <div className="form-grid two-col">
                 <label className="field-stack"><span>Nome</span><input className="field-control" name="first_name" required /></label>
                 <label className="field-stack"><span>Cognome</span><input className="field-control" name="last_name" required /></label>
-                <label className="field-stack"><span>Azienda</span><select className="field-control" name="company_id" defaultValue=""><option value="">Nessuna</option>{companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}</select></label>
+                <label className="field-stack"><span>Azienda</span><select className="field-control" name="company_id" defaultValue=""><option value="">Nessuna</option>{sortedCompanies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}</select></label>
                 <label className="field-stack"><span>Ruolo</span><input className="field-control" name="role" /></label>
                 <label className="field-stack"><span>Email</span><input className="field-control" name="email" type="email" /></label>
                 <label className="field-stack"><span>Telefono</span><input className="field-control" name="phone" /></label>

@@ -15,7 +15,7 @@ export function OpportunityEditCard({ opportunity, companies, contacts }: { oppo
       <input type="hidden" name="id" value={opportunity.id} />
       <div className="form-grid two-col">
         <label className="field-stack"><span>Titolo</span><input className="field-control" name="title" defaultValue={opportunity.title ?? ''} required /></label>
-        <label className="field-stack"><span>Azienda</span><select className="field-control" name="company_id" defaultValue={opportunity.company_id ?? ''} required>{companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}</select></label>
+        <label className="field-stack"><span>Azienda</span><select className="field-control" name="company_id" defaultValue={opportunity.company_id ?? ''} required>{sortedCompanies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}</select></label>
         <label className="field-stack"><span>Fase</span><select className="field-control" name="stage" defaultValue={opportunity.stage ?? 'new_lead'}>{OPPORTUNITY_STAGE_OPTIONS.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
         <label className="field-stack"><span>Contatto principale</span><select className="field-control" name="primary_contact_id" defaultValue={opportunity.primary_contact_id ?? ''}><option value="">Nessuno</option>{availableContacts.map((contact) => <option key={contact.id} value={contact.id}>{contact.first_name} {contact.last_name}</option>)}</select></label>
         <label className="field-stack"><span>Valore stimato</span><input className="field-control" name="value_estimate" type="number" step="0.01" defaultValue={opportunity.value_estimate ?? ''} /></label>

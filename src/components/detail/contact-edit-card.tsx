@@ -3,6 +3,8 @@ import { EditToggleCard } from '@/components/detail/edit-toggle-card'
 import { CONTACT_METHOD_OPTIONS } from '@/lib/crm-options'
 
 export function ContactEditCard({ contact, companies, primaryPhone }: { contact: any; companies: any[]; primaryPhone?: string | null }) {
+  const sortedCompanies = [...companies].sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '', 'it', { sensitivity: 'base' }))
+
   return (
     <EditToggleCard
       title="Modifica dati"
@@ -14,7 +16,7 @@ export function ContactEditCard({ contact, companies, primaryPhone }: { contact:
       <div className="form-grid two-col">
         <label className="field-stack"><span>Nome</span><input className="field-control" name="first_name" defaultValue={contact.first_name ?? ''} required /></label>
         <label className="field-stack"><span>Cognome</span><input className="field-control" name="last_name" defaultValue={contact.last_name ?? ''} required /></label>
-        <label className="field-stack"><span>Azienda</span><select className="field-control" name="company_id" defaultValue={contact.company_id ?? ''}><option value="">Nessuna</option>{companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}</select></label>
+        <label className="field-stack"><span>Azienda</span><select className="field-control" name="company_id" defaultValue={contact.company_id ?? ''}><option value="">Nessuna</option>{sortedCompanies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}</select></label>
         <label className="field-stack"><span>Ruolo</span><input className="field-control" name="role" defaultValue={contact.role ?? ''} /></label>
         <label className="field-stack"><span>Email</span><input className="field-control" name="email" type="email" defaultValue={contact.email ?? ''} /></label>
         <label className="field-stack"><span>Telefono</span><input className="field-control" name="phone" defaultValue={primaryPhone ?? ''} /></label>
