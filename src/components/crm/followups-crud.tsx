@@ -5,7 +5,6 @@ import { useFormStatus } from 'react-dom'
 import { createFollowup, deleteFollowup, updateFollowupStatus } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
 import { formatDateTime } from '@/lib/format'
-import { CrmHero, CrmScene } from '@/components/crm/crm-scene'
 import { followupStatusLabel, priorityLabel } from '@/lib/crm-labels'
 
 const statuses = ['pending', 'in_progress', 'completed', 'cancelled', 'overdue']
@@ -53,39 +52,13 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
       })
   }, [followups, query, filter])
 
-  const overdueCount = items.filter((item) => item.status === 'overdue').length
-  const progressCount = items.filter((item) => item.status === 'in_progress').length
-  const completedCount = items.filter((item) => item.status === 'completed').length
-
-  const companyMap = useMemo(() => new Map(companies.map((company) => [company.id, company.name])), [companies])
-  const contactMap = useMemo(() => new Map(contacts.map((contact) => [contact.id, `${contact.first_name} ${contact.last_name}`.trim()])), [contacts])
-  const opportunityMap = useMemo(() => new Map(opportunities.map((opportunity) => [opportunity.id, opportunity.title])), [opportunities])
-
   return (
     <>
-      <CrmScene className="crm-scene-followups">
-        <CrmHero
-          eyebrow="Follow-up"
-          title="Agenda workspace"
-          description="Una vista più operativa di agenda, scadenze e task da chiudere senza perdere priorità."
-          spotlight={{ kicker: 'Scaduti', value: String(overdueCount), note: `${progressCount} attività già in corso` }}
-          stats={[
-            { label: 'Totale', value: items.length, note: 'attività visibili' },
-            { label: 'Scaduti', value: overdueCount, note: 'da rimettere in riga' },
-            { label: 'In corso', value: progressCount, note: 'già presi in carico' },
-            { label: 'Completati', value: completedCount, note: 'chiusi con successo' },
-          ]}
-          links={[
-            { href: '/opportunities', label: 'Apri pipeline', tone: 'ghost' },
-            { href: '/dashboard', label: 'Torna alla dashboard', tone: 'primary' },
-          ]}
-        />
-
-      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-followups">
+      <section className="panel-card page-section-card">
         <div className="list-head">
           <div>
             <h2>Agenda operativa</h2>
-            <p>Priorità, scadenze e chiusure rapide senza perdere il contesto.</p>
+            <p>{items.length} attività</p>
           </div>
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
             + Nuovo follow-up
@@ -112,7 +85,7 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
 
         <div className="cards-stack">
           {items.map((item) => (
-            <article key={item.id} className="entity-card entity-card-followup">
+            <article key={item.id} className="entity-card">
               <div className="entity-card-copy stretch">
                 <div className="entity-card-top">
                   <div>
@@ -125,11 +98,6 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
                   </div>
                 </div>
                 {item.description ? <div className="entity-body-copy">{item.description}</div> : null}
-                <div className="entity-inline-meta wrap entity-inline-meta-soft">
-                  {item.company_id && companyMap.get(item.company_id) ? <span>{companyMap.get(item.company_id)}</span> : null}
-                  {item.contact_id && contactMap.get(item.contact_id) ? <span>{contactMap.get(item.contact_id)}</span> : null}
-                  {item.opportunity_id && opportunityMap.get(item.opportunity_id) ? <span>{opportunityMap.get(item.opportunity_id)}</span> : null}
-                </div>
               </div>
               <div className="entity-card-actions cleaner-actions">
                 {item.status !== 'completed' ? (
@@ -156,7 +124,6 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
           {!items.length ? <div className="empty-state-box">Nessun follow-up trovato.</div> : null}
         </div>
       </section>
-      </CrmScene>
 
       {showCreate ? (
         <div className="overlay-shell" role="dialog" aria-modal="true">

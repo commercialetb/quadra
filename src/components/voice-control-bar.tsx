@@ -32,6 +32,14 @@ declare global {
   }
 }
 
+function detectIntent(note: string) {
+  const value = note.toLowerCase().trim()
+  if (!value) return 'voice'
+  if (value.includes('brief') || value.includes('giornata') || value.includes('priorit')) return 'brief'
+  if (value.includes('?') || value.startsWith('chi ') || value.startsWith('quali ') || value.startsWith('quale ') || value.startsWith('cosa ')) return 'crm'
+  return 'voice'
+}
+
 export function VoiceControlBar({ compact = false }: { compact?: boolean }) {
   const router = useRouter()
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null)
@@ -47,8 +55,18 @@ export function VoiceControlBar({ compact = false }: { compact?: boolean }) {
     }
   }, [])
 
-  function goToVoicePage(note = '') {
-    const query = note.trim() ? `?note=${encodeURIComponent(note.trim())}` : ''
+  function routeByIntent(note = '') {
+    const trimmed = note.trim()
+    const intent = detectIntent(trimmed)
+    if (intent === 'brief') {
+      router.push('/assistant?action=brief&tab=brief')
+      return
+    }
+    if (intent === 'crm' && trimmed) {
+      router.push(`/assistant?q=${encodeURIComponent(trimmed)}&tab=query`)
+      return
+    }
+    const query = trimmed ? `?note=${encodeURIComponent(trimmed)}` : ''
     router.push(`/capture/voice${query}`)
   }
 
@@ -56,7 +74,7 @@ export function VoiceControlBar({ compact = false }: { compact?: boolean }) {
     if (typeof window === 'undefined') return
     const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition
     if (!Recognition) {
-      goToVoicePage()
+      routeByIntent('')
       return
     }
 
@@ -85,7 +103,7 @@ export function VoiceControlBar({ compact = false }: { compact?: boolean }) {
     recognition.onend = () => {
       setListening(false)
       const note = finalTranscript.trim()
-      if (note) goToVoicePage(note)
+      if (note) routeByIntent(note)
     }
 
     recognitionRef.current = recognition
@@ -100,11 +118,11 @@ export function VoiceControlBar({ compact = false }: { compact?: boolean }) {
         type="button"
         className="voice-trigger"
         onClick={startListening}
-        aria-label={supported ? 'Avvia dettatura vocale' : 'Apri workspace vocale'}
+        aria-label={supported ? 'Avvia dettatura vocale' : 'Apri lo spazio vocale'}
       >
         <span className="voice-trigger-dot" />
         <span className="voice-trigger-wave" aria-hidden="true"><i /><i /><i /><i /></span>
-        <span className="voice-trigger-label">{listening ? 'Ascolto in corso' : 'Voice Control Bar'}</span>
+        <span className="voice-trigger-label">{listening ? 'Ascolto in corso' : 'Barra vocale'}</span>
       </button>
 
       {!compact ? (
@@ -115,8 +133,14 @@ export function VoiceControlBar({ compact = false }: { compact?: boolean }) {
         </div>
       ) : null}
 
+      <div className="voice-control-quick-intents">
+        <button type="button" className="voice-intent-pill" onClick={() => router.push('/assistant?tab=query&q=Chi%20devo%20sentire%20oggi%3F')}>Domande CRM</button>
+        <button type="button" className="voice-intent-pill" onClick={() => router.push('/assistant?action=brief&tab=brief')}>Brief del giorno</button>
+        <button type="button" className="voice-intent-pill" onClick={() => router.push('/capture/voice')}>Note vocali</button>
+      </div>
+
       <div className="voice-control-status" aria-live="polite">
-        {status || (supported ? 'Tocca per dettare e aprire la nota vocale.' : 'Apre il workspace vocale.')}
+        {status || (supported ? 'Tocca per dettare: Quadra capisce se vuoi una domanda CRM, un brief o una nota libera.' : 'Apre lo spazio vocale e le scorciatoie rapide.')}
       </div>
     </div>
   )

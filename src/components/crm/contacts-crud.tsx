@@ -5,7 +5,6 @@ import { useMemo, useState } from 'react'
 import { createContact, deleteContact, updateContact } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
 import { ContactAvatar } from '@/components/ui/contact-avatar'
-import { CrmHero, CrmScene } from '@/components/crm/crm-scene'
 import { CONTACT_METHOD_OPTIONS } from '@/lib/crm-options'
 import { labelize } from '@/lib/crm-labels'
 
@@ -20,35 +19,13 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
     })
   }, [contacts, query])
 
-  const linkedCount = items.filter((contact) => contact.companies?.name).length
-  const emailCount = items.filter((contact) => contact.email).length
-  const whatsappCount = items.filter((contact) => contact.whatsapp).length
-
   return (
     <>
-      <CrmScene className="crm-scene-contacts">
-        <CrmHero
-          eyebrow="Contatti"
-          title="Relationship workspace"
-          description="Rubrica viva, contatti chiave e segnali immediati per riprendere una relazione senza rumore."
-          spotlight={{ kicker: 'Con azienda', value: String(linkedCount), note: `${whatsappCount} raggiungibili anche via WhatsApp` }}
-          stats={[
-            { label: 'Totale', value: items.length, note: 'contatti visibili' },
-            { label: 'Con azienda', value: linkedCount, note: 'account già collegati' },
-            { label: 'Con email', value: emailCount, note: 'pronti per outreach' },
-            { label: 'WhatsApp', value: whatsappCount, note: 'canale rapido' },
-          ]}
-          links={[
-            { href: '/companies', label: 'Apri aziende', tone: 'ghost' },
-            { href: '/dashboard', label: 'Torna alla dashboard', tone: 'primary' },
-          ]}
-        />
-
-      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-contacts">
+      <section className="panel-card page-section-card">
         <div className="list-head">
           <div>
             <h2>Rubrica</h2>
-            <p>Contatti chiave, canali e relazioni da riattivare subito.</p>
+            <p>{items.length} risultati</p>
           </div>
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
             + Nuovo contatto
@@ -68,7 +45,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
 
         <div className="cards-stack">
           {items.map((contact) => (
-            <article key={contact.id} className="entity-card entity-card-contact">
+            <article key={contact.id} className="entity-card">
               <Link href={`/contacts/${contact.id}`} className="entity-card-main entity-card-main-link">
                 <ContactAvatar firstName={contact.first_name} lastName={contact.last_name} />
                 <div className="entity-card-copy stretch">
@@ -107,7 +84,6 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
           {!items.length ? <div className="empty-state-box">Nessun contatto trovato.</div> : null}
         </div>
       </section>
-      </CrmScene>
 
       {showCreate ? (
         <div className="overlay-shell" role="dialog" aria-modal="true">

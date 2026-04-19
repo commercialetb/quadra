@@ -6,7 +6,6 @@ import { useFormStatus } from 'react-dom'
 import { createCompany, deleteCompany, updateCompanyStatus } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
 import { CompanyAvatar } from '@/components/ui/company-avatar'
-import { CrmHero, CrmScene } from '@/components/crm/crm-scene'
 import { COMPANY_INDUSTRY_OPTIONS } from '@/lib/crm-options'
 import { labelize } from '@/lib/crm-labels'
 
@@ -47,35 +46,13 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
     })
   }, [companies, query, filter])
 
-  const clientCount = items.filter((company) => company.status === 'client').length
-  const prospectCount = items.filter((company) => company.status === 'prospect').length
-  const partnerCount = items.filter((company) => company.status === 'partner').length
-
   return (
     <>
-      <CrmScene className="crm-scene-companies">
-        <CrmHero
-          eyebrow="Aziende"
-          title="Account workspace"
-          description="Una vista più forte di account, stato relazioni e nuovi ingressi in pipeline."
-          spotlight={{ kicker: 'Clienti attivi', value: String(clientCount), note: `${prospectCount} prospect da trasformare` }}
-          stats={[
-            { label: 'Totale', value: items.length, note: 'account visibili' },
-            { label: 'Clienti', value: clientCount, note: 'relazioni consolidate' },
-            { label: 'Prospect', value: prospectCount, note: 'da coltivare' },
-            { label: 'Partner', value: partnerCount, note: 'canali attivi' },
-          ]}
-          links={[
-            { href: '/import', label: 'Importa lista', tone: 'ghost' },
-            { href: '/dashboard', label: 'Torna alla dashboard', tone: 'primary' },
-          ]}
-        />
-
-      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-companies">
+      <section className="panel-card page-section-card">
         <div className="list-head">
           <div>
             <h2>Aziende attive</h2>
-            <p>Account, città e stato relazione in una vista più leggibile.</p>
+            <p>{items.length} risultati</p>
           </div>
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
             + Nuova azienda
@@ -102,7 +79,7 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
 
         <div className="cards-stack">
           {items.map((company) => (
-            <article key={company.id} className="entity-card entity-card-company">
+            <article key={company.id} className="entity-card">
               <Link href={`/companies/${company.id}`} className="entity-card-main entity-card-main-link">
                 <CompanyAvatar name={company.name} website={company.website} />
                 <div className="entity-card-copy stretch">
@@ -145,7 +122,6 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
           {!items.length ? <div className="empty-state-box">Nessuna azienda trovata con questi filtri.</div> : null}
         </div>
       </section>
-      </CrmScene>
 
       {showCreate ? (
         <div className="overlay-shell" role="dialog" aria-modal="true">

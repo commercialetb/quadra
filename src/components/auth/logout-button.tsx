@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
-export function LogoutButton({ className = 'ghost-button' }: { className?: string }) {
+export function LogoutButton() {
   const router = useRouter()
   const supabase = useMemo(() => createClient(), [])
   const [loading, setLoading] = useState(false)
@@ -17,7 +17,7 @@ export function LogoutButton({ className = 'ghost-button' }: { className?: strin
   }
 
   return (
-    <button type="button" onClick={onLogout} disabled={loading} className={className}>
+    <button type="button" onClick={onLogout} disabled={loading} className="ghost-button">
       {loading ? 'Uscita...' : 'Esci'}
     </button>
   )

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { VoiceControlBar } from '@/components/voice-control-bar'
+import { QuadraVoiceGreeting } from '@/components/ai/quadra-voice-greeting'
 import { followupStatusLabel, priorityLabel, stageLabel } from '@/lib/crm-labels'
 
 type Item = Record<string, any>
@@ -30,10 +31,7 @@ function formatDate(value?: string) {
   if (!value) return 'Senza data'
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return 'Senza data'
-  return new Intl.DateTimeFormat('it-IT', {
-    day: '2-digit',
-    month: '2-digit',
-  }).format(date)
+  return new Intl.DateTimeFormat('it-IT', { day: '2-digit', month: '2-digit' }).format(date)
 }
 
 function personName(item: Item) {
@@ -54,6 +52,7 @@ function MetricCard({ label, value, note }: { label: string; value: string | num
       <span className="dashboard-metric-label">{label}</span>
       <strong className="dashboard-metric-value">{value}</strong>
       <span className="dashboard-metric-note">{note}</span>
+      <div className="dashboard-metric-spark" aria-hidden="true"><i /><i /><i /><i /><i /></div>
     </article>
   )
 }
@@ -88,9 +87,7 @@ function FollowupRow({ item }: { item: Item }) {
     <Link href="/followups" className="dashboard-entity-row dashboard-link-card compact">
       <div className="dashboard-entity-copy">
         <strong>{item.title || 'Follow-up'}</strong>
-        <span>
-          {priorityLabel(item.priority)} · {followupStatusLabel(item.status)} · {formatDate(item.due_at || item.scheduled_for)}
-        </span>
+        <span>{priorityLabel(item.priority)} · {followupStatusLabel(item.status)} · {formatDate(item.due_at || item.scheduled_for)}</span>
       </div>
       <span className="dashboard-pill-badge">oggi</span>
     </Link>
@@ -101,7 +98,7 @@ function OpportunityRow({ item }: { item: Item }) {
   return (
     <Link href={`/opportunities/${item.id}`} className="dashboard-entity-row dashboard-link-card compact">
       <div className="dashboard-entity-copy">
-        <strong>{item.title || 'Opportunità'}</strong>
+        <strong>{item.title || 'Opportunita'}</strong>
         <span>{stageLabel(item.stage)} · {item.companies?.name || 'Senza azienda'}</span>
       </div>
       <span className="dashboard-pill-badge warning">ferma</span>
@@ -109,7 +106,7 @@ function OpportunityRow({ item }: { item: Item }) {
   )
 }
 
-export function DashboardShell({ data }: { data: DashboardData }) {
+export function DashboardShell({ data, userName = '' }: { data: DashboardData; userName?: string }) {
   const recentCompanies = (data.recentCompanies || []).slice(0, 4)
   const recentContacts = (data.recentContacts || []).slice(0, 4)
   const todayFollowups = (data.todayFollowups || []).slice(0, 4)
@@ -119,6 +116,7 @@ export function DashboardShell({ data }: { data: DashboardData }) {
   const openCount = data.kpis.openCount || 0
   const todayCount = data.kpis.todayCount || 0
   const overdueCount = data.kpis.overdueCount || 0
+  const greetingName = userName ? userName.split(' ')[0] : ''
 
   return (
     <div className="page-stack dashboard-phaseE dashboard-phaseE2">
@@ -126,23 +124,33 @@ export function DashboardShell({ data }: { data: DashboardData }) {
         <VoiceControlBar compact />
       </section>
 
+      <QuadraVoiceGreeting
+        userName={userName}
+        storageKey="quadra_dashboard_greeting_v1"
+        message={greetingName ? `Ciao ${greetingName}. Oggi hai ${todayCount} follow-up da chiudere e ${staleOpportunities.length} opportunita da sbloccare.` : undefined}
+      />
+
       <section className="dashboard-e2-layout" aria-label="Dashboard predittiva">
         <div className="dashboard-e2-main">
           <section className="dashboard-widget dashboard-widget-priority">
             <div className="dashboard-widget-head compact-head">
               <div>
-                <h2>Priorità di oggi</h2>
+                <h2>Priorita di oggi</h2>
                 <p>Subito cosa guardare, chi sentire e cosa sbloccare.</p>
               </div>
-              <Link href="/followups" className="secondary-button">
-                Apri agenda
-              </Link>
+              <Link href="/followups" className="secondary-button">Apri agenda</Link>
             </div>
 
             <div className="dashboard-e2-kpis">
-              <MetricCard label="Pipeline" value={pipelineValue} note="Valore stimato." />
-              <MetricCard label="Trattative" value={openCount} note="Aperte in pipeline." />
-              <MetricCard label="Follow-up oggi" value={todayCount} note="Azioni da chiudere." />
+              <MetricCard label="Stato pipeline" value={pipelineValue} note="Valore attuale in trattativa." />
+              <MetricCard label="Opportunita aperte" value={openCount} note="Deal attivi da seguire." />
+              <MetricCard label="Follow-up oggi" value={todayCount} note="Task da chiudere oggi." />
+            </div>
+
+            <div className="dashboard-stage-strip" aria-label="Sintesi pipeline">
+              <span className="dashboard-stage-pill is-active">Priorita oggi: {todayCount}</span>
+              <span className="dashboard-stage-pill">In ritardo: {overdueCount}</span>
+              <span className="dashboard-stage-pill">Da sbloccare: {staleOpportunities.length}</span>
             </div>
 
             <div className="dashboard-e2-priority-grid">
@@ -152,25 +160,17 @@ export function DashboardShell({ data }: { data: DashboardData }) {
                   <span>{todayCount} oggi</span>
                 </div>
                 <div className="dashboard-widget-stack compact-stack">
-                  {todayFollowups.length === 0 ? (
-                    <EmptyState text="Nessuna azione urgente per oggi." />
-                  ) : (
-                    todayFollowups.map((item) => <FollowupRow key={item.id} item={item} />)
-                  )}
+                  {todayFollowups.length === 0 ? <EmptyState text="Nessuna azione urgente per oggi." /> : todayFollowups.map((item) => <FollowupRow key={item.id} item={item} />)}
                 </div>
               </div>
 
               <div className="dashboard-e2-subcard">
                 <div className="dashboard-subcard-head">
-                  <h3>Da sbloccare</h3>
+                  <h3>Opportunita da sbloccare</h3>
                   <span>{overdueCount} elementi</span>
                 </div>
                 <div className="dashboard-widget-stack compact-stack">
-                  {staleOpportunities.length === 0 ? (
-                    <EmptyState text="Nessuna opportunità bloccata." />
-                  ) : (
-                    staleOpportunities.map((item) => <OpportunityRow key={item.id} item={item} />)
-                  )}
+                  {staleOpportunities.length === 0 ? <EmptyState text="Nessuna opportunita bloccata." /> : staleOpportunities.map((item) => <OpportunityRow key={item.id} item={item} />)}
                 </div>
               </div>
             </div>
@@ -179,58 +179,41 @@ export function DashboardShell({ data }: { data: DashboardData }) {
           <section className="dashboard-widget dashboard-widget-copilot">
             <div className="dashboard-widget-head compact-head">
               <div>
-                <h2>Copilota AI</h2>
-                <p>Una domanda, una risposta utile. Niente CTA duplicate.</p>
+                <h2>Assistente AI</h2>
+                <p>Quadra sintetizza, suggerisce la prossima mossa e ti lascia azioni pronte.</p>
               </div>
-              <button type="button" className="primary-button">
-                Genera brief
-              </button>
+              <Link href="/assistant?action=brief&tab=brief" className="primary-button">Genera brief</Link>
             </div>
 
-            <div className="dashboard-copilot-brief">Genera un brief veloce sulle priorità di oggi.</div>
+            <div className="dashboard-copilot-brief">
+              <strong>Brief del giorno.</strong> Parti dai follow-up in scadenza, poi sblocca le opportunita ferme sopra 10k e chiudi almeno un recap.
+            </div>
 
-            <div className="dashboard-copilot-field">
-              <label htmlFor="dashboard-copilot-query">Chiedi a Quadra</label>
-              <textarea
-                id="dashboard-copilot-query"
-                className="dashboard-copilot-textarea"
-                placeholder="Es. Chi devo sentire oggi? Oppure: quali opportunità sopra 10k sono ferme?"
-                rows={5}
-              />
+            <div className="dashboard-copilot-actions dashboard-copilot-actions--chips">
+              <Link href="/assistant?tab=query&q=Chi%20devo%20sentire%20oggi%3F" className="dashboard-query-chip">Chi devo sentire oggi?</Link>
+              <Link href="/assistant?tab=query&q=Quali%20opportunita%20sopra%2010k%20sono%20ferme%3F" className="dashboard-query-chip">Opportunita sopra 10k</Link>
+              <Link href="/assistant?tab=query&q=Quali%20follow-up%20sono%20in%20ritardo%3F" className="dashboard-query-chip">Follow-up in ritardo</Link>
+            </div>
+
+            <div className="dashboard-ai-preview-grid">
+              <div className="dashboard-ai-preview-card">
+                <span>Sintesi</span>
+                <p>Quadra ti restituisce una risposta breve, ordinata e gia orientata all’azione.</p>
+              </div>
+              <div className="dashboard-ai-preview-card">
+                <span>Prossimo passo</span>
+                <p>Dalla risposta puoi creare un follow-up, aprire le opportunita o generare un messaggio.</p>
+              </div>
             </div>
 
             <div className="dashboard-copilot-actions">
-              <button type="button" className="secondary-button">
-                Interroga il CRM
-              </button>
-              <Link href="/assistant" className="secondary-button">
-                Apri assistente
-              </Link>
+              <Link href="/assistant?tab=query&q=Chi%20devo%20sentire%20oggi%3F" className="secondary-button">Interroga il CRM</Link>
+              <Link href="/assistant" className="secondary-button">Apri assistente</Link>
+              <Link href="/capture/voice" className="secondary-button">Detta nota</Link>
             </div>
 
             <div className="dashboard-copilot-footer">
-              Oggi: {todayCount} follow-up · {overdueCount} in ritardo · {openCount} opportunità aperte.
-            </div>
-          </section>
-
-          <section className="dashboard-widget dashboard-widget-actions e2-actions">
-            <div className="dashboard-widget-head compact-head">
-              <div>
-                <h2>Azioni rapide</h2>
-                <p>Solo le tre azioni che servono davvero.</p>
-              </div>
-            </div>
-
-            <div className="dashboard-actions-grid dashboard-actions-grid--three">
-              <Link href="/capture/voice" className="primary-button">
-                Detta in Quadra
-              </Link>
-              <Link href="/assistant" className="secondary-button">
-                Assistente AI
-              </Link>
-              <Link href="/opportunities" className="secondary-button">
-                Pipeline
-              </Link>
+              Oggi: {todayCount} follow-up · {overdueCount} in ritardo · {openCount} opportunita aperte.
             </div>
           </section>
         </div>
@@ -242,17 +225,10 @@ export function DashboardShell({ data }: { data: DashboardData }) {
                 <h2>Contatti recenti</h2>
                 <p>Tocca e apri la scheda.</p>
               </div>
-              <Link href="/contacts" className="ghost-button">
-                Contatti
-              </Link>
+              <Link href="/contacts" className="ghost-button">Contatti</Link>
             </div>
-
             <div className="dashboard-widget-stack compact-stack">
-              {recentContacts.length === 0 ? (
-                <EmptyState text="Nessun contatto recente." />
-              ) : (
-                recentContacts.map((item) => <ContactRow key={item.id} item={item} />)
-              )}
+              {recentContacts.length === 0 ? <EmptyState text="Nessun contatto recente." /> : recentContacts.map((item) => <ContactRow key={item.id} item={item} />)}
             </div>
           </section>
 
@@ -262,17 +238,10 @@ export function DashboardShell({ data }: { data: DashboardData }) {
                 <h2>Aziende recenti</h2>
                 <p>Apri subito i record principali.</p>
               </div>
-              <Link href="/companies" className="ghost-button">
-                Aziende
-              </Link>
+              <Link href="/companies" className="ghost-button">Aziende</Link>
             </div>
-
             <div className="dashboard-widget-stack compact-stack">
-              {recentCompanies.length === 0 ? (
-                <EmptyState text="Nessuna azienda recente." />
-              ) : (
-                recentCompanies.map((item) => <CompanyRow key={item.id} item={item} />)
-              )}
+              {recentCompanies.length === 0 ? <EmptyState text="Nessuna azienda recente." /> : recentCompanies.map((item) => <CompanyRow key={item.id} item={item} />)}
             </div>
           </section>
         </aside>
