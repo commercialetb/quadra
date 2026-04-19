@@ -522,7 +522,7 @@ export function AssistantWorkspace({ userName = '' }: { userName?: string }) {
         <section className={`panel-card quadra-ai-card ${activeTab === 'parse' ? 'is-emphasis' : ''}`}>
           <div className="panel-head">
             <div>
-              <h2>Nota -> azione CRM</h2>
+              <h2>Nota → azione CRM</h2>
               <p>Prende testo o dettato e restituisce sintesi, follow-up e segnale opportunita.</p>
             </div>
           </div>
