@@ -6,6 +6,7 @@ import { useFormStatus } from 'react-dom'
 import { createOpportunity, deleteOpportunity, updateOpportunityStage } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
 import { formatCurrency, formatDate } from '@/lib/format'
+import { CrmHero, CrmScene } from '@/components/crm/crm-scene'
 import { stageLabel } from '@/lib/crm-labels'
 
 const stages = ['new_lead', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost']
@@ -32,7 +33,8 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
   const [showCreate, setShowCreate] = useState(false)
   const [selectedCompanyId, setSelectedCompanyId] = useState('')
 
-  const availableContacts = useMemo(() => contacts.filter((contact) => !selectedCompanyId || contact.company_id === selectedCompanyId), [contacts, selectedCompanyId])
+  const sortedCompanies = useMemo(() => [...companies].sort((a, b) => a.name.localeCompare(b.name, 'it', { sensitivity: 'base' })), [companies])
+  const availableContacts = useMemo(() => contacts.filter((contact) => !selectedCompanyId || contact.company_id === selectedCompanyId).sort((a, b) => `${a.first_name ?? ''} ${a.last_name ?? ''}`.trim().localeCompare(`${b.first_name ?? ''} ${b.last_name ?? ''}`.trim(), 'it', { sensitivity: 'base' })), [contacts, selectedCompanyId])
 
   const items = useMemo(() => {
     return opportunities.filter((item) => {
@@ -43,13 +45,35 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
     })
   }, [opportunities, query, filter])
 
+  const openCount = items.filter((item) => !['won', 'lost'].includes(item.stage)).length
+  const proposalCount = items.filter((item) => item.stage === 'proposal').length
+  const pipelineValue = formatCurrency(items.reduce((sum, item) => sum + Number(item.value_estimate || 0), 0))
+
   return (
     <>
-      <section className="panel-card page-section-card">
+      <CrmScene className="crm-scene-opportunities">
+        <CrmHero
+          eyebrow="Opportunità"
+          title="Pipeline workspace"
+          description="Una pipeline più leggibile, con vista rapida su valore, trattative aperte e blocchi da sbloccare."
+          spotlight={{ kicker: 'Valore pipeline', value: pipelineValue, note: `${openCount} deal ancora aperti` }}
+          stats={[
+            { label: 'Totale', value: items.length, note: 'opportunità visibili' },
+            { label: 'Aperte', value: openCount, note: 'deal in movimento' },
+            { label: 'In proposta', value: proposalCount, note: 'fase calda' },
+            { label: 'Valore', value: pipelineValue, note: 'stima complessiva' },
+          ]}
+          links={[
+            { href: '/followups', label: 'Apri agenda', tone: 'ghost' },
+            { href: '/dashboard', label: 'Torna alla dashboard', tone: 'primary' },
+          ]}
+        />
+
+      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-opportunities">
         <div className="list-head">
           <div>
             <h2>Pipeline</h2>
-            <p>{items.length} opportunità visibili.</p>
+            <p>Deal attivi, valore e prossimi step in una lettura più operativa.</p>
           </div>
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
             + Nuova opportunità
@@ -76,7 +100,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
 
         <div className="cards-stack">
           {items.map((item) => (
-            <article key={item.id} className="entity-card opportunity-card">
+            <article key={item.id} className="entity-card opportunity-card entity-card-opportunity">
               <Link href={`/opportunities/${item.id}`} className="entity-card-copy stretch entity-card-main-link">
                 <div className="entity-card-top">
                   <div>
@@ -88,6 +112,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
                 <div className="entity-inline-meta wrap">
                   <span>{formatCurrency(item.value_estimate)}</span>
                   {item.next_action ? <span>Prossimo passo: {item.next_action}</span> : null}
+                  {item.next_action_due_at ? <span>Entro {formatDate(item.next_action_due_at)}</span> : null}
                   {item.primary_contact?.full_name ? <span>{item.primary_contact.full_name}</span> : null}
                 </div>
               </Link>
@@ -110,6 +135,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
           {!items.length ? <div className="empty-state-box">Nessuna opportunità trovata.</div> : null}
         </div>
       </section>
+      </CrmScene>
 
       {showCreate ? (
         <div className="overlay-shell" role="dialog" aria-modal="true">
