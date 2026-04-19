@@ -1,26 +1,35 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { useDeviceClass } from './use-device-class'
+
 import { ShellDesktop } from '@/components/shell/shell-desktop'
 import { ShellTablet } from '@/components/shell/shell-tablet'
 import { ShellMobile } from '@/components/shell/shell-mobile'
 
-export function DeviceShell({ children }: { children: React.ReactNode }) {
+type DeviceShellProps = {
+  children: React.ReactNode
+}
+
+export function DeviceShell({ children }: DeviceShellProps) {
   const pathname = usePathname()
-  const deviceClass = useDeviceClass()
 
-  if (deviceClass === 'mobile') {
-    return <ShellMobile pathname={pathname}>
-      {children}
-    </ShellMobile>
+  if (pathname.startsWith('/capture')) {
+    return <ShellMobile>{children}</ShellMobile>
   }
 
-  if (deviceClass === 'tablet') {
-    return <ShellTablet pathname={pathname}>
-      {children}
-    </ShellTablet>
-  }
+  return (
+    <>
+      <div className="device-shell device-shell-desktop">
+        <ShellDesktop>{children}</ShellDesktop>
+      </div>
 
-  return <ShellDesktop pathname={pathname}>{children}</ShellDesktop>
+      <div className="device-shell device-shell-tablet">
+        <ShellTablet>{children}</ShellTablet>
+      </div>
+
+      <div className="device-shell device-shell-mobile">
+        <ShellMobile>{children}</ShellMobile>
+      </div>
+    </>
+  )
 }
