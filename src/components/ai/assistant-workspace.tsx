@@ -580,7 +580,7 @@ export function AssistantWorkspace({ userName = '' }: { userName?: string }) {
         <section className="panel-card quadra-ai-card">
           <div className="panel-head">
             <div>
-              <h2>Nota libera -> sintesi</h2>
+              <h2>Nota libera → sintesi</h2>
               <p>Per appunti grezzi, call recap e trascrizioni veloci.</p>
             </div>
           </div>
