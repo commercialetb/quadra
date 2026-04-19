@@ -1,9 +1,7 @@
-import { DashboardShell } from '@/components/dashboard/dashboard-shell'
-import { getDashboardData } from '@/lib/dashboard-queries'
-import { requireUser } from '@/lib/auth'
+import { DashboardShell } from '@/components/dashboard/dashboard-shell';
+import { getDashboardData } from '@/lib/dashboard-queries';
 
 export default async function DashboardPage() {
-  const [{ user }, data] = await Promise.all([requireUser(), getDashboardData()])
-  const userName = String(user.user_metadata?.full_name || user.user_metadata?.name || user.email || '').trim()
-  return <DashboardShell data={data} userName={userName} />
+  const data = await getDashboardData();
+  return <DashboardShell data={data} />;
 }

@@ -4476,115 +4476,46 @@ body {
 }
 
 
-/* quadra ai voice milestone */
-.quadra-greeting-card {
-  display: grid;
-  gap: 12px;
-  padding: 18px 20px;
-  border-radius: 28px;
-  background: linear-gradient(180deg, rgba(255,255,255,.88) 0%, rgba(245,248,255,.78) 100%);
-  border: 1px solid rgba(212,218,236,.82);
-  box-shadow: 0 20px 44px rgba(110,120,150,.12);
-}
-.quadra-greeting-card.is-compact { padding: 14px 16px; border-radius: 22px; }
-.quadra-greeting-kicker {
-  display: inline-flex;
-  font-size: .74rem;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: #8a91a8;
-  margin-bottom: 8px;
-}
-.quadra-greeting-card p { margin: 0; font-size: 1.02rem; line-height: 1.45; color: #22314d; }
-.quadra-greeting-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.quadra-pill-button {
-  display: inline-flex; align-items: center; justify-content: center; min-height: 44px;
-  padding: 0 16px; border-radius: 999px; border: 1px solid rgba(200,206,230,.9);
-  background: rgba(255,255,255,.88); color: #25314d; font-weight: 700;
-}
-.quadra-pill-button.primary {
-  background: linear-gradient(180deg, rgba(224,219,255,.94) 0%, rgba(224,246,244,.92) 100%);
-  border-color: rgba(192,198,232,.95);
-}
-.quadra-pill-button.ghost:hover, .quadra-pill-button.primary:hover { transform: translateY(-1px); }
-.quadra-ai-workspace { gap: 18px; }
-.quadra-ai-hero {
-  display: grid; gap: 16px; border-radius: 34px; padding: 28px;
-  background: linear-gradient(135deg, rgba(255,255,255,.92) 0%, rgba(245,248,255,.78) 100%);
-}
-.quadra-ai-eyebrow { display: inline-flex; margin-bottom: 10px; font-size: .76rem; letter-spacing: .24em; text-transform: uppercase; color: #8790aa; }
-.quadra-ai-hero h1 { margin: 0; font-size: clamp(1.8rem, 3vw, 2.7rem); line-height: 1.02; letter-spacing: -.06em; }
-.quadra-ai-hero p { margin: 10px 0 0; color: #5f6982; max-width: 64ch; }
-.quadra-ai-hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.quadra-ai-tab, .quadra-ai-mode, .quadra-ai-chip, .voice-intent-pill, .dashboard-query-chip {
-  display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 14px;
-  border-radius: 999px; border: 1px solid rgba(200,206,230,.88); background: rgba(255,255,255,.88); color: #4c5977; font-weight: 700;
-}
-.quadra-ai-tab.is-active, .quadra-ai-mode.is-active {
-  background: linear-gradient(180deg, rgba(224,219,255,.94) 0%, rgba(224,246,244,.92) 100%);
-  color: #24314d; border-color: rgba(191,199,232,.95);
-}
-.quadra-ai-query-card, .quadra-ai-card { border-radius: 30px; }
-.quadra-ai-toolbar { display: grid; gap: 12px; margin-bottom: 18px; }
-.quadra-ai-suggestion-row, .quadra-ai-mode-row, .quadra-ai-post-actions, .voice-control-quick-intents, .dashboard-copilot-actions--chips {
-  display: flex; flex-wrap: wrap; gap: 10px;
-}
-.quadra-ai-executive-strip, .dashboard-stage-strip {
-  display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 16px;
-}
-.quadra-ai-mini-pill, .dashboard-stage-pill {
-  display: inline-flex; align-items: center; min-height: 34px; padding: 0 12px; border-radius: 999px;
-  background: rgba(245,248,255,.92); border: 1px solid rgba(214,220,239,.9); color: #58657f; font-weight: 700; font-size: .88rem;
-}
-.quadra-ai-mini-pill.primary, .dashboard-stage-pill.is-active {
-  background: linear-gradient(180deg, rgba(224,219,255,.94) 0%, rgba(224,246,244,.92) 100%);
-  color: #22314d;
-}
-.quadra-ai-output {
-  border-radius: 22px; min-height: 90px; background: linear-gradient(180deg, rgba(251,252,255,.96) 0%, rgba(245,248,255,.82) 100%);
-}
-.quadra-ai-executive-grid, .dashboard-ai-preview-grid {
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 14px;
-}
-.quadra-ai-executive-card, .dashboard-ai-preview-card {
-  padding: 16px 18px; border-radius: 22px; background: rgba(255,255,255,.82); border: 1px solid rgba(214,220,239,.82);
-}
-.quadra-ai-executive-card span, .dashboard-ai-preview-card span {
-  display: inline-flex; margin-bottom: 10px; font-size: .78rem; letter-spacing: .18em; text-transform: uppercase; color: #8891ab;
-}
-.quadra-ai-executive-card p, .dashboard-ai-preview-card p, .quadra-ai-executive-card ul { margin: 0; color: #33415c; }
-.quadra-ai-executive-card ul { padding-left: 18px; display: grid; gap: 8px; }
-.quadra-ai-lower-grid { gap: 16px; }
-.assistant-textarea.compact { min-height: 120px; }
-.voice-control-quick-intents { margin-top: 10px; }
-.dashboard-copilot-brief strong { display: inline-block; margin-right: 6px; }
-.dashboard-ai-preview-grid { margin-top: 18px; }
-.dashboard-metric-spark { display: flex; align-items: end; gap: 4px; margin-top: auto; height: 26px; }
-.dashboard-metric-spark i {
-  display: block; width: 8px; border-radius: 999px; background: linear-gradient(180deg, rgba(149,118,255,.82) 0%, rgba(101,219,208,.82) 100%);
-}
-.dashboard-metric-spark i:nth-child(1) { height: 8px; }
-.dashboard-metric-spark i:nth-child(2) { height: 16px; }
-.dashboard-metric-spark i:nth-child(3) { height: 22px; }
-.dashboard-metric-spark i:nth-child(4) { height: 14px; }
-.dashboard-metric-spark i:nth-child(5) { height: 19px; }
-.voice-control-bar .voice-intent-pill { min-height: 34px; padding-inline: 12px; }
-@media (max-width: 920px) {
-  .quadra-ai-executive-grid, .dashboard-ai-preview-grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 720px) {
-  .quadra-ai-hero, .quadra-greeting-card { padding: 20px; border-radius: 24px; }
-  .quadra-ai-hero h1 { font-size: 1.6rem; }
-  .quadra-ai-post-actions, .voice-control-quick-intents, .dashboard-copilot-actions--chips { display: grid; grid-template-columns: 1fr; }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .quadra-pill-button, .quadra-ai-tab, .quadra-ai-mode, .quadra-ai-chip, .voice-intent-pill, .dashboard-query-chip,
-  .dashboard-ai-preview-card, .quadra-ai-executive-card {
-    transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+/* targeted fix: sorted forms + mobile dashboard overlap */
+@media (max-width: 640px) {
+  .dashboard-phaseE2 .dashboard-e2-kpis {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
   }
-  .quadra-pill-button:hover, .quadra-ai-tab:hover, .quadra-ai-mode:hover, .quadra-ai-chip:hover,
-  .voice-intent-pill:hover, .dashboard-query-chip:hover, .dashboard-ai-preview-card:hover, .quadra-ai-executive-card:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 12px 28px rgba(117, 126, 156, 0.14);
+
+  .dashboard-phaseE2 .dashboard-metric-card {
+    min-height: 0 !important;
+    padding: 18px 16px 16px !important;
+  }
+
+  .dashboard-phaseE2 .dashboard-metric-value {
+    font-size: clamp(2rem, 10vw, 2.6rem) !important;
+    line-height: 0.95 !important;
+    letter-spacing: -0.08em !important;
+  }
+
+  .dashboard-phaseE2 .dashboard-metric-note {
+    max-width: none !important;
+  }
+
+  .dashboard-phaseE2 .dashboard-inline-stats,
+  .dashboard-phaseE2 .dashboard-stage-row,
+  .dashboard-phaseE2 .dashboard-chip-row {
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .dashboard-phaseE2 .dashboard-widget {
+    padding: 18px 16px !important;
+  }
+
+  .dashboard-phaseE2 .dashboard-widget-head h2 {
+    font-size: 1.1rem !important;
+  }
+
+  .dashboard-phaseE2 .dashboard-e2-priority-grid {
+    grid-template-columns: 1fr !important;
   }
 }
