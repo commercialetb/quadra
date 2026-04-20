@@ -62,3 +62,9 @@ Nota: il file esiste per evitare di continuare a stratificare fix dentro `global
 - consolidato il layer responsive finale in `src/app/v5-clean.css`
 - rimosso l'import a cascata di `v2/v3/v4` dal layout
 - rifiniti sidebar, KPI dashboard, topbar iPhone/iPad e spacing desktop
+
+
+## v6 clean
+- ridotto lo spazio vuoto sopra su iPad portrait e iPhone portrait/landscape
+- drawer tablet forzato fuori dal flusso del layout
+- topbar e ambient shell riallineati in alto
