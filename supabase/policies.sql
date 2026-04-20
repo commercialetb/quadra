@@ -8,6 +8,10 @@ alter table public.contact_phones enable row level security;
 alter table public.opportunities enable row level security;
 alter table public.activities enable row level security;
 alter table public.followups enable row level security;
+alter table public.orders enable row level security;
+alter table public.analysis_imports enable row level security;
+alter table public.analysis_signals enable row level security;
+alter table public.company_data_links enable row level security;
 alter table public.notes enable row level security;
 alter table public.shortcut_review_queue enable row level security;
 alter table public.tags enable row level security;
@@ -76,3 +80,20 @@ with check (
       and c.owner_id = auth.uid()
   )
 );
+
+
+create policy orders_all_own on public.orders
+for all using (auth.uid() = owner_id)
+with check (auth.uid() = owner_id);
+
+create policy analysis_imports_all_own on public.analysis_imports
+for all using (auth.uid() = owner_id)
+with check (auth.uid() = owner_id);
+
+create policy analysis_signals_all_own on public.analysis_signals
+for all using (auth.uid() = owner_id)
+with check (auth.uid() = owner_id);
+
+create policy company_data_links_all_own on public.company_data_links
+for all using (auth.uid() = owner_id)
+with check (auth.uid() = owner_id);

@@ -68,3 +68,13 @@ Nota: il file esiste per evitare di continuare a stratificare fix dentro `global
 - ridotto lo spazio vuoto sopra su iPad portrait e iPhone portrait/landscape
 - drawer tablet forzato fuori dal flusso del layout
 - topbar e ambient shell riallineati in alto
+
+
+## v19 cleanup finale
+
+Questa build aggiunge solo un layer conservativo di pulizia finale:
+- rifinitura visiva per Analisi, score e priorita
+- griglie e card piu coerenti tra desktop, iPad e mobile
+- spaziatura piu ordinata in Settings e nei pannelli operativi
+
+Obiettivo: consolidare, non rifare.
