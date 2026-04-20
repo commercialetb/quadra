@@ -1,6 +1,7 @@
 import './globals.css'
 import './v5-clean.css'
 import './v6-clean.css'
+import './v7-clean.css'
 import type { Metadata, Viewport } from 'next'
 import { PwaRegister } from '@/components/pwa-register'
 
