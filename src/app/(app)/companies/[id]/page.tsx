@@ -76,7 +76,6 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
               presetCompanyId={company.id}
               presetCompanyName={company.name}
               compact
-              showAdvanced={false}
               eyebrow="Import"
               title="Importa ordini per questa azienda"
               description="Carichi il CSV dalla scheda azienda: prima fai anteprima, poi importi solo se il match opportunità è corretto."
