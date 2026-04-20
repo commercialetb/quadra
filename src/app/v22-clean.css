@@ -1,0 +1,166 @@
+/* v22: focused polish for Analysis + tablet drawer visibility */
+
+/* Keep the tablet menu and drawer above sticky shells and page layers */
+.app-topbar-menu {
+  position: relative;
+  z-index: 121;
+}
+
+.tablet-drawer-backdrop {
+  z-index: 140;
+}
+
+.tablet-drawer {
+  z-index: 150;
+}
+
+@media (max-width: 1100px) and (min-width: 721px) {
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-topbar {
+    position: sticky;
+    top: max(env(safe-area-inset-top), 8px);
+    z-index: 120;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-main,
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .page-shell {
+    overflow: visible;
+  }
+}
+
+/* Analysis page: prioritize readability on iPad portrait / compact landscape */
+.analysis-page-v20 {
+  gap: 18px;
+}
+
+.analysis-metric-panel .panel-head,
+.analysis-score-panel-v20 .panel-head,
+.analysis-action-panel-v20 .panel-head,
+.analysis-company-panel-v20 .panel-head,
+.analysis-chart-panel-v20 .panel-head,
+.analysis-suggestion-panel-v20 .panel-head,
+.analysis-import-panel-v20 .panel-head {
+  margin-bottom: 12px;
+}
+
+.analysis-kpi-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.analysis-kpi-card {
+  min-width: 0;
+}
+
+.analysis-kpi-card span,
+.analysis-kpi-card strong,
+.analysis-kpi-card small {
+  display: block;
+}
+
+.analysis-kpi-card strong {
+  line-height: 1.15;
+}
+
+.analysis-score-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.analysis-main-grid-v20 {
+  grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.92fr);
+}
+
+.analysis-action-grid.compact-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+
+.analysis-action-item.compact-item,
+.analysis-suggestion-item.compact-item,
+.analysis-priority-item {
+  min-width: 0;
+}
+
+.analysis-action-item.compact-item strong,
+.analysis-action-item.compact-item span,
+.analysis-suggestion-item.compact-item strong,
+.analysis-suggestion-item.compact-item span,
+.analysis-priority-item strong,
+.analysis-priority-item span {
+  display: block;
+}
+
+.analysis-action-buttons.compact-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.analysis-company-table-wrap,
+.analysis-orders-table-wrap {
+  overflow-x: auto;
+}
+
+.analysis-details-panel,
+.analysis-details-block {
+  overflow: clip;
+}
+
+@media (max-width: 1366px) {
+  .analysis-main-grid-v20 {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-side-column {
+    display: grid;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 1100px) and (min-width: 721px) {
+  .analysis-header-card-v20 {
+    padding: 22px;
+  }
+
+  .analysis-metric-grid-v20,
+  .analysis-score-grid,
+  .analysis-main-grid-v20 {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-action-grid.compact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .analysis-company-list-item,
+  .analysis-priority-item,
+  .analysis-action-item.compact-item,
+  .analysis-suggestion-item.compact-item {
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 820px) {
+  .analysis-kpi-grid,
+  .analysis-action-grid.compact-grid,
+  .analysis-score-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-header-actions,
+  .analysis-actions-row,
+  .analysis-action-buttons.compact-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .analysis-header-actions .primary-button,
+  .analysis-header-actions .ghost-button,
+  .analysis-action-buttons.compact-buttons .ghost-button {
+    width: 100%;
+    text-align: center;
+  }
+}
