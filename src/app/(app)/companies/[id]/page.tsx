@@ -5,11 +5,17 @@ import { EntityListCard } from '@/components/detail/entity-list-card'
 import { InfoCard, InfoRow } from '@/components/detail/info-card'
 import { TimelineCard } from '@/components/detail/timeline-card'
 import { getCompanyDetail, getTimelineForEntity } from '@/lib/detail-queries'
+import { getCompanyAnalysis } from '@/lib/analysis/queries'
+import { CompanyAnalysisCard } from '@/components/analysis/company-analysis-card'
+import { AnalysisImportCard } from '@/components/analysis/analysis-import-card'
 
 export default async function CompanyDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const { company, contacts, opportunities, notes } = await getCompanyDetail(id)
-  const timeline = await getTimelineForEntity({ companyId: id })
+  const [timeline, analysis] = await Promise.all([
+    getTimelineForEntity({ companyId: id }),
+    getCompanyAnalysis(id),
+  ])
 
   if (!company) notFound()
 
@@ -27,6 +33,19 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
             <InfoRow label="Settore" value={company.industry} />
             <InfoRow label="Fonte" value={company.source} />
           </InfoCard>
+
+          <CompanyAnalysisCard data={analysis} />
+
+          <AnalysisImportCard
+            companies={[{ id: company.id, name: company.name }]}
+            presetCompanyId={company.id}
+            presetCompanyName={company.name}
+            compact
+            eyebrow="Import"
+            title="Importa ordini per questa azienda"
+            description="Carichi il CSV direttamente dalla scheda azienda: ogni riga usa Il suo ordine come riferimento opportunità della scheda corrente. Se esiste la aggiorna, se manca la crea."
+            submitLabel="Importa in questa azienda"
+          />
 
           <TimelineCard items={timeline} />
 

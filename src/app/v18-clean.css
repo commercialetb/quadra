@@ -1,0 +1,81 @@
+.analysis-score-panel,
+.analysis-score-grid,
+.analysis-score-block,
+.analysis-priority-list,
+.company-analysis-score-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.analysis-score-grid,
+.company-analysis-score-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.analysis-score-block,
+.company-analysis-score-card {
+  padding: 16px;
+  border: 1px solid rgba(120, 136, 160, 0.18);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.analysis-score-block h3,
+.company-analysis-score-card strong {
+  margin: 0;
+}
+
+.analysis-priority-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(120, 136, 160, 0.16);
+  background: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  color: inherit;
+}
+
+.analysis-priority-item strong,
+.analysis-priority-item span,
+.company-analysis-score-card span,
+.company-analysis-score-card small {
+  display: block;
+}
+
+.analysis-priority-item span,
+.company-analysis-score-card small {
+  color: var(--muted-foreground, #667085);
+}
+
+.company-analysis-score-card span {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground, #667085);
+}
+
+.company-analysis-score-card strong {
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  line-height: 1.05;
+  margin: 6px 0;
+}
+
+.dashboard-analysis-grid--priority {
+  margin-top: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.dashboard-analysis-priority-block .dashboard-link-card.compact {
+  min-height: 0;
+}
+
+@media (max-width: 1100px) {
+  .analysis-score-grid,
+  .company-analysis-score-grid,
+  .dashboard-analysis-grid--priority {
+    grid-template-columns: 1fr;
+  }
+}

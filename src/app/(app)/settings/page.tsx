@@ -12,13 +12,24 @@ type ExportChoice = {
   href: string
 }
 
-function readShortcutLink(envName: string) {
-  return process.env[envName]?.trim() || null
+const SHORTCUT_ENV: Record<string, string | undefined> = {
+  NEXT_PUBLIC_SHORTCUT_LINK_CREATE_FOLLOWUP: process.env.NEXT_PUBLIC_SHORTCUT_LINK_CREATE_FOLLOWUP,
+  NEXT_PUBLIC_SHORTCUT_FILE_CREATE_FOLLOWUP: process.env.NEXT_PUBLIC_SHORTCUT_FILE_CREATE_FOLLOWUP,
+  NEXT_PUBLIC_SHORTCUT_LINK_SEARCH_RECORD: process.env.NEXT_PUBLIC_SHORTCUT_LINK_SEARCH_RECORD,
+  NEXT_PUBLIC_SHORTCUT_FILE_SEARCH_RECORD: process.env.NEXT_PUBLIC_SHORTCUT_FILE_SEARCH_RECORD,
+  NEXT_PUBLIC_SHORTCUT_LINK_TODAY_AGENDA: process.env.NEXT_PUBLIC_SHORTCUT_LINK_TODAY_AGENDA,
+  NEXT_PUBLIC_SHORTCUT_FILE_TODAY_AGENDA: process.env.NEXT_PUBLIC_SHORTCUT_FILE_TODAY_AGENDA,
+  NEXT_PUBLIC_SHORTCUT_LINK_LOG_CALL_OUTCOME: process.env.NEXT_PUBLIC_SHORTCUT_LINK_LOG_CALL_OUTCOME,
+  NEXT_PUBLIC_SHORTCUT_FILE_LOG_CALL_OUTCOME: process.env.NEXT_PUBLIC_SHORTCUT_FILE_LOG_CALL_OUTCOME,
+}
+
+function readShortcutLink(envName: keyof typeof SHORTCUT_ENV) {
+  return SHORTCUT_ENV[envName]?.trim() || null
 }
 
 function shortcutState(envSuffix: string) {
-  const icloud = readShortcutLink(`NEXT_PUBLIC_SHORTCUT_LINK_${envSuffix}`)
-  const file = readShortcutLink(`NEXT_PUBLIC_SHORTCUT_FILE_${envSuffix}`)
+  const icloud = readShortcutLink(`NEXT_PUBLIC_SHORTCUT_LINK_${envSuffix}` as keyof typeof SHORTCUT_ENV)
+  const file = readShortcutLink(`NEXT_PUBLIC_SHORTCUT_FILE_${envSuffix}` as keyof typeof SHORTCUT_ENV)
   if (icloud) return { label: 'Pronto su iPhone', href: icloud }
   if (file) return { label: 'Pronto da file', href: file }
   return { label: 'Da collegare', href: '/capture/siri/install' }
