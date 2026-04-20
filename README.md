@@ -35,3 +35,30 @@ Per una checklist sintetica vedi `docs/production-notes.md`.
 
 ## Voce e Siri
 La scelta consigliata e usare Siri / Apple Shortcuts come trigger esterno e Quadra come motore operativo per parsing, conferma e creazione follow-up. La pagina interna di cattura vocale resta utile quando l'utente e gia dentro l'app.
+
+
+## Responsive v2 clean pass
+
+Questa versione include un layer finale `src/app/v2-clean.css` con override mirati per:
+- dashboard su iPhone portrait e landscape
+- topbar iPad portrait
+- rail desktop più stabile
+- detail page a colonna singola su tablet
+- dock mobile meno invasivo
+
+Nota: il file esiste per evitare di continuare a stratificare fix dentro `globals.css` senza una chiusura leggibile del pass responsive.
+
+
+## Responsive v3 clean
+- Stabilizzazione finale per iPhone portrait/landscape, iPad portrait e desktop compatti.
+- KPI dashboard in colonna su schermi stretti per evitare overlap.
+- Topbar mobile/tablet più compatta e consistente.
+- Priority grid desktop più leggibile con badge che non schiacciano il testo.
+
+- v4 clean: rifinitura desktop/iPad con sidebar più leggera, promo voice nascosta sulle viste larghe e KPI valuta stabilizzati su una sola riga.
+
+
+## v5 clean
+- consolidato il layer responsive finale in `src/app/v5-clean.css`
+- rimosso l'import a cascata di `v2/v3/v4` dal layout
+- rifiniti sidebar, KPI dashboard, topbar iPhone/iPad e spacing desktop
