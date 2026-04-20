@@ -181,8 +181,8 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         {!isSettingsPage ? (
           <div className="sidebar-card sidebar-card-phase2">
             <div className="sidebar-card-label">Quadra OS</div>
-            <strong>Più scena, più gerarchia, meno rumore.</strong>
-            <p>Desktop con sidebar vera, contenuto centrale ampio e dock mobile separato.</p>
+            <strong>Più gerarchia, meno rumore.</strong>
+            <p>Desktop pulito, contenuto centrale più leggibile e dock mobile separato.</p>
           </div>
         ) : null}
       </aside>
@@ -287,6 +287,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
 
           <div className="app-topbar-actions app-topbar-actions-mobile">
             {!active(pathname, '/assistant') ? <Link href="/assistant" className="ghost-button ghost-button-subtle" aria-label="Apri Assistente AI">AI</Link> : null}
+            {!isSettingsPage ? <Link href="/settings" className="ghost-button ghost-button-subtle" aria-label="Apri Strumenti">Tool</Link> : null}
             <LogoutButton />
           </div>
         </header>
