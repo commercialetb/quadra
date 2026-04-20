@@ -6,6 +6,7 @@ import './v15-clean.css'
 import './v17-clean.css'
 import './v18-clean.css'
 import './v19-clean.css'
+import './v20-clean.css'
 import type { Metadata, Viewport } from 'next'
 import { PwaRegister } from '@/components/pwa-register'
 
