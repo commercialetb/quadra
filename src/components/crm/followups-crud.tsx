@@ -5,7 +5,6 @@ import { useFormStatus } from 'react-dom'
 import { createFollowup, deleteFollowup, updateFollowupStatus } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
 import { formatDateTime } from '@/lib/format'
-import { CrmHero, CrmScene } from '@/components/crm/crm-scene'
 import { followupStatusLabel, priorityLabel } from '@/lib/crm-labels'
 
 const statuses = ['pending', 'in_progress', 'completed', 'cancelled', 'overdue']
@@ -67,24 +66,6 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
 
   return (
     <>
-      <CrmScene className="crm-scene-followups">
-        <CrmHero
-          eyebrow="Follow-up"
-          title="Agenda workspace"
-          description="Una vista più operativa di agenda, scadenze e task da chiudere senza perdere priorità."
-          spotlight={{ kicker: 'Scaduti', value: String(overdueCount), note: `${progressCount} attività già in corso` }}
-          stats={[
-            { label: 'Totale', value: items.length, note: 'attività visibili' },
-            { label: 'Scaduti', value: overdueCount, note: 'da rimettere in riga' },
-            { label: 'In corso', value: progressCount, note: 'già presi in carico' },
-            { label: 'Completati', value: completedCount, note: 'chiusi con successo' },
-          ]}
-          links={[
-            { href: '/opportunities', label: 'Apri pipeline', tone: 'ghost' },
-            { href: '/dashboard', label: 'Torna alla dashboard', tone: 'primary' },
-          ]}
-        />
-
       <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-followups">
         <div className="list-head">
           <div>
@@ -160,7 +141,6 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
           {!items.length ? <div className="empty-state-box">Nessun follow-up trovato.</div> : null}
         </div>
       </section>
-      </CrmScene>
 
       {showCreate ? (
         <div className="overlay-shell" role="dialog" aria-modal="true">

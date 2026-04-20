@@ -6,7 +6,6 @@ import { useFormStatus } from 'react-dom'
 import { createOpportunity, deleteOpportunity, updateOpportunityStage } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
 import { formatCurrency, formatDate } from '@/lib/format'
-import { CrmHero, CrmScene } from '@/components/crm/crm-scene'
 import { stageLabel } from '@/lib/crm-labels'
 
 const stages = ['new_lead', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost']
@@ -51,24 +50,6 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
 
   return (
     <>
-      <CrmScene className="crm-scene-opportunities">
-        <CrmHero
-          eyebrow="Opportunità"
-          title="Pipeline workspace"
-          description="Una pipeline più leggibile, con vista rapida su valore, trattative aperte e blocchi da sbloccare."
-          spotlight={{ kicker: 'Valore pipeline', value: pipelineValue, note: `${openCount} deal ancora aperti` }}
-          stats={[
-            { label: 'Totale', value: items.length, note: 'opportunità visibili' },
-            { label: 'Aperte', value: openCount, note: 'deal in movimento' },
-            { label: 'In proposta', value: proposalCount, note: 'fase calda' },
-            { label: 'Valore', value: pipelineValue, note: 'stima complessiva' },
-          ]}
-          links={[
-            { href: '/followups', label: 'Apri agenda', tone: 'ghost' },
-            { href: '/dashboard', label: 'Torna alla dashboard', tone: 'primary' },
-          ]}
-        />
-
       <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-opportunities">
         <div className="list-head">
           <div>
@@ -135,7 +116,6 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
           {!items.length ? <div className="empty-state-box">Nessuna opportunità trovata.</div> : null}
         </div>
       </section>
-      </CrmScene>
 
       {showCreate ? (
         <div className="overlay-shell" role="dialog" aria-modal="true">

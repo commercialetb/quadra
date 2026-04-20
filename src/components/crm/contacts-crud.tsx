@@ -5,7 +5,6 @@ import { useMemo, useState } from 'react'
 import { createContact, deleteContact, updateContact } from '@/app/(app)/actions'
 import { SearchInput } from '@/components/ui/search-input'
 import { ContactAvatar } from '@/components/ui/contact-avatar'
-import { CrmHero, CrmScene } from '@/components/crm/crm-scene'
 import { CONTACT_METHOD_OPTIONS } from '@/lib/crm-options'
 import { labelize } from '@/lib/crm-labels'
 
@@ -28,24 +27,6 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
 
   return (
     <>
-      <CrmScene className="crm-scene-contacts">
-        <CrmHero
-          eyebrow="Contatti"
-          title="Relationship workspace"
-          description="Rubrica viva, contatti chiave e segnali immediati per riprendere una relazione senza rumore."
-          spotlight={{ kicker: 'Con azienda', value: String(linkedCount), note: `${whatsappCount} raggiungibili anche via WhatsApp` }}
-          stats={[
-            { label: 'Totale', value: items.length, note: 'contatti visibili' },
-            { label: 'Con azienda', value: linkedCount, note: 'account già collegati' },
-            { label: 'Con email', value: emailCount, note: 'pronti per outreach' },
-            { label: 'WhatsApp', value: whatsappCount, note: 'canale rapido' },
-          ]}
-          links={[
-            { href: '/companies', label: 'Apri aziende', tone: 'ghost' },
-            { href: '/dashboard', label: 'Torna alla dashboard', tone: 'primary' },
-          ]}
-        />
-
       <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-contacts">
         <div className="list-head">
           <div>
@@ -109,7 +90,6 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
           {!items.length ? <div className="empty-state-box">Nessun contatto trovato.</div> : null}
         </div>
       </section>
-      </CrmScene>
 
       {showCreate ? (
         <div className="overlay-shell" role="dialog" aria-modal="true">

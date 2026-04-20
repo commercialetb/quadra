@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { VoiceControlBar } from '@/components/voice-control-bar'
+import { DashboardAnalysisPanel } from '@/components/analysis/dashboard-analysis-panel'
 import { followupStatusLabel, priorityLabel, stageLabel } from '@/lib/crm-labels'
 
 type Item = Record<string, any>
@@ -16,6 +17,14 @@ type DashboardData = {
   recentActivities?: Item[]
   todayFollowups?: Item[]
   staleOpportunities?: Item[]
+  dashboardSignals?: Array<{ companyId: string; companyName: string; signal: 'high' | 'medium' | 'low'; title: string; detail: string }>
+  suggestedFollowups?: Array<{ companyId: string; companyName: string; title: string; description: string; priority: 'medium' | 'high' | 'urgent' }>
+  actionPlan?: Array<{ companyId: string; companyName: string; title: string; detail: string; priority: 'medium' | 'high' | 'urgent'; lane: 'agenda' | 'pipeline' | 'ordini' | 'copertura' }>
+  priorityBuckets?: {
+    callNow: Array<{ companyId: string; companyName: string; score: number; band: 'alta' | 'media' | 'base'; reason: string }>
+    reactivate: Array<{ companyId: string; companyName: string; score: number; band: 'alta' | 'media' | 'base'; reason: string }>
+    monitor: Array<{ companyId: string; companyName: string; score: number; band: 'alta' | 'media' | 'base'; reason: string }>
+  }
 }
 
 function formatCurrency(value = 0) {
@@ -175,6 +184,13 @@ export function DashboardShell({ data }: { data: DashboardData }) {
               </div>
             </div>
           </section>
+
+          <DashboardAnalysisPanel
+            signals={data.dashboardSignals || []}
+            suggestions={data.suggestedFollowups || []}
+            actionPlan={data.actionPlan || []}
+            priorityBuckets={data.priorityBuckets || { callNow: [], reactivate: [], monitor: [] }}
+          />
 
           <section className="dashboard-widget dashboard-widget-copilot">
             <div className="dashboard-widget-head compact-head">

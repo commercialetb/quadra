@@ -11,7 +11,7 @@ type NavItem = {
   label: string
   shortLabel: string
   tinyLabel: string
-  icon: 'home' | 'building' | 'person' | 'sparkles' | 'check'
+  icon: 'home' | 'building' | 'person' | 'sparkles' | 'check' | 'analysis'
 }
 
 const primaryNav: NavItem[] = [
@@ -20,6 +20,7 @@ const primaryNav: NavItem[] = [
   { href: '/contacts', label: 'Contatti', shortLabel: 'Cont.', tinyLabel: 'Cont', icon: 'person' },
   { href: '/opportunities', label: 'Opportunita', shortLabel: 'Opp.', tinyLabel: 'Opp', icon: 'sparkles' },
   { href: '/followups', label: 'Follow-up', shortLabel: 'Task', tinyLabel: 'Task', icon: 'check' },
+  { href: '/analysis', label: 'Analisi', shortLabel: 'Anal.', tinyLabel: 'Anal', icon: 'analysis' },
 ]
 
 function active(pathname: string, href: string) {
@@ -31,6 +32,7 @@ function currentTitle(pathname: string) {
   if (pathname.startsWith('/contacts')) return 'Contatti'
   if (pathname.startsWith('/opportunities')) return 'Opportunita'
   if (pathname.startsWith('/followups')) return 'Follow-up'
+  if (pathname.startsWith('/analysis')) return 'Analisi'
   if (pathname.startsWith('/import')) return 'Import dati'
   if (pathname.startsWith('/assistant')) return 'Assistente AI'
   if (pathname.startsWith('/capture/voice')) return 'Detta in Quadra'
@@ -76,6 +78,13 @@ function NavIcon({ name }: { name: NavItem['icon'] }) {
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <rect x="4.5" y="5" width="15" height="14" rx="3" fill="none" stroke="currentColor" strokeWidth="1.8" />
           <path d="m8.5 12 2.3 2.3 4.7-5" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      )
+    case 'analysis':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 18.5h14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          <path d="M7.5 16V11.5M12 16V8M16.5 16v-5" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       )
   }
@@ -275,12 +284,14 @@ export default function Shell({ children }: { children: React.ReactNode }) {
 
           <div className="app-topbar-actions app-topbar-actions-desktop">
             {!active(pathname, '/assistant') ? <Link href="/assistant" className="ghost-button">Assistente AI</Link> : null}
+            {!active(pathname, '/analysis') ? <Link href="/analysis" className="ghost-button">Analisi</Link> : null}
             {!isSettingsPage ? <Link href="/settings" className="ghost-button">Strumenti</Link> : null}
             <LogoutButton />
           </div>
 
           <div className="app-topbar-actions app-topbar-actions-tablet">
             {!active(pathname, '/assistant') ? <Link href="/assistant" className="ghost-button">Assistente AI</Link> : null}
+            {!active(pathname, '/analysis') ? <Link href="/analysis" className="ghost-button ghost-button-subtle">Analisi</Link> : null}
             {!isSettingsPage ? <Link href="/settings" className="ghost-button ghost-button-subtle">Strumenti</Link> : null}
             <LogoutButton />
           </div>

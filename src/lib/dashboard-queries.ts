@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { getDashboardAnalysisSummary } from '@/lib/analysis/queries';
 
 type StageKey =
   | 'new_lead'
@@ -11,6 +12,8 @@ type StageKey =
 
 export async function getDashboardData() {
   const supabase = await createClient();
+
+  const analysisSummaryPromise = getDashboardAnalysisSummary();
 
   const [
     openOpportunitiesRes,
@@ -112,6 +115,7 @@ export async function getDashboardData() {
   const overdueCount = (overdueFollowupsRes.data ?? []).length;
   const todayCount = (todayFollowupsRes.data ?? []).length;
   const wonCount = pipelineCounts.won;
+  const analysisSummary = await analysisSummaryPromise;
 
   return {
     kpis: {
@@ -130,5 +134,9 @@ export async function getDashboardData() {
     recentContacts: recentContactsRes.data ?? [],
     staleOpportunities: staleOpportunitiesRes.data ?? [],
     pipelineCounts,
+    dashboardSignals: analysisSummary.dashboardSignals,
+    suggestedFollowups: analysisSummary.suggestedFollowups,
+    actionPlan: analysisSummary.actionPlan,
+    priorityBuckets: analysisSummary.priorityBuckets,
   };
 }

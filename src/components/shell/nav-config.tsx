@@ -5,7 +5,7 @@ export type NavItem = {
   label: string
   shortLabel?: string
   description?: string
-  icon?: 'home' | 'companies' | 'contacts' | 'opportunities' | 'followups' | 'assistant' | 'settings'
+  icon?: 'home' | 'companies' | 'contacts' | 'opportunities' | 'followups' | 'analysis' | 'assistant' | 'settings'
 }
 
 export const primaryNav: NavItem[] = [
@@ -43,6 +43,13 @@ export const primaryNav: NavItem[] = [
     shortLabel: 'Follow-up',
     description: 'Chiudi azioni, promemoria e scadenze operative.',
     icon: 'followups',
+  },
+  {
+    href: '/analysis',
+    label: 'Analisi',
+    shortLabel: 'Analisi',
+    description: 'Unifica CRM, ordini importati e segnali operativi.',
+    icon: 'analysis',
   },
 ]
 
@@ -113,6 +120,7 @@ export function NavIcon({
     contacts: '◉',
     opportunities: '◇',
     followups: '✓',
+    analysis: '▤',
     assistant: '✦',
     settings: '⚙',
   }
