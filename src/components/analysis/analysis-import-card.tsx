@@ -32,6 +32,7 @@ type AnalysisImportCardProps = {
   presetCompanyId?: string
   presetCompanyName?: string
   compact?: boolean
+  simplified?: boolean
   title?: string
   eyebrow?: string
   description?: string
@@ -43,6 +44,7 @@ export function AnalysisImportCard({
   presetCompanyId,
   presetCompanyName,
   compact = false,
+  simplified = false,
   title = 'Importa CSV ordini',
   eyebrow = 'Data intake',
   description = 'Selezioni l’azienda dal menu a discesa, poi ogni riga usa Il suo ordine come riferimento opportunità: se esiste la aggiorna, se manca la crea.',
@@ -109,16 +111,17 @@ export function AnalysisImportCard({
   }
 
   const companyLabel = presetCompanyName || companies.find((company) => company.id === presetCompanyId)?.name || ''
+  const showAdvanced = !simplified && !compact
 
   return (
-    <section className="panel-card analysis-import-card">
+    <section className={`analysis-import-card-shell ${simplified ? 'is-simplified' : ''}`}>
       <div className="panel-head compact">
         <div>
           <p className="page-eyebrow">{eyebrow}</p>
           <h2>{title}</h2>
         </div>
       </div>
-      <p className="settings-copy">
+      <p className="settings-copy analysis-import-copy">
         {description.includes('Il suo ordine') ? (
           <>
             {description.split('Il suo ordine')[0]}<strong>Il suo ordine</strong>{description.split('Il suo ordine').slice(1).join('Il suo ordine')}
@@ -129,12 +132,12 @@ export function AnalysisImportCard({
       </p>
 
       <form ref={formRef} className="analysis-upload-form" onSubmit={(event) => event.preventDefault()}>
-        <label className="analysis-field">
-          <span>File CSV</span>
-          <input name="file" type="file" accept=".csv,text/csv" required />
-        </label>
-
         <div className={`analysis-upload-grid ${compact ? 'is-compact' : ''}`}>
+          <label className="analysis-field analysis-field-file">
+            <span>File CSV</span>
+            <input name="file" type="file" accept=".csv,text/csv" required />
+          </label>
+
           {presetCompanyId ? (
             <label className="analysis-field analysis-field-readonly">
               <span>Azienda</span>
@@ -163,20 +166,40 @@ export function AnalysisImportCard({
           </label>
         </div>
 
-        <div className={`analysis-upload-grid ${compact ? 'is-compact' : ''}`}>
-          <label className="analysis-check">
-            <input type="checkbox" name="update_existing" defaultChecked />
-            <span>Aggiorna opportunità esistenti</span>
-          </label>
-          <label className="analysis-check">
-            <input type="checkbox" name="create_missing" defaultChecked />
-            <span>Crea opportunità mancanti</span>
-          </label>
-          <label className="analysis-check analysis-check-wide">
-            <input type="checkbox" name="apply_imported_only" value="true" defaultChecked />
-            <span>Sovrascrivi solo campi importati, non note/owner/manuale</span>
-          </label>
-        </div>
+        {showAdvanced ? (
+          <div className={`analysis-upload-grid ${compact ? 'is-compact' : ''}`}>
+            <label className="analysis-check">
+              <input type="checkbox" name="update_existing" defaultChecked />
+              <span>Aggiorna opportunità esistenti</span>
+            </label>
+            <label className="analysis-check">
+              <input type="checkbox" name="create_missing" defaultChecked />
+              <span>Crea opportunità mancanti</span>
+            </label>
+            <label className="analysis-check analysis-check-wide">
+              <input type="checkbox" name="apply_imported_only" value="true" defaultChecked />
+              <span>Sovrascrivi solo i campi importati, non note e gestione manuale</span>
+            </label>
+          </div>
+        ) : (
+          <details className="analysis-options-compact">
+            <summary>Opzioni import</summary>
+            <div className="analysis-options-compact-body">
+              <label className="analysis-check">
+                <input type="checkbox" name="update_existing" defaultChecked />
+                <span>Aggiorna opportunità esistenti</span>
+              </label>
+              <label className="analysis-check">
+                <input type="checkbox" name="create_missing" defaultChecked />
+                <span>Crea opportunità mancanti</span>
+              </label>
+              <label className="analysis-check">
+                <input type="checkbox" name="apply_imported_only" value="true" defaultChecked />
+                <span>Sovrascrivi solo i campi importati</span>
+              </label>
+            </div>
+          </details>
+        )}
 
         <div className="analysis-actions-row cluster-wrap">
           <button type="button" className="secondary-button" disabled={loading || companies.length === 0} onClick={() => submitWithMode('preview')}>
@@ -192,42 +215,25 @@ export function AnalysisImportCard({
             <div className="analysis-preview-summary">
               <div>
                 <strong>{preview.companyName}</strong>
-                <span>{preview.totalRows} righe · {preview.sourceType} · {preview.createCount} create · {preview.updateCount} update · {preview.skipCount} skip · {preview.warningCount} warning</span>
+                <span>{preview.totalRows} righe · {preview.createCount} create · {preview.updateCount} update · {preview.skipCount} skip · {preview.warningCount} warning</span>
               </div>
-              <span className="analysis-preview-note">Mostrate le prime {preview.preview.length} righe dell’anteprima.</span>
+              <span className="analysis-preview-note">Prime {preview.preview.length} righe mostrate.</span>
             </div>
-            <div className="analysis-preview-table-wrap">
-              <table className="analysis-preview-table">
-                <thead>
-                  <tr>
-                    <th>Riferimento</th>
-                    <th>Ordine BEGA</th>
-                    <th>Azione</th>
-                    <th>Stato</th>
-                    <th>Totale</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {preview.preview.map((row) => (
-                    <tr key={`${row.bega_order}-${row.reference}`}>
-                      <td>
-                        <div className="analysis-company-cell">
-                          <strong>{row.reference}</strong>
-                          <span>
-                            {row.matchedOpportunity ? `Match: ${row.matchedOpportunity}` : row.warning || 'Match pulito'}
-                            {row.warning && row.matchedOpportunity ? ` · ${row.warning}` : ''}
-                            {row.existingOrder ? ' · Ordine già presente' : ''}
-                          </span>
-                        </div>
-                      </td>
-                      <td>{row.bega_order}</td>
-                      <td><span className={`analysis-action-pill is-${row.action}`}>{row.action}</span></td>
-                      <td>{row.status || '—'}</td>
-                      <td>{new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(row.total_eur || 0)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="analysis-preview-list">
+              {preview.preview.map((row) => (
+                <div key={`${row.bega_order}-${row.reference}`} className="analysis-preview-list-item">
+                  <div>
+                    <strong>{row.reference}</strong>
+                    <span>{row.bega_order} · {row.status || '—'} · {new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(row.total_eur || 0)}</span>
+                    <small>
+                      {row.matchedOpportunity ? `Match: ${row.matchedOpportunity}` : row.warning || 'Match pulito'}
+                      {row.warning && row.matchedOpportunity ? ` · ${row.warning}` : ''}
+                      {row.existingOrder ? ' · Ordine già presente' : ''}
+                    </small>
+                  </div>
+                  <span className={`analysis-action-pill is-${row.action}`}>{row.action}</span>
+                </div>
+              ))}
             </div>
           </div>
         ) : null}
