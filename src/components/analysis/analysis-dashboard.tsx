@@ -273,7 +273,7 @@ export function AnalysisDashboard({
                   title={item.title}
                   description={item.detail}
                   priority={item.priority}
-                  defaultDueInDays={item.priority === 'urgent' ? 1 : item.priority === 'high' ? 2 : 5}
+                  defaultDueInDays={item.priority === 'urgent' ? 1 : item.priority === 'high' ? 2 : 7}
                   compact
                 />
               </div>

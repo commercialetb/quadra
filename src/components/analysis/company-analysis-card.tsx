@@ -130,7 +130,7 @@ export function CompanyAnalysisCard({ data }: { data: CompanyAnalysisData | null
                   title={topAction.title}
                   description={topAction.detail}
                   priority={topAction.priority}
-                  defaultDueInDays={topAction.priority === 'urgent' ? 1 : topAction.priority === 'high' ? 2 : 5}
+                  defaultDueInDays={topAction.priority === 'urgent' ? 1 : topAction.priority === 'high' ? 2 : 7}
                   compact
                 />
               </div>
