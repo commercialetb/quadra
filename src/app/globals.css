@@ -4475,268 +4475,171 @@ body {
   }
 }
 
-/* v53 CRM hero scene restore */
-.crm-scene {
-  position: relative;
-  display: grid;
-  gap: 18px;
+/* v46 responsive audit patch: iPhone + iPad + desktop cleanup */
+
+/* Dashboard rows with status badge should not reserve the avatar column */
+.dashboard-phaseE2 .dashboard-entity-row.compact {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
 }
 
-.crm-scene-shell {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  gap: 18px;
-}
-
-.crm-scene-orb {
-  position: absolute;
-  inset: auto;
-  border-radius: 999px;
-  pointer-events: none;
-  filter: blur(60px);
-  opacity: 0.38;
-}
-
-.crm-scene-orb-a {
-  width: 240px;
-  height: 240px;
-  top: 42px;
-  right: 8%;
-  background: rgba(143, 215, 234, 0.22);
-}
-
-.crm-scene-orb-b {
-  width: 180px;
-  height: 180px;
-  top: 180px;
-  left: 8%;
-  background: rgba(142, 108, 255, 0.12);
-}
-
-.crm-hero-card {
-  position: relative;
-  overflow: hidden;
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.55fr);
-  gap: 16px;
-  padding: 24px;
-  border-radius: 32px;
-  border: 1px solid rgba(170, 183, 211, 0.24);
-  background:
-    radial-gradient(circle at top right, rgba(168, 235, 244, 0.24), transparent 30%),
-    linear-gradient(135deg, rgba(255,255,255,0.90) 0%, rgba(246,243,255,0.84) 52%, rgba(239,248,252,0.88) 100%);
-  box-shadow: 0 18px 48px rgba(30, 41, 59, 0.08);
-}
-
-.crm-hero-noise {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent 42%, rgba(255,255,255,0.12));
-}
-
-.crm-hero-copy,
-.crm-hero-spotlight,
-.crm-hero-stats {
-  position: relative;
-  z-index: 1;
-}
-
-.crm-hero-copy {
-  display: grid;
-  align-content: start;
-  gap: 14px;
-  min-width: 0;
-}
-
-.crm-hero-eyebrow {
-  font-size: 0.78rem;
-  line-height: 1;
-  text-transform: uppercase;
-  letter-spacing: 0.24em;
-  color: var(--soft);
-  font-weight: 800;
-}
-
-.crm-hero-copy h1 {
-  margin: 0;
-  font-size: clamp(2.2rem, 4vw, 3.35rem);
-  line-height: 0.98;
-  letter-spacing: -0.07em;
-}
-
-.crm-hero-copy > p {
-  margin: 0;
-  max-width: 58ch;
-  color: var(--muted);
-  font-size: 1.02rem;
-  line-height: 1.65;
-}
-
-.crm-hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-}
-
-.crm-hero-spotlight {
-  align-self: start;
-  display: grid;
-  gap: 8px;
-  padding: 18px 18px 20px;
-  border-radius: 24px;
-  border: 1px solid rgba(170, 183, 211, 0.24);
-  background: rgba(255,255,255,0.74);
-  min-width: 0;
-}
-
-.crm-hero-spotlight span {
-  font-size: 0.76rem;
-  line-height: 1;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--soft);
-  font-weight: 800;
-}
-
-.crm-hero-spotlight strong {
-  font-size: clamp(1.55rem, 3vw, 2.3rem);
-  line-height: 1;
-  letter-spacing: -0.05em;
-}
-
-.crm-hero-spotlight p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-.crm-hero-spotlight i {
-  width: 72px;
-  height: 6px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(129, 140, 248, 0.6), rgba(103, 232, 249, 0.55));
-}
-
-.crm-hero-stats {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.crm-hero-stat {
-  min-width: 0;
-  display: grid;
+.dashboard-phaseE2 .dashboard-entity-row.compact .dashboard-entity-copy {
   gap: 4px;
-  padding: 16px 18px;
-  border-radius: 22px;
-  border: 1px solid rgba(170, 183, 211, 0.2);
-  background: rgba(255,255,255,0.68);
 }
 
-.crm-hero-stat i {
-  width: 34px;
-  height: 4px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(129, 140, 248, 0.42), rgba(103, 232, 249, 0.4));
+.dashboard-phaseE2 .dashboard-entity-row.compact .dashboard-pill-badge {
+  justify-self: end;
+  align-self: start;
 }
 
-.crm-hero-stat span {
-  font-size: 0.78rem;
-  line-height: 1.15;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--soft);
-  font-weight: 800;
+/* Keep KPI cards readable on narrow widths */
+.dashboard-phaseE2 .dashboard-metric-card {
+  min-width: 0;
 }
 
-.crm-hero-stat strong {
-  font-size: clamp(1.02rem, 1.4vw, 1.3rem);
-  line-height: 1.1;
-  letter-spacing: -0.04em;
+.dashboard-phaseE2 .dashboard-metric-value {
+  font-size: clamp(1.9rem, 3.8vw, 3rem);
+  line-height: 0.95;
   overflow-wrap: anywhere;
 }
 
-.crm-hero-stat small {
-  color: var(--muted);
-  line-height: 1.45;
-  overflow-wrap: anywhere;
-}
-
-@media (max-width: 1180px) {
-  .crm-hero-card {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .crm-hero-spotlight {
-    max-width: 420px;
-  }
-
-  .crm-hero-stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+/* Better desktop/tablet balance so the right rail does not starve the main content */
+@media (min-width: 1101px) {
+  .dashboard-phaseE2 .dashboard-e2-layout {
+    grid-template-columns: minmax(0, 1.72fr) minmax(320px, 0.68fr);
   }
 }
 
-@media (max-width: 760px) {
-  .crm-scene,
-  .crm-scene-shell {
-    gap: 14px;
+/* iPad portrait and narrow tablet */
+@media (max-width: 1024px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
   }
 
-  .crm-hero-card {
-    padding: 18px;
-    border-radius: 26px;
-    gap: 14px;
-  }
-
-  .crm-hero-copy {
-    gap: 12px;
-  }
-
-  .crm-hero-copy h1 {
-    font-size: clamp(1.82rem, 9vw, 2.45rem);
-  }
-
-  .crm-hero-copy > p {
-    font-size: 0.96rem;
-    line-height: 1.55;
-  }
-
-  .crm-hero-stats {
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-
-  .crm-hero-stat,
-  .crm-hero-spotlight {
-    padding: 14px;
-    border-radius: 18px;
+  .info-row-v2 strong {
+    max-width: 70%;
   }
 }
 
-@media (max-width: 520px) {
-  .crm-scene-orb {
-    display: none;
+@media (max-width: 900px) {
+  .dashboard-phaseE2 .dashboard-e2-kpis,
+  .dashboard-phaseE2 .dashboard-e2-priority-grid,
+  .dashboard-phaseE2 .dashboard-e2-rail,
+  .dashboard-phaseE2 .dashboard-actions-grid--three {
+    grid-template-columns: 1fr;
   }
 
-  .crm-hero-card {
-    padding: 16px;
+  .dashboard-phaseE2 .dashboard-widget-head,
+  .dashboard-phaseE2 .dashboard-subcard-head {
+    align-items: flex-start;
+  }
+}
+
+/* Phone layout */
+@media (max-width: 720px) {
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-main {
+    padding-bottom: 108px !important;
+  }
+
+  .mobile-nav {
+    width: calc(100% - 16px);
+    bottom: calc(max(env(safe-area-inset-bottom), 8px) + 6px) !important;
+    padding: 6px;
+    gap: 4px;
     border-radius: 22px;
   }
 
-  .crm-hero-actions {
+  .mobile-nav-link {
+    min-height: 56px;
+    border-radius: 18px;
+  }
+
+  .dashboard-phaseE2 .dashboard-widget {
+    padding: 16px;
+    border-radius: 24px;
+  }
+
+  .dashboard-phaseE2 .dashboard-metric-card {
+    min-height: 0;
+  }
+
+  .dashboard-phaseE2 .dashboard-metric-value {
+    font-size: clamp(1.7rem, 8vw, 2.3rem);
+  }
+
+  .dashboard-phaseE2 .dashboard-subcard-head {
+    flex-wrap: wrap;
+  }
+
+  .dashboard-phaseE2 .dashboard-pill-badge {
+    min-width: 52px;
+    padding-inline: 9px;
+    font-size: 0.74rem;
+  }
+
+  .page-hero {
+    padding: 18px;
+  }
+
+  .page-title {
+    font-size: clamp(1.85rem, 8vw, 2.35rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-main {
+    padding-bottom: 104px !important;
+  }
+
+  .mobile-nav {
+    width: calc(100% - 12px);
+    bottom: calc(max(env(safe-area-inset-bottom), 6px) + 4px) !important;
+    padding: 5px;
+    border-radius: 20px;
+  }
+
+  .mobile-nav-link {
+    min-height: 54px;
+    padding: 4px 2px;
+  }
+
+  .mobile-nav-label {
+    font-size: 0.68rem;
+  }
+
+  .dashboard-phaseE2 .dashboard-widget-head .secondary-button,
+  .dashboard-phaseE2 .dashboard-widget-head .primary-button,
+  .dashboard-phaseE2 .dashboard-widget-head .ghost-button {
+    width: 100%;
+  }
+
+  .dashboard-phaseE2 .dashboard-copilot-actions {
     display: grid;
     grid-template-columns: 1fr;
   }
 
-  .crm-hero-actions > * {
-    width: 100%;
+  .info-row-v2 {
+    display: grid;
+    gap: 6px;
   }
 
-  .crm-hero-stats {
-    grid-template-columns: 1fr;
+  .info-row-v2 strong {
+    max-width: 100%;
+    text-align: left;
+  }
+}
+
+@media (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 {
+    padding-top: max(env(safe-area-inset-top), 8px) !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-main {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  .page-stack.detail-page {
+    gap: 14px;
   }
 }
