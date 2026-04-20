@@ -22,8 +22,9 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
   return (
     <DetailShell title={company.name} subtitle={company.legal_name} backHref="/companies" backLabel="Aziende">
       <CompanyEditCard company={company} />
-      <div className="detail-grid">
-        <div className="stack-lg">
+
+      <div className="company-detail-grid-v21">
+        <div className="stack-lg company-detail-main-col">
           <InfoCard title="Panoramica azienda">
             <InfoRow label="Status" value={company.status} />
             <InfoRow label="Sito web" value={company.website ? <a href={company.website} target="_blank">{company.website}</a> : '—'} />
@@ -35,28 +36,9 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           </InfoCard>
 
           <CompanyAnalysisCard data={analysis} />
-
-          <AnalysisImportCard
-            companies={[{ id: company.id, name: company.name }]}
-            presetCompanyId={company.id}
-            presetCompanyName={company.name}
-            compact
-            eyebrow="Import"
-            title="Importa ordini per questa azienda"
-            description="Carichi il CSV direttamente dalla scheda azienda: ogni riga usa Il suo ordine come riferimento opportunità della scheda corrente. Se esiste la aggiorna, se manca la crea."
-            submitLabel="Importa in questa azienda"
-          />
-
-          <TimelineCard items={timeline} />
-
-          <EntityListCard
-            title="Note recenti"
-            empty="Nessuna nota collegata."
-            items={notes.map((note) => ({ id: note.id, label: note.title || 'Nota', meta: note.body }))}
-          />
         </div>
 
-        <div className="stack-lg">
+        <aside className="stack-lg company-detail-side-col">
           <EntityListCard
             title="Contatti"
             empty="Nessun contatto collegato."
@@ -82,9 +64,42 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
               href: `/opportunities/${opportunity.id}`,
             }))}
           />
-
-        </div>
+        </aside>
       </div>
+
+      <details className="company-detail-drawer-v21" open>
+        <summary>Import e attività</summary>
+        <div className="company-detail-drawer-body-v21">
+          <div className="company-detail-secondary-grid-v21">
+            <AnalysisImportCard
+              companies={[{ id: company.id, name: company.name }]}
+              presetCompanyId={company.id}
+              presetCompanyName={company.name}
+              compact
+              showAdvanced={false}
+              eyebrow="Import"
+              title="Importa ordini per questa azienda"
+              description="Carichi il CSV dalla scheda azienda: prima fai anteprima, poi importi solo se il match opportunità è corretto."
+              submitLabel="Importa in questa azienda"
+            />
+
+            <TimelineCard items={timeline} />
+          </div>
+        </div>
+      </details>
+
+      <details className="company-detail-drawer-v21">
+        <summary>Note e contenuti secondari</summary>
+        <div className="company-detail-drawer-body-v21">
+          <div className="company-detail-secondary-grid-v21 single-column">
+            <EntityListCard
+              title="Note recenti"
+              empty="Nessuna nota collegata."
+              items={notes.map((note) => ({ id: note.id, label: note.title || 'Nota', meta: note.body }))}
+            />
+          </div>
+        </div>
+      </details>
     </DetailShell>
   )
 }
