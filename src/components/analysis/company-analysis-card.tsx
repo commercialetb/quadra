@@ -63,10 +63,10 @@ export function CompanyAnalysisCard({ data }: { data: CompanyAnalysisData | null
   ]
 
   const summaryItems = [
+    { label: 'Priorità', value: `${data.companyRow.priorityScore}/100` },
     { label: 'Pipeline', value: formatCurrency(data.companyRow.pipelineValue) },
-    { label: 'Ordini', value: data.companyRow.importedOrders > 0 ? `${data.companyRow.importedOrders} importati` : 'Nessun dato' },
-    { label: 'Valore ordini', value: formatCurrency(data.companyRow.importedValue) },
     { label: 'Follow-up', value: data.companyRow.pendingFollowups > 0 ? `${data.companyRow.pendingFollowups} attivi` : 'Nessuno' },
+    { label: 'Ultimo ordine', value: data.companyRow.lastOrderDate ? formatDate(data.companyRow.lastOrderDate) : 'Nessun dato' },
   ]
 
   return (
@@ -74,7 +74,7 @@ export function CompanyAnalysisCard({ data }: { data: CompanyAnalysisData | null
       <div className="panel-head compact company-analysis-topbar">
         <div>
           <p className="page-eyebrow">Analisi</p>
-          <h2>Segnali azienda</h2>
+          <h2>Sintesi azienda</h2>
         </div>
         <div className="cluster-wrap company-analysis-top-actions">
           <SignalPill level={data.companyRow.signal} />
@@ -83,35 +83,20 @@ export function CompanyAnalysisCard({ data }: { data: CompanyAnalysisData | null
         </div>
       </div>
 
-      <p className="settings-copy company-analysis-lead">{data.companyRow.insight}</p>
-
-      <div className="company-analysis-summary-grid">
-        {summaryItems.map((item) => (
-          <div key={item.label} className="company-analysis-summary-card">
+      <div className="company-analysis-mini-strip">
+        {pressureItems.map((item) => (
+          <div key={item.label} className="company-analysis-mini-pill">
             <span>{item.label}</span>
             <strong>{item.value}</strong>
           </div>
         ))}
       </div>
 
-      <div className="company-analysis-score-strip company-analysis-score-strip-v21">
-        <div className="company-analysis-score-chip">
-          <span>Priorità</span>
-          <strong>{data.companyRow.priorityScore}/100</strong>
-        </div>
-        <div className="company-analysis-score-chip">
-          <span>Potenziale</span>
-          <strong>{data.companyRow.potentialScore}/100</strong>
-        </div>
-        <div className="company-analysis-score-chip">
-          <span>Rischio</span>
-          <strong>{data.companyRow.riskScore}/100</strong>
-        </div>
-      </div>
+      <p className="settings-copy company-analysis-lead company-analysis-lead-v23">{data.companyRow.insight}</p>
 
-      <div className="company-analysis-pressure-strip company-analysis-pressure-strip-v21">
-        {pressureItems.map((item) => (
-          <div key={item.label} className="company-analysis-pressure-pill">
+      <div className="company-analysis-summary-grid">
+        {summaryItems.map((item) => (
+          <div key={item.label} className="company-analysis-summary-card">
             <span>{item.label}</span>
             <strong>{item.value}</strong>
           </div>
@@ -143,26 +128,14 @@ export function CompanyAnalysisCard({ data }: { data: CompanyAnalysisData | null
             <div className="simple-row static"><div><strong>Situazione ordinata</strong><span>Nessuna priorità critica: mantieni il presidio attuale.</span></div></div>
           )}
         </div>
-
-        <div className="company-analysis-block">
-          <div className="company-analysis-block-head compact">
-            <h3>Contesto rapido</h3>
-          </div>
-          <div className="company-analysis-context-grid">
-            <div className="company-analysis-context-card"><span>Ultimo ordine</span><strong>{formatDate(data.companyRow.lastOrderDate)}</strong></div>
-            <div className="company-analysis-context-card"><span>Outstanding</span><strong>{formatCurrency(data.orderKpis.outstandingValue)}</strong></div>
-            <div className="company-analysis-context-card"><span>Ticket medio</span><strong>{formatCurrency(data.orderKpis.averageOrderValue)}</strong></div>
-            <div className="company-analysis-context-card"><span>Ultimo mese</span><strong>{latestMonth ? `${latestMonth.label} · ${formatCurrency(latestMonth.value)}` : 'Nessun dato'}</strong></div>
-          </div>
-        </div>
       </div>
 
-      <details className="analysis-details-block company-analysis-drawer" open>
-        <summary>Dettagli analisi</summary>
+      <details className="analysis-details-block company-analysis-drawer">
+        <summary>Approfondisci analisi</summary>
         <div className="company-analysis-drawer-body">
           <div className="company-analysis-grid">
             <div className="company-analysis-block">
-              <h3>Azioni suggerite</h3>
+              <h3>Azioni consigliate</h3>
               <div className="simple-list compact-list">
                 {data.suggestions.length > 0 ? data.suggestions.slice(0, 2).map((item) => (
                   <div key={item.title} className="simple-row static company-analysis-suggestion-row">
@@ -185,7 +158,7 @@ export function CompanyAnalysisCard({ data }: { data: CompanyAnalysisData | null
             </div>
 
             <div className="company-analysis-block">
-              <h3>Opportunità e agenda</h3>
+              <h3>Pipeline e agenda</h3>
               <div className="simple-list compact-list">
                 {data.openOpportunities.length > 0 ? data.openOpportunities.slice(0, 3).map((item) => (
                   <Link key={item.id} href={`/opportunities/${item.id}`} className="simple-row">
@@ -212,7 +185,19 @@ export function CompanyAnalysisCard({ data }: { data: CompanyAnalysisData | null
 
           <div className="company-analysis-grid">
             <div className="company-analysis-block">
-              <h3>Ordini e segnali</h3>
+              <h3>Dati chiave</h3>
+              <div className="company-analysis-context-grid company-analysis-context-grid-v23">
+                <div className="company-analysis-context-card"><span>Ultimo ordine</span><strong>{formatDate(data.companyRow.lastOrderDate)}</strong></div>
+                <div className="company-analysis-context-card"><span>Outstanding</span><strong>{formatCurrency(data.orderKpis.outstandingValue)}</strong></div>
+                <div className="company-analysis-context-card"><span>Ticket medio</span><strong>{formatCurrency(data.orderKpis.averageOrderValue)}</strong></div>
+                <div className="company-analysis-context-card"><span>Ultimo mese</span><strong>{latestMonth ? `${latestMonth.label} · ${formatCurrency(latestMonth.value)}` : 'Nessun dato'}</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="company-analysis-grid">
+            <div className="company-analysis-block">
+              <h3>Ordini e alert</h3>
               <div className="simple-list compact-list">
                 {data.recentOrders.length > 0 ? data.recentOrders.slice(0, 3).map((order) => (
                   <div key={order.id ?? order.bega_order} className="simple-row static">
@@ -246,7 +231,7 @@ export function CompanyAnalysisCard({ data }: { data: CompanyAnalysisData | null
             </div>
 
             <div className="company-analysis-block">
-              <h3>Lettura sintetica</h3>
+              <h3>Dati chiave</h3>
               <div className="simple-list compact-list">
                 <div className="simple-row static"><div><strong>Priorità attuale</strong><span>{data.companyRow.priorityBand === 'alta' ? 'Alta' : data.companyRow.priorityBand === 'media' ? 'Media' : 'Base'}</span></div></div>
                 <div className="simple-row static"><div><strong>Pipeline + ordini</strong><span>{formatCurrency(data.companyRow.pipelineValue + data.companyRow.importedValue)}</span></div></div>

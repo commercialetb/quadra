@@ -126,8 +126,15 @@ export default function Shell({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    const shouldLockScroll = tabletNavOpen && isTabletPortrait
+    document.body.classList.toggle('tablet-nav-open', shouldLockScroll)
+    return () => document.body.classList.remove('tablet-nav-open')
+  }, [tabletNavOpen, isTabletPortrait])
+
   return (
-    <div className="app-shell quadra-shell-refresh quadra-shell-phase2">
+    <div className="app-shell quadra-shell-refresh quadra-shell-phase2" data-tablet-nav-open={tabletNavOpen && isTabletPortrait ? "true" : "false"}>
       <div className="quadra-ambient quadra-ambient-a" aria-hidden="true" />
       <div className="quadra-ambient quadra-ambient-b" aria-hidden="true" />
 

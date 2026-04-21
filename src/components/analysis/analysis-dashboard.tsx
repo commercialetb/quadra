@@ -105,9 +105,9 @@ export function AnalysisDashboard({
         <div className="analysis-header-copy">
           <div>
             <p className="page-eyebrow">Analisi</p>
-            <h1 className="page-title">Analisi CRM + mercato</h1>
+            <h1 className="page-title">Analisi operativa</h1>
             <p className="page-subtitle">
-              Una vista più corta e utile: priorità, azioni e import. Il resto resta disponibile nei dettagli sotto.
+              Prima vedi priorità, azioni e aziende da aprire. Trend e storico restano sotto, senza appesantire la pagina.
             </p>
           </div>
           <div className="cluster-wrap analysis-header-actions">
@@ -193,7 +193,7 @@ export function AnalysisDashboard({
             <div className="panel-head compact">
               <div>
                 <p className="page-eyebrow">Aziende</p>
-                <h2>Lettura trasversale rapida</h2>
+                <h2>Aziende prioritarie</h2>
               </div>
             </div>
             <div className="analysis-company-list">
@@ -322,7 +322,7 @@ export function AnalysisDashboard({
         )}
 
         <details className="panel-card analysis-details-panel" open={false}>
-          <summary>Dati e storico</summary>
+          <summary>Apri trend, storico e ordini</summary>
           <div className="analysis-details-grid">
             <section className="analysis-chart-panel">
               <div className="panel-head compact">
