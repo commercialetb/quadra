@@ -27,7 +27,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
         <div className="stack-lg company-detail-main-col">
           <InfoCard title="Panoramica azienda">
             <InfoRow label="Status" value={company.status} />
-            <InfoRow label="Sito web" value={company.website ? <a href={company.website} target="_blank">{company.website}</a> : '—'} />
+            <InfoRow label="Sito web" value={company.website ? <a href={company.website} target="_blank" rel="noreferrer">{company.website}</a> : '—'} />
             <InfoRow label="Email" value={company.email} />
             <InfoRow label="Telefono" value={company.phone} />
             <InfoRow label="Indirizzo" value={[company.address_line1, company.city, company.province].filter(Boolean).join(', ')} />
@@ -67,7 +67,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
         </aside>
       </div>
 
-      <details className="company-detail-drawer-v21" open>
+      <details className="company-detail-drawer-v21">
         <summary>Import e attività</summary>
         <div className="company-detail-drawer-body-v21">
           <div className="company-detail-secondary-grid-v21">
