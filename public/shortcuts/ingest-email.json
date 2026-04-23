@@ -1,0 +1,24 @@
+{
+  "name": "Quadra - Leggi email",
+  "method": "POST",
+  "url": "https://TUO-DOMINIO/api/shortcut/ingest-email",
+  "headers": {
+    "Content-Type": "application/json",
+    "x-shortcut-token": "SHORTCUT_SHARED_TOKEN"
+  },
+  "body": {
+    "fromEmail": "mario.rossi@acme.it",
+    "fromName": "Mario Rossi",
+    "subject": "Richiesta informazioni",
+    "snippet": "Vorrei ricevere una proposta aggiornata.",
+    "body": "Buongiorno, vorrei ricevere una proposta aggiornata e sentirci entro venerdi.",
+    "createCompanyIfMissing": true,
+    "createContactIfMissing": true,
+    "createFollowup": true,
+    "followupTitle": "Seguire email",
+    "followupDate": "",
+    "priority": ""
+  },
+  "readField": "spokenResponse",
+  "openField": "openUrl"
+}

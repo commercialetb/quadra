@@ -1,0 +1,27 @@
+{
+  "name": "Quadra - Gmail CRM",
+  "method": "POST",
+  "url": "https://TUO-DOMINIO/api/shortcut/ingest-gmail-crm",
+  "headers": {
+    "Content-Type": "application/json",
+    "x-shortcut-token": "SHORTCUT_SHARED_TOKEN"
+  },
+  "body": {
+    "fromEmail": "mario.rossi@acme.it",
+    "fromName": "Mario Rossi",
+    "subject": "Richiesta informazioni",
+    "snippet": "Vorrei ricevere una proposta aggiornata.",
+    "body": "Buongiorno, vorrei ricevere una proposta aggiornata e sentirci entro venerdi.",
+    "gmailLabels": ["CRM"],
+    "threadId": "188abc123",
+    "messageId": "188abc123-msg",
+    "createCompanyIfMissing": true,
+    "createContactIfMissing": true,
+    "createFollowup": true,
+    "followupTitle": "Seguire email CRM",
+    "followupDate": "",
+    "priority": ""
+  },
+  "readField": "spokenResponse",
+  "openField": "openUrl"
+}
