@@ -12,8 +12,8 @@ export function ShellMobile({ pathname, children }: { pathname: string; children
   const showVoice = pathname === '/' || pathname.startsWith('/assistant')
 
   return (
-    <div className="shell-mobile">
-      <header className="shell-mobile-header">
+    <div className="shell-mobile shell-redesign-mobile">
+      <header className="shell-mobile-header redesign-mobile-header">
         <div className="shell-mobile-copy">
           <div className="shell-mobile-kicker">Quadra</div>
           <h1 className="shell-mobile-title">{title}</h1>
@@ -21,28 +21,18 @@ export function ShellMobile({ pathname, children }: { pathname: string; children
         </div>
 
         <div className="shell-mobile-actions">
-          <Link href="/assistant" className="quadra-pill-button">
-            AI
-          </Link>
+          <Link href="/assistant" className="quadra-pill-button ghost">AI</Link>
           <LogoutButton className="quadra-pill-button" />
         </div>
       </header>
 
-      {showVoice ? (
-        <div className="shell-mobile-voice">
-          <VoiceControlBar />
-        </div>
-      ) : null}
+      {showVoice ? <div className="shell-mobile-voice redesign-mobile-voice"><VoiceControlBar /></div> : null}
 
-      <main className="shell-mobile-main">{children}</main>
+      <main className="shell-mobile-main redesign-mobile-main">{children}</main>
 
-      <nav className="mobile-nav quadra-bottom-nav">
+      <nav className="mobile-nav quadra-bottom-nav redesign-bottom-nav">
         {primaryNav.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`mobile-nav-link ${isActive(pathname, item.href) ? 'is-active' : ''}`}
-          >
+          <Link key={item.href} href={item.href} className={`mobile-nav-link ${isActive(pathname, item.href) ? 'is-active' : ''}`}>
             <NavIcon name={item.icon} className="mobile-nav-icon" />
             <span>{item.shortLabel ?? item.label}</span>
           </Link>

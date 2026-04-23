@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { VoiceControlBar } from '@/components/voice-control-bar'
-import { DashboardAnalysisPanel } from '@/components/analysis/dashboard-analysis-panel'
 import { followupStatusLabel, priorityLabel, stageLabel } from '@/lib/crm-labels'
 
 type Item = Record<string, any>
@@ -39,81 +38,53 @@ function formatDate(value?: string) {
   if (!value) return 'Senza data'
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return 'Senza data'
-  return new Intl.DateTimeFormat('it-IT', {
-    day: '2-digit',
-    month: '2-digit',
-  }).format(date)
+  return new Intl.DateTimeFormat('it-IT', { day: '2-digit', month: '2-digit' }).format(date)
 }
 
 function personName(item: Item) {
   return item.full_name || `${item.first_name || ''} ${item.last_name || ''}`.trim() || 'Contatto'
 }
 
-function statusLine(parts: Array<string | null | undefined>) {
-  return parts.filter(Boolean).join(' · ') || 'Apri scheda'
+function signalText(level: 'high' | 'medium' | 'low') {
+  if (level === 'high') return 'Alta'
+  if (level === 'medium') return 'Media'
+  return 'Base'
+}
+
+function bandClass(band?: 'alta' | 'media' | 'base') {
+  if (band === 'alta') return 'is-high'
+  if (band === 'media') return 'is-medium'
+  return 'is-base'
+}
+
+function priorityClass(priority?: 'medium' | 'high' | 'urgent') {
+  if (priority === 'urgent') return 'is-high'
+  if (priority === 'high') return 'is-medium'
+  return 'is-base'
 }
 
 function EmptyState({ text }: { text: string }) {
-  return <div className="dashboard-widget-empty">{text}</div>
+  return <div className="dashboard-widget-empty apple-empty">{text}</div>
 }
 
-function MetricCard({ label, value, note }: { label: string; value: string | number; note: string }) {
+function KpiCard({ label, value, note }: { label: string; value: string | number; note: string }) {
   return (
-    <article className="dashboard-metric-card">
-      <span className="dashboard-metric-label">{label}</span>
-      <strong className="dashboard-metric-value">{value}</strong>
-      <span className="dashboard-metric-note">{note}</span>
+    <article className="apple-kpi-card">
+      <span>{label}</span>
+      <strong>{value}</strong>
+      <small>{note}</small>
     </article>
   )
 }
 
-function ContactRow({ item }: { item: Item }) {
-  const name = personName(item)
+function CompactLinkRow({ href, title, meta, badge }: { href: string; title: string; meta: string; badge?: React.ReactNode }) {
   return (
-    <Link href={`/contacts/${item.id}`} className="dashboard-entity-row dashboard-link-card compact-row">
-      <span className="dashboard-entity-avatar">{name.slice(0, 1).toUpperCase()}</span>
-      <div className="dashboard-entity-copy">
-        <strong>{name}</strong>
-        <span>{statusLine([item.job_title, item.companies?.name])}</span>
+    <Link href={href} className="apple-list-row">
+      <div>
+        <strong>{title}</strong>
+        <span>{meta}</span>
       </div>
-    </Link>
-  )
-}
-
-function CompanyRow({ item }: { item: Item }) {
-  return (
-    <Link href={`/companies/${item.id}`} className="dashboard-entity-row dashboard-link-card compact-row">
-      <span className="dashboard-entity-avatar">{(item.name || 'A').slice(0, 1).toUpperCase()}</span>
-      <div className="dashboard-entity-copy">
-        <strong>{item.name || 'Azienda'}</strong>
-        <span>{statusLine([item.city, item.status])}</span>
-      </div>
-    </Link>
-  )
-}
-
-function FollowupRow({ item }: { item: Item }) {
-  return (
-    <Link href="/followups" className="dashboard-entity-row dashboard-link-card compact">
-      <div className="dashboard-entity-copy">
-        <strong>{item.title || 'Follow-up'}</strong>
-        <span>
-          {priorityLabel(item.priority)} · {followupStatusLabel(item.status)} · {formatDate(item.due_at || item.scheduled_for)}
-        </span>
-      </div>
-      <span className="dashboard-pill-badge">oggi</span>
-    </Link>
-  )
-}
-
-function OpportunityRow({ item }: { item: Item }) {
-  return (
-    <Link href={`/opportunities/${item.id}`} className="dashboard-entity-row dashboard-link-card compact">
-      <div className="dashboard-entity-copy">
-        <strong>{item.title || 'Opportunità'}</strong>
-        <span>{stageLabel(item.stage)} · {item.companies?.name || 'Senza azienda'}</span>
-      </div>
-      <span className="dashboard-pill-badge warning">ferma</span>
+      {badge}
     </Link>
   )
 }
@@ -121,174 +92,194 @@ function OpportunityRow({ item }: { item: Item }) {
 export function DashboardShell({ data }: { data: DashboardData }) {
   const recentCompanies = (data.recentCompanies || []).slice(0, 4)
   const recentContacts = (data.recentContacts || []).slice(0, 4)
-  const todayFollowups = (data.todayFollowups || []).slice(0, 4)
-  const staleOpportunities = (data.staleOpportunities || []).slice(0, 3)
+  const todayFollowups = (data.todayFollowups || []).slice(0, 5)
+  const staleOpportunities = (data.staleOpportunities || []).slice(0, 4)
+  const topSignals = (data.dashboardSignals || []).slice(0, 3)
+  const topSuggestions = (data.suggestedFollowups || []).slice(0, 3)
+  const bestCompanies = [
+    ...(data.priorityBuckets?.callNow || []).slice(0, 2),
+    ...(data.priorityBuckets?.reactivate || []).slice(0, 2),
+    ...(data.priorityBuckets?.monitor || []).slice(0, 1),
+  ].slice(0, 5)
 
   const pipelineValue = formatCurrency(data.kpis.pipelineValue || 0)
   const openCount = data.kpis.openCount || 0
   const todayCount = data.kpis.todayCount || 0
   const overdueCount = data.kpis.overdueCount || 0
+  const topAction = data.actionPlan?.[0]
 
   return (
-    <div className="page-stack dashboard-phaseE dashboard-phaseE2">
-      <section className="dashboard-mobile-voice">
+    <div className="page-stack dashboard-redesign-page">
+      <section className="dashboard-mobile-voice redesign-dashboard-voice">
         <VoiceControlBar compact />
       </section>
 
-      <section className="dashboard-e2-layout" aria-label="Dashboard predittiva">
-        <div className="dashboard-e2-main">
-          <section className="dashboard-widget dashboard-widget-priority">
-            <div className="dashboard-widget-head compact-head">
+      <section className="panel-card dashboard-hero-redesign">
+        <div>
+          <p className="page-eyebrow">Home</p>
+          <h1 className="page-title">Apri, capisci, agisci</h1>
+          <p className="page-subtitle">Una dashboard operativa: priorità, aziende da seguire e prossima azione. Il resto resta sotto.</p>
+        </div>
+        <div className="cluster-wrap">
+          <Link href="/followups" className="primary-button">Apri agenda</Link>
+          <Link href="/companies" className="ghost-button">Aziende</Link>
+        </div>
+      </section>
+
+      <section className="dashboard-redesign-grid">
+        <div className="dashboard-redesign-main">
+          <section className="dashboard-redesign-block">
+            <div className="dashboard-redesign-head">
               <div>
+                <p className="page-eyebrow">Oggi</p>
                 <h2>Priorità di oggi</h2>
-                <p>Subito cosa guardare, chi sentire e cosa sbloccare.</p>
               </div>
-              <Link href="/followups" className="secondary-button">
-                Apri agenda
-              </Link>
+              {topAction ? <span className={`dashboard-pill-badge ${priorityClass(topAction.priority)}`}>prossima azione</span> : null}
             </div>
 
-            <div className="dashboard-e2-kpis">
-              <MetricCard label="Pipeline" value={pipelineValue} note="Valore stimato." />
-              <MetricCard label="Trattative" value={openCount} note="Aperte in pipeline." />
-              <MetricCard label="Follow-up oggi" value={todayCount} note="Azioni da chiudere." />
+            <div className="apple-kpi-grid">
+              <KpiCard label="Pipeline" value={pipelineValue} note="valore stimato" />
+              <KpiCard label="Opportunità" value={openCount} note="aperte ora" />
+              <KpiCard label="Follow-up oggi" value={todayCount} note="azioni pianificate" />
+              <KpiCard label="In ritardo" value={overdueCount} note="da chiudere" />
             </div>
 
-            <div className="dashboard-e2-priority-grid">
-              <div className="dashboard-e2-subcard">
-                <div className="dashboard-subcard-head">
-                  <h3>Focus giornaliero</h3>
-                  <span>{todayCount} oggi</span>
+            <div className="apple-dashboard-two-col">
+              <div className="panel-card apple-subpanel">
+                <div className="dashboard-redesign-head compact">
+                  <h3>Da fare oggi</h3>
+                  <span>{todayFollowups.length}</span>
                 </div>
-                <div className="dashboard-widget-stack compact-stack">
-                  {todayFollowups.length === 0 ? (
-                    <EmptyState text="Nessuna azione urgente per oggi." />
-                  ) : (
-                    todayFollowups.map((item) => <FollowupRow key={item.id} item={item} />)
-                  )}
+                <div className="apple-list-stack">
+                  {todayFollowups.length ? todayFollowups.map((item) => (
+                    <CompactLinkRow
+                      key={item.id}
+                      href="/followups"
+                      title={item.title || 'Follow-up'}
+                      meta={`${priorityLabel(item.priority)} · ${followupStatusLabel(item.status)} · ${formatDate(item.due_at || item.scheduled_for)}`}
+                      badge={<span className="dashboard-pill-badge">oggi</span>}
+                    />
+                  )) : <EmptyState text="Nessuna azione urgente per oggi." />}
                 </div>
               </div>
 
-              <div className="dashboard-e2-subcard">
-                <div className="dashboard-subcard-head">
+              <div className="panel-card apple-subpanel">
+                <div className="dashboard-redesign-head compact">
                   <h3>Da sbloccare</h3>
-                  <span>{overdueCount} elementi</span>
+                  <span>{staleOpportunities.length}</span>
                 </div>
-                <div className="dashboard-widget-stack compact-stack">
-                  {staleOpportunities.length === 0 ? (
-                    <EmptyState text="Nessuna opportunità bloccata." />
-                  ) : (
-                    staleOpportunities.map((item) => <OpportunityRow key={item.id} item={item} />)
-                  )}
+                <div className="apple-list-stack">
+                  {staleOpportunities.length ? staleOpportunities.map((item) => (
+                    <CompactLinkRow
+                      key={item.id}
+                      href={`/opportunities/${item.id}`}
+                      title={item.title || 'Opportunità'}
+                      meta={`${stageLabel(item.stage)} · ${item.companies?.name || 'Senza azienda'}`}
+                      badge={<span className="dashboard-pill-badge warning">ferma</span>}
+                    />
+                  )) : <EmptyState text="Nessuna opportunità bloccata." />}
                 </div>
               </div>
             </div>
           </section>
 
-          <DashboardAnalysisPanel
-            signals={data.dashboardSignals || []}
-            suggestions={data.suggestedFollowups || []}
-            actionPlan={data.actionPlan || []}
-            priorityBuckets={data.priorityBuckets || { callNow: [], reactivate: [], monitor: [] }}
-          />
-
-          <section className="dashboard-widget dashboard-widget-copilot">
-            <div className="dashboard-widget-head compact-head">
+          <section className="dashboard-redesign-block">
+            <div className="dashboard-redesign-head">
               <div>
-                <h2>Copilota AI</h2>
-                <p>Una domanda, una risposta utile. Niente CTA duplicate.</p>
+                <p className="page-eyebrow">Migliori account</p>
+                <h2>Chi sta andando meglio</h2>
               </div>
-              <button type="button" className="primary-button">
-                Genera brief
-              </button>
+              <Link href="/analysis" className="ghost-button">Apri insight</Link>
             </div>
-
-            <div className="dashboard-copilot-brief">Genera un brief veloce sulle priorità di oggi.</div>
-
-            <div className="dashboard-copilot-field">
-              <label htmlFor="dashboard-copilot-query">Chiedi a Quadra</label>
-              <textarea
-                id="dashboard-copilot-query"
-                className="dashboard-copilot-textarea"
-                placeholder="Es. Chi devo sentire oggi? Oppure: quali opportunità sopra 10k sono ferme?"
-                rows={5}
-              />
-            </div>
-
-            <div className="dashboard-copilot-actions">
-              <button type="button" className="secondary-button">
-                Interroga il CRM
-              </button>
-              <Link href="/assistant" className="secondary-button">
-                Apri assistente
-              </Link>
-            </div>
-
-            <div className="dashboard-copilot-footer">
-              Oggi: {todayCount} follow-up · {overdueCount} in ritardo · {openCount} opportunità aperte.
+            <div className="apple-best-list">
+              {bestCompanies.length ? bestCompanies.map((item) => (
+                <Link key={`${item.companyId}-${item.reason}`} href={`/companies/${item.companyId}`} className="apple-best-row">
+                  <div>
+                    <strong>{item.companyName}</strong>
+                    <span>{item.reason}</span>
+                  </div>
+                  <div className="apple-best-meta">
+                    <span className={`dashboard-pill-badge ${bandClass(item.band)}`}>{item.band}</span>
+                    <strong>{item.score}/100</strong>
+                  </div>
+                </Link>
+              )) : <EmptyState text="Servono più segnali per ordinare le aziende migliori." />}
             </div>
           </section>
 
-          <section className="dashboard-widget dashboard-widget-actions e2-actions">
-            <div className="dashboard-widget-head compact-head">
+          <section className="dashboard-redesign-block">
+            <div className="dashboard-redesign-head">
               <div>
-                <h2>Azioni rapide</h2>
-                <p>Solo le tre azioni che servono davvero.</p>
+                <p className="page-eyebrow">Insight</p>
+                <h2>Solo ciò che serve</h2>
               </div>
+              <Link href="/assistant" className="ghost-button">Assistente</Link>
             </div>
-
-            <div className="dashboard-actions-grid dashboard-actions-grid--three">
-              <Link href="/capture/voice" className="primary-button">
-                Detta in Quadra
-              </Link>
-              <Link href="/assistant" className="secondary-button">
-                Assistente AI
-              </Link>
-              <Link href="/opportunities" className="secondary-button">
-                Pipeline
-              </Link>
+            <div className="apple-insight-grid">
+              <div className="panel-card apple-subpanel">
+                <div className="dashboard-redesign-head compact"><h3>Segnali da presidiare</h3></div>
+                <div className="apple-list-stack">
+                  {topSignals.length ? topSignals.map((item) => (
+                    <CompactLinkRow
+                      key={`${item.companyId}-${item.title}`}
+                      href={`/companies/${item.companyId}`}
+                      title={item.companyName}
+                      meta={`${item.title} · ${item.detail}`}
+                      badge={<span className={`dashboard-pill-badge ${item.signal === 'high' ? 'danger' : item.signal === 'medium' ? 'warning' : ''}`}>{signalText(item.signal)}</span>}
+                    />
+                  )) : <EmptyState text="Nessun segnale forte al momento." />}
+                </div>
+              </div>
+              <div className="panel-card apple-subpanel">
+                <div className="dashboard-redesign-head compact"><h3>Follow-up suggeriti</h3></div>
+                <div className="apple-list-stack">
+                  {topSuggestions.length ? topSuggestions.map((item) => (
+                    <CompactLinkRow
+                      key={`${item.companyId}-${item.title}`}
+                      href={`/companies/${item.companyId}`}
+                      title={item.title}
+                      meta={`${item.companyName} · ${item.description}`}
+                      badge={<span className={`dashboard-pill-badge ${priorityClass(item.priority)}`}>{priorityLabel(item.priority)}</span>}
+                    />
+                  )) : <EmptyState text="Nessun follow-up suggerito." />}
+                </div>
+              </div>
             </div>
           </section>
         </div>
 
-        <aside className="dashboard-e2-rail">
-          <section className="dashboard-widget dashboard-widget-contacts rail-widget">
-            <div className="dashboard-widget-head rail-head">
-              <div>
-                <h2>Contatti recenti</h2>
-                <p>Tocca e apri la scheda.</p>
-              </div>
-              <Link href="/contacts" className="ghost-button">
-                Contatti
-              </Link>
+        <aside className="dashboard-redesign-rail">
+          <section className="panel-card apple-rail-card">
+            <div className="dashboard-redesign-head compact">
+              <h3>Contatti recenti</h3>
+              <Link href="/contacts" className="ghost-button">Contatti</Link>
             </div>
-
-            <div className="dashboard-widget-stack compact-stack">
-              {recentContacts.length === 0 ? (
-                <EmptyState text="Nessun contatto recente." />
-              ) : (
-                recentContacts.map((item) => <ContactRow key={item.id} item={item} />)
-              )}
+            <div className="apple-list-stack">
+              {recentContacts.length ? recentContacts.map((item) => (
+                <CompactLinkRow
+                  key={item.id}
+                  href={`/contacts/${item.id}`}
+                  title={personName(item)}
+                  meta={[item.job_title, item.companies?.name].filter(Boolean).join(' · ') || 'Apri scheda'}
+                />
+              )) : <EmptyState text="Nessun contatto recente." />}
             </div>
           </section>
 
-          <section className="dashboard-widget dashboard-widget-companies rail-widget">
-            <div className="dashboard-widget-head rail-head">
-              <div>
-                <h2>Aziende recenti</h2>
-                <p>Apri subito i record principali.</p>
-              </div>
-              <Link href="/companies" className="ghost-button">
-                Aziende
-              </Link>
+          <section className="panel-card apple-rail-card">
+            <div className="dashboard-redesign-head compact">
+              <h3>Aziende recenti</h3>
+              <Link href="/companies" className="ghost-button">Aziende</Link>
             </div>
-
-            <div className="dashboard-widget-stack compact-stack">
-              {recentCompanies.length === 0 ? (
-                <EmptyState text="Nessuna azienda recente." />
-              ) : (
-                recentCompanies.map((item) => <CompanyRow key={item.id} item={item} />)
-              )}
+            <div className="apple-list-stack">
+              {recentCompanies.length ? recentCompanies.map((item) => (
+                <CompactLinkRow
+                  key={item.id}
+                  href={`/companies/${item.id}`}
+                  title={item.name || 'Azienda'}
+                  meta={[item.city, item.status].filter(Boolean).join(' · ') || 'Apri scheda'}
+                />
+              )) : <EmptyState text="Nessuna azienda recente." />}
             </div>
           </section>
         </aside>

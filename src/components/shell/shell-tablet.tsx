@@ -11,8 +11,8 @@ export function ShellTablet({ pathname, children }: { pathname: string; children
   const subtitle = getCurrentSubtitle(pathname)
 
   return (
-    <div className="shell-tablet">
-      <header className="shell-tablet-header">
+    <div className="shell-tablet shell-redesign-tablet">
+      <header className="shell-tablet-header redesign-tablet-header">
         <div className="shell-tablet-copy">
           <div className="shell-tablet-kicker">Quadra</div>
           <h1 className="shell-tablet-title">{title}</h1>
@@ -21,7 +21,7 @@ export function ShellTablet({ pathname, children }: { pathname: string; children
 
         <div className="shell-tablet-actions">
           {secondaryNav.map((item) => (
-            <Link key={item.href} href={item.href} className="quadra-pill-button">
+            <Link key={item.href} href={item.href} className="quadra-pill-button ghost">
               {item.shortLabel ?? item.label}
             </Link>
           ))}
@@ -29,24 +29,20 @@ export function ShellTablet({ pathname, children }: { pathname: string; children
         </div>
       </header>
 
-      <div className="shell-tablet-voice">
+      <div className="shell-tablet-voice redesign-tablet-voice">
         <VoiceControlBar />
       </div>
 
-      <nav className="shell-tablet-nav">
+      <nav className="shell-tablet-nav redesign-tablet-nav">
         {primaryNav.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`shell-tablet-nav-link ${isActive(pathname, item.href) ? 'is-active' : ''}`}
-          >
+          <Link key={item.href} href={item.href} className={`shell-tablet-nav-link ${isActive(pathname, item.href) ? 'is-active' : ''}`}>
             <NavIcon name={item.icon} className="shell-tablet-nav-icon" />
             <span>{item.label}</span>
           </Link>
         ))}
       </nav>
 
-      <main className="shell-tablet-main">{children}</main>
+      <main className="shell-tablet-main redesign-tablet-main">{children}</main>
     </div>
   )
 }
