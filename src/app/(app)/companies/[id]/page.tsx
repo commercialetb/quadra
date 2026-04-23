@@ -21,11 +21,38 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
 
   return (
     <DetailShell title={company.name} subtitle={company.legal_name} backHref="/companies" backLabel="Aziende">
-      <CompanyEditCard company={company} />
+      <section className="company-page-redesign-top">
+        <CompanyEditCard company={company} />
+      </section>
 
-      <div className="company-detail-grid-v21">
+      <section className="company-record-summary-grid">
+        <article className="panel-card company-record-summary-card emphasis">
+          <span>Status</span>
+          <strong>{company.status || '—'}</strong>
+          <small>{company.industry || 'Settore non indicato'}</small>
+        </article>
+        <article className="panel-card company-record-summary-card">
+          <span>Sito</span>
+          <strong>{company.website ? <a href={company.website} target="_blank" rel="noreferrer">{company.website}</a> : '—'}</strong>
+          <small>{company.email || 'Email non indicata'}</small>
+        </article>
+        <article className="panel-card company-record-summary-card">
+          <span>Telefono</span>
+          <strong>{company.phone || '—'}</strong>
+          <small>{[company.city, company.province].filter(Boolean).join(', ') || 'Località non indicata'}</small>
+        </article>
+        <article className="panel-card company-record-summary-card">
+          <span>Fonte</span>
+          <strong>{company.source || '—'}</strong>
+          <small>{company.address_line1 || 'Indirizzo non indicato'}</small>
+        </article>
+      </section>
+
+      <div className="company-detail-grid-v21 company-page-redesign-grid">
         <div className="stack-lg company-detail-main-col">
-          <InfoCard title="Panoramica azienda">
+          <CompanyAnalysisCard data={analysis} />
+
+          <InfoCard title="Dati chiave">
             <InfoRow label="Status" value={company.status} />
             <InfoRow label="Sito web" value={company.website ? <a href={company.website} target="_blank" rel="noreferrer">{company.website}</a> : '—'} />
             <InfoRow label="Email" value={company.email} />
@@ -34,13 +61,11 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
             <InfoRow label="Settore" value={company.industry} />
             <InfoRow label="Fonte" value={company.source} />
           </InfoCard>
-
-          <CompanyAnalysisCard data={analysis} />
         </div>
 
         <aside className="stack-lg company-detail-side-col">
           <EntityListCard
-            title="Contatti"
+            title="Contatto e riferimenti"
             empty="Nessun contatto collegato."
             ctaLabel="+ Aggiungi contatto"
             ctaHref="/contacts"
@@ -53,7 +78,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           />
 
           <EntityListCard
-            title="Opportunità"
+            title="Opportunità aperte"
             empty="Nessuna opportunità aperta."
             ctaLabel="+ Aggiungi opportunità"
             ctaHref="/opportunities"
@@ -67,7 +92,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
         </aside>
       </div>
 
-      <details className="company-detail-drawer-v21">
+      <details className="company-detail-drawer-v21 redesigned-details">
         <summary>Import e attività</summary>
         <div className="company-detail-drawer-body-v21">
           <div className="company-detail-secondary-grid-v21">
@@ -87,15 +112,11 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
         </div>
       </details>
 
-      <details className="company-detail-drawer-v21">
+      <details className="company-detail-drawer-v21 redesigned-details">
         <summary>Note e contenuti secondari</summary>
         <div className="company-detail-drawer-body-v21">
           <div className="company-detail-secondary-grid-v21 single-column">
-            <EntityListCard
-              title="Note recenti"
-              empty="Nessuna nota collegata."
-              items={notes.map((note) => ({ id: note.id, label: note.title || 'Nota', meta: note.body }))}
-            />
+            <EntityListCard title="Note recenti" empty="Nessuna nota collegata." items={notes.map((note) => ({ id: note.id, label: note.title || 'Nota', meta: note.body }))} />
           </div>
         </div>
       </details>

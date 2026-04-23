@@ -5901,3 +5901,434 @@ body.tablet-nav-open {
     border-radius: 24px 24px 0 0;
   }
 }
+
+/* v31 real redesign */
+:root {
+  --apple-bg: #f6f7fb;
+  --apple-surface: rgba(255,255,255,0.86);
+  --apple-surface-strong: #ffffff;
+  --apple-line: #e7e9f2;
+  --apple-text: #161b2d;
+  --apple-muted: #6d7388;
+  --apple-blue: #295dff;
+  --apple-blue-soft: #eef3ff;
+  --apple-shadow: 0 20px 48px rgba(20, 28, 45, 0.08);
+  --apple-radius: 24px;
+}
+
+body {
+  background: radial-gradient(circle at top left, #f3f0ff 0, transparent 24%), radial-gradient(circle at top right, #edf5ff 0, transparent 20%), var(--apple-bg);
+  color: var(--apple-text);
+}
+
+.page-wrap,
+.page-stack,
+.app-main,
+.shell-mobile-main,
+.shell-tablet-main {
+  color: var(--apple-text);
+}
+
+.panel-card,
+.crm-hero-card,
+.page-hero,
+.sheet-card,
+.overlay-shell .sheet-card,
+.entity-card,
+.company-record-summary-card,
+.apple-subpanel,
+.apple-rail-card,
+.company-next-action-card,
+.company-summary-card-redesign,
+.dashboard-redesign-block,
+.dashboard-hero-redesign,
+.analysis-hero-redesign,
+.analysis-top-grid-redesign > .panel-card,
+.analysis-main-grid-redesign > .panel-card,
+.analysis-details-redesign-grid > .panel-card,
+.subtle-panel {
+  background: var(--apple-surface);
+  border: 1px solid var(--apple-line);
+  box-shadow: var(--apple-shadow);
+  backdrop-filter: blur(18px);
+  border-radius: var(--apple-radius);
+}
+
+.redesign-sidebar {
+  background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(248,249,253,0.9));
+  border-right: 1px solid var(--apple-line);
+  box-shadow: inset -1px 0 0 rgba(255,255,255,0.55);
+}
+
+.redesign-brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.redesign-brand .sidebar-brand-mark {
+  background: linear-gradient(135deg, #7b6cff, #5f8fff);
+  box-shadow: 0 12px 24px rgba(104, 78, 255, 0.25);
+}
+.redesign-brand p { font-size: 1.125rem; font-weight: 700; margin: 0; }
+.redesign-brand span { color: var(--apple-muted); }
+
+.redesign-nav { gap: 6px; }
+.redesign-sidebar-link,
+.shell-tablet-nav-link,
+.mobile-nav-link,
+.quadra-pill-button,
+.primary-button,
+.secondary-button,
+.ghost-button,
+.back-link,
+.simple-row,
+.apple-list-row,
+.apple-best-row,
+.analysis-company-list-item,
+.export-choice-card,
+.shortcut-mini-item-clean,
+.entity-card,
+.entity-summary-pill,
+.field-control,
+select,
+textarea,
+input {
+  border-radius: 18px;
+}
+
+.redesign-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  color: #46506a;
+  border: 1px solid transparent;
+}
+.redesign-sidebar-link:hover,
+.redesign-sidebar-link.is-active {
+  background: var(--apple-blue-soft);
+  color: var(--apple-blue);
+  border-color: #dbe5ff;
+}
+.sidebar-nav-icon,
+.shell-tablet-nav-icon,
+.mobile-nav-icon { font-size: 1rem; opacity: .8; }
+
+.redesign-note {
+  margin-top: auto;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #ffffff, #f8f9fc);
+  border: 1px solid var(--apple-line);
+  box-shadow: var(--apple-shadow);
+}
+.redesign-note strong { color: var(--apple-text); }
+.redesign-note p,
+.dashboard-metric-note,
+.page-subtitle,
+.settings-copy,
+.company-analysis-lead-redesign { color: var(--apple-muted); }
+
+.redesign-main { background: transparent; }
+.redesign-topbar,
+.redesign-mobile-header,
+.redesign-tablet-header,
+.redesign-tablet-nav,
+.redesign-mobile-voice,
+.redesign-tablet-voice,
+.redesign-bottom-nav {
+  background: var(--apple-surface);
+  border: 1px solid var(--apple-line);
+  box-shadow: var(--apple-shadow);
+  backdrop-filter: blur(18px);
+}
+.redesign-topbar { border-radius: 28px; margin: 16px 20px 8px; padding: 18px 22px; }
+.redesign-copy .app-topbar-kicker,
+.shell-mobile-kicker,
+.shell-tablet-kicker,
+.page-eyebrow { text-transform: uppercase; letter-spacing: .14em; color: #8a91a8; font-weight: 700; font-size: .72rem; }
+.app-topbar-title,
+.page-title,
+.shell-mobile-title,
+.shell-tablet-title { letter-spacing: -0.03em; }
+.redesign-actions .quadra-pill-button,
+.shell-mobile-actions .quadra-pill-button,
+.shell-tablet-actions .quadra-pill-button { min-height: 44px; }
+.quadra-pill-button,
+.ghost-button,
+.secondary-button {
+  background: rgba(255,255,255,0.9);
+  border: 1px solid var(--apple-line);
+  color: var(--apple-text);
+}
+.quadra-pill-button.ghost,
+.ghost-button,
+.secondary-button { box-shadow: none; }
+.primary-button {
+  background: linear-gradient(180deg, #3d6dff, #295dff);
+  border: 0;
+  color: #fff;
+  box-shadow: 0 16px 28px rgba(41, 93, 255, 0.26);
+}
+
+.dashboard-redesign-page,
+.analysis-redesign-page,
+.redesign-detail-page { gap: 18px; }
+.dashboard-hero-redesign,
+.analysis-hero-redesign,
+.redesign-detail-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  padding: 28px;
+}
+.dashboard-redesign-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(320px, .9fr);
+  gap: 18px;
+}
+.dashboard-redesign-main,
+.dashboard-redesign-rail,
+.company-page-redesign-grid,
+.analysis-main-grid-redesign { display: grid; gap: 18px; }
+.dashboard-redesign-block { padding: 0; background: transparent; border: 0; box-shadow: none; backdrop-filter: none; }
+.dashboard-redesign-head,
+.dashboard-subcard-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 16px; }
+.dashboard-redesign-head.compact { margin-bottom: 12px; }
+.dashboard-redesign-head h2,
+.dashboard-redesign-head h3,
+.panel-head.compact h2 { margin: 0; font-size: 1.25rem; }
+.apple-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+.apple-kpi-grid.two-rows { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.apple-kpi-card {
+  padding: 20px;
+  background: rgba(255,255,255,0.82);
+  border: 1px solid var(--apple-line);
+  border-radius: 22px;
+}
+.apple-kpi-card span { display: block; color: #7e8598; font-size: .78rem; text-transform: uppercase; letter-spacing: .12em; margin-bottom: 8px; }
+.apple-kpi-card strong { display: block; font-size: 2rem; line-height: 1.05; margin-bottom: 8px; }
+.apple-kpi-card small { color: var(--apple-muted); }
+.apple-kpi-card.compact strong { font-size: 1.4rem; }
+.apple-dashboard-two-col,
+.apple-insight-grid,
+.company-decision-grid,
+.company-analysis-details-grid-redesign,
+.analysis-details-redesign-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.apple-subpanel,
+.apple-rail-card,
+.company-next-action-card,
+.subtle-panel { padding: 18px; }
+.apple-list-stack { display: grid; gap: 10px; }
+.apple-list-row,
+.apple-best-row,
+.apple-action-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  padding: 16px 18px;
+  background: rgba(255,255,255,.88);
+  border: 1px solid var(--apple-line);
+  color: inherit;
+  text-decoration: none;
+}
+.apple-list-row strong,
+.apple-best-row strong,
+.apple-action-row strong { display: block; font-size: .98rem; }
+.apple-list-row span,
+.apple-best-row span,
+.apple-action-row span { color: var(--apple-muted); }
+.static-row { cursor: default; }
+.apple-best-meta,
+.apple-action-side { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.apple-empty { padding: 24px; text-align: center; background: rgba(255,255,255,.72); border: 1px dashed #d9dfef; color: var(--apple-muted); border-radius: 18px; }
+
+.dashboard-pill-badge,
+.analysis-signal-pill,
+.tone-badge,
+.badge-soft {
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: #f3f5fb;
+  border: 1px solid #e3e9f6;
+  color: #54607b;
+  font-weight: 600;
+}
+.dashboard-pill-badge.warning,
+.dashboard-pill-badge.is-medium,
+.analysis-signal-pill.is-medium,
+.tone-badge.warning { background: #fff6eb; border-color: #f6dfb3; color: #b06e13; }
+.dashboard-pill-badge.danger,
+.dashboard-pill-badge.is-high,
+.analysis-signal-pill.is-high,
+.tone-badge.danger { background: #fff1ef; border-color: #ffcfc5; color: #c2553f; }
+.dashboard-pill-badge.is-base,
+.analysis-signal-pill.is-low { background: #f5f7fb; }
+
+.company-record-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+.company-record-summary-card { padding: 20px; }
+.company-record-summary-card span { display: block; color: #7e8598; margin-bottom: 8px; }
+.company-record-summary-card strong { display: block; font-size: 1.05rem; }
+.company-record-summary-card small { color: var(--apple-muted); }
+.company-record-summary-card.emphasis { background: linear-gradient(180deg, #ffffff, #f3f7ff); }
+.company-page-redesign-grid { grid-template-columns: minmax(0, 1.45fr) minmax(300px, .8fr); }
+.company-analysis-redesign { padding: 24px; }
+.company-analysis-lead-redesign { margin: 0 0 16px; font-size: 1.02rem; }
+.company-next-action-card {
+  background: linear-gradient(180deg, #fffaf4, #fff);
+  border-color: #f4e7cf;
+}
+.company-next-action-card span { display: block; color: #9e7a42; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .1em; font-size: .72rem; }
+.company-next-action-card strong { display: block; font-size: 1.25rem; margin-bottom: 8px; }
+.company-next-action-card p { margin: 0 0 12px; color: var(--apple-muted); }
+.company-summary-grid-redesign { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.company-summary-card-redesign { padding: 18px; }
+.company-summary-card-redesign span { display: block; color: #7e8598; margin-bottom: 8px; }
+.company-summary-card-redesign strong { display: block; font-size: 1.05rem; }
+.redesigned-details summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.82);
+  border: 1px solid var(--apple-line);
+  font-weight: 600;
+}
+.redesigned-details[open] summary { margin-bottom: 16px; }
+
+.crm-scene,
+.page-wrap { padding: 0; }
+.page-wrap > *:first-child { margin-top: 0; }
+.page-section-card,
+.settings-panel,
+.milestone-panel,
+.import-shell-card,
+.assistant-workspace,
+.voice-capture-workspace,
+.siri-workspace {
+  background: var(--apple-surface);
+  border: 1px solid var(--apple-line);
+  box-shadow: var(--apple-shadow);
+  border-radius: 28px;
+}
+.list-head,
+.toolbar-row,
+.entity-card-main,
+.entity-card-actions,
+.sheet-head,
+.sheet-actions { gap: 14px; }
+.entity-card {
+  padding: 18px;
+  border: 1px solid var(--apple-line);
+  background: rgba(255,255,255,.84);
+}
+.entity-card-main-link { gap: 16px; }
+.entity-card h3 { margin-bottom: 4px; font-size: 1.08rem; }
+.entity-inline-meta span { background: #f5f7fb; padding: 6px 10px; border-radius: 999px; border: 1px solid #e7e9f2; }
+.entity-summary-pill { background: rgba(255,255,255,.82); border: 1px solid var(--apple-line); box-shadow: none; }
+.segmented-control,
+.toolbar-row,
+.status-card-grid,
+.shortcut-mini-list-compact,
+.export-picker-grid { gap: 10px; }
+.segmented-control button,
+.export-choice-card,
+.shortcut-mini-item-clean,
+.status-card-soft,
+.export-summary-card,
+.field-control,
+.sheet-card,
+.overlay-backdrop + .sheet-card { border: 1px solid var(--apple-line); background: rgba(255,255,255,.9); }
+.field-control,
+select,
+textarea,
+input { min-height: 46px; }
+.field-area { min-height: 120px; }
+
+.analysis-company-table,
+.redesign-best-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
+.analysis-company-table th { color: #8891a7; font-size: .78rem; text-transform: uppercase; letter-spacing: .1em; text-align: left; padding: 0 14px 6px; }
+.analysis-company-table td { padding: 16px 14px; background: rgba(255,255,255,.82); border-top: 1px solid var(--apple-line); border-bottom: 1px solid var(--apple-line); }
+.analysis-company-table td:first-child { border-left: 1px solid var(--apple-line); border-top-left-radius: 16px; border-bottom-left-radius: 16px; }
+.analysis-company-table td:last-child { border-right: 1px solid var(--apple-line); border-top-right-radius: 16px; border-bottom-right-radius: 16px; }
+.analysis-company-table a { color: var(--apple-blue); font-weight: 600; text-decoration: none; }
+
+.overlay-shell { padding: 24px; }
+.overlay-backdrop { background: rgba(12, 18, 31, 0.22); backdrop-filter: blur(10px); }
+
+@media (max-width: 1200px) {
+  .dashboard-redesign-grid,
+  .company-page-redesign-grid,
+  .analysis-top-grid-redesign,
+  .analysis-main-grid-redesign,
+  .analysis-details-redesign-grid,
+  .apple-dashboard-two-col,
+  .apple-insight-grid,
+  .company-decision-grid,
+  .company-analysis-details-grid-redesign,
+  .company-record-summary-grid,
+  .apple-kpi-grid,
+  .apple-kpi-grid.two-rows {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-redesign-grid,
+  .company-page-redesign-grid,
+  .dashboard-redesign-main,
+  .dashboard-redesign-rail,
+  .analysis-top-grid-redesign,
+  .analysis-main-grid-redesign,
+  .analysis-details-redesign-grid,
+  .apple-dashboard-two-col,
+  .apple-insight-grid,
+  .company-decision-grid,
+  .company-analysis-details-grid-redesign,
+  .company-record-summary-grid,
+  .apple-kpi-grid,
+  .apple-kpi-grid.two-rows {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-hero-redesign,
+  .analysis-hero-redesign,
+  .redesign-detail-hero,
+  .redesign-topbar {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .redesign-mobile-header { padding: 16px; }
+  .redesign-mobile-main { padding-bottom: calc(110px + env(safe-area-inset-bottom)); }
+  .dashboard-hero-redesign,
+  .analysis-hero-redesign,
+  .redesign-detail-hero,
+  .panel-card,
+  .page-section-card,
+  .company-analysis-redesign,
+  .apple-subpanel,
+  .apple-rail-card,
+  .subtle-panel,
+  .company-next-action-card,
+  .company-summary-card-redesign,
+  .sheet-card { border-radius: 22px; }
+  .apple-list-row,
+  .apple-best-row,
+  .apple-action-row,
+  .entity-card,
+  .simple-row { padding: 14px; }
+  .primary-button,
+  .secondary-button,
+  .ghost-button,
+  .quadra-pill-button { min-height: 46px; }
+}
