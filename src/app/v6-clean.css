@@ -1,0 +1,146 @@
+/* Quadra v6 clean
+   Focus: remove top dead-space on iPad portrait and iPhone landscape/portrait.
+   This layer is intentionally narrow and only overrides shell spacing/orientation issues. */
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2,
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-main,
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .page-shell,
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .page-stack {
+  align-content: start !important;
+  align-items: start !important;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 > .tablet-drawer,
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 > .tablet-drawer-backdrop {
+  position: fixed !important;
+  inset: auto;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 > .tablet-drawer.is-open {
+  top: max(env(safe-area-inset-top), 10px) !important;
+  left: 12px !important;
+  bottom: 12px !important;
+  width: min(330px, calc(100vw - 56px)) !important;
+  height: auto !important;
+  padding: 18px !important;
+  overflow: auto !important;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 > .tablet-drawer-backdrop.is-open {
+  inset: 0 !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+/* iPad portrait and compact tablets */
+@media (min-width: 721px) and (max-width: 1100px) {
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 {
+    padding-top: 4px !important;
+    gap: 10px !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 > .quadra-ambient.quadra-ambient-a {
+    top: 18px !important;
+    left: 12px !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 > .quadra-ambient.quadra-ambient-b {
+    top: 26px !important;
+    right: 2% !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-main {
+    gap: 10px !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    align-self: start !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-topbar {
+    position: sticky !important;
+    top: max(env(safe-area-inset-top), 4px) !important;
+    margin-top: 0 !important;
+    align-self: start !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .page-shell,
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .page-stack {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1100px) and (orientation: portrait) {
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 {
+    padding-top: 2px !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-topbar {
+    top: max(env(safe-area-inset-top), 2px) !important;
+  }
+}
+
+/* Phones */
+@media (max-width: 720px) {
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 {
+    padding-top: 4px !important;
+    gap: 8px !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 > .quadra-ambient.quadra-ambient-a {
+    top: 10px !important;
+    left: 0 !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 > .quadra-ambient.quadra-ambient-b {
+    top: 12px !important;
+    right: -8% !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-main {
+    gap: 8px !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-topbar {
+    top: max(env(safe-area-inset-top), 2px) !important;
+    margin-top: 0 !important;
+    min-height: 58px !important;
+  }
+
+  .dashboard-phaseE2 .dashboard-mobile-voice {
+    margin-top: 0 !important;
+  }
+}
+
+/* iPhone landscape */
+@media (max-width: 932px) and (orientation: landscape) {
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 {
+    padding-top: 2px !important;
+    gap: 6px !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-main {
+    gap: 6px !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    padding-bottom: 88px !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-topbar {
+    top: max(env(safe-area-inset-top), 2px) !important;
+    min-height: 54px !important;
+    padding-block: 7px !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 > .quadra-ambient.quadra-ambient-a,
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 > .quadra-ambient.quadra-ambient-b {
+    top: 6px !important;
+  }
+}

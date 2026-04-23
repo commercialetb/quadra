@@ -1,0 +1,88 @@
+/* v19 clean-up layer: conservative polish only, no structural rewrites */
+
+:root {
+  --analysis-card-gap: clamp(14px, 1.6vw, 20px);
+}
+
+.analysis-actions-grid,
+.analysis-priority-grid,
+.dashboard-analysis-grid,
+.company-analysis-grid {
+  gap: var(--analysis-card-gap);
+}
+
+.analysis-score-strip,
+.company-analysis-score-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.analysis-score-chip,
+.company-analysis-score-chip {
+  min-width: 0;
+}
+
+.analysis-score-chip strong,
+.company-analysis-score-chip strong {
+  white-space: nowrap;
+}
+
+.analysis-action-card,
+.dashboard-analysis-card,
+.company-analysis-card {
+  border-radius: 24px;
+}
+
+.analysis-action-card .cluster-wrap,
+.dashboard-analysis-card .cluster-wrap,
+.company-analysis-card .cluster-wrap,
+.settings-panel .cluster-wrap {
+  gap: 10px;
+}
+
+.settings-columns {
+  align-items: start;
+}
+
+.settings-panel,
+.milestone-panel {
+  border-radius: 24px;
+}
+
+.milestone-board-grid {
+  gap: var(--analysis-card-gap);
+}
+
+.export-summary-card,
+.export-choice-card,
+.shortcut-mini-item-clean,
+.status-card-soft {
+  border-radius: 18px;
+}
+
+@media (max-width: 1080px) {
+  .analysis-score-strip,
+  .company-analysis-score-strip,
+  .dashboard-analysis-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 820px) {
+  .settings-columns,
+  .milestone-board-grid,
+  .analysis-actions-grid,
+  .analysis-priority-grid,
+  .company-analysis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-action-card,
+  .dashboard-analysis-card,
+  .company-analysis-card,
+  .settings-panel,
+  .milestone-panel {
+    border-radius: 20px;
+  }
+}

@@ -1,0 +1,365 @@
+/* Quadra v2 clean responsive pass
+   Final override layer for desktop, iPad and iPhone portrait/landscape. */
+
+:root {
+  --v2-shell-gap: 16px;
+  --v2-card-radius: 28px;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 {
+  min-height: 100dvh;
+  align-content: start !important;
+  align-items: start !important;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-main,
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .page-shell,
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .page-stack {
+  min-width: 0;
+  align-content: start !important;
+}
+
+.app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-topbar {
+  margin-top: 0 !important;
+}
+
+/* Topbar */
+.app-topbar-phase2 {
+  grid-template-columns: minmax(0, auto) minmax(220px, 1fr) auto;
+  align-items: center;
+}
+
+.app-topbar-leading {
+  min-width: 0;
+}
+
+.app-topbar-title {
+  overflow-wrap: anywhere;
+}
+
+.app-topbar-actions,
+.app-topbar-actions-mobile,
+.app-topbar-actions-tablet,
+.app-topbar-actions-desktop {
+  align-items: center;
+}
+
+/* Dashboard */
+.dashboard-phaseE2 .dashboard-e2-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(320px, 0.74fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.dashboard-phaseE2 .dashboard-widget,
+.dashboard-phaseE2 .dashboard-e2-subcard,
+.detail-card,
+.entity-list-card,
+.info-card-v2,
+.timeline-card {
+  min-width: 0;
+}
+
+.dashboard-phaseE2 .dashboard-e2-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.dashboard-phaseE2 .dashboard-metric-card {
+  min-width: 0;
+  min-height: 0;
+}
+
+.dashboard-phaseE2 .dashboard-metric-label,
+.dashboard-phaseE2 .dashboard-subcard-head span {
+  letter-spacing: .16em;
+}
+
+.dashboard-phaseE2 .dashboard-metric-value {
+  font-size: clamp(2.1rem, 3.6vw, 3.2rem);
+  line-height: .94;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-phaseE2 .dashboard-e2-priority-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+}
+
+.dashboard-phaseE2 .dashboard-widget-stack.compact-stack {
+  gap: 10px;
+}
+
+.dashboard-phaseE2 .dashboard-entity-row.compact,
+.dashboard-phaseE2 .dashboard-entity-row.compact-row {
+  min-width: 0;
+}
+
+.dashboard-phaseE2 .dashboard-entity-row.compact {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.dashboard-phaseE2 .dashboard-entity-row.compact .dashboard-entity-copy,
+.dashboard-phaseE2 .dashboard-entity-row.compact-row .dashboard-entity-copy {
+  min-width: 0;
+}
+
+.dashboard-phaseE2 .dashboard-entity-row.compact strong,
+.dashboard-phaseE2 .dashboard-entity-row.compact-row strong,
+.dashboard-phaseE2 .dashboard-entity-row.compact span,
+.dashboard-phaseE2 .dashboard-entity-row.compact-row span {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.dashboard-phaseE2 .dashboard-pill-badge {
+  justify-self: end;
+  align-self: center;
+  white-space: nowrap;
+  min-width: 56px;
+}
+
+/* Detail pages */
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
+  gap: 16px;
+}
+
+.detail-back-row,
+.page-stack.detail-page,
+.detail-hero-card {
+  min-width: 0;
+}
+
+.info-row-v2,
+.info-row {
+  min-width: 0;
+}
+
+.info-row-v2 strong,
+.info-row strong {
+  overflow-wrap: anywhere;
+}
+
+/* iPad portrait */
+@media (min-width: 768px) and (max-width: 1100px) and (orientation: portrait) {
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 {
+    padding-top: max(env(safe-area-inset-top), 8px) !important;
+    gap: 12px !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-main {
+    padding-top: 0 !important;
+    padding-bottom: 24px !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-topbar {
+    top: max(env(safe-area-inset-top), 8px) !important;
+    min-height: 76px;
+  }
+
+  .app-topbar-phase2 {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 10px;
+  }
+
+  .topbar-voice-slot-desktop {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+
+  .dashboard-phaseE2 .dashboard-e2-layout,
+  .dashboard-phaseE2 .dashboard-e2-priority-grid,
+  .dashboard-phaseE2 .dashboard-actions-grid--three,
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tablet landscape / compact laptop */
+@media (min-width: 721px) and (max-width: 1180px) {
+  .dashboard-phaseE2 .dashboard-e2-layout {
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, .8fr);
+  }
+}
+
+/* Phones */
+@media (max-width: 720px) {
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 {
+    padding: max(env(safe-area-inset-top), 6px) 10px calc(92px + env(safe-area-inset-bottom)) !important;
+    gap: 10px !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-main {
+    gap: 10px;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-topbar {
+    top: max(env(safe-area-inset-top), 6px) !important;
+    min-height: 64px;
+    padding: 10px 12px;
+    border-radius: 22px;
+  }
+
+  .app-topbar-phase2 {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  .app-topbar-leading {
+    gap: 10px;
+  }
+
+  .app-topbar-menu {
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+  }
+
+  .app-topbar-title {
+    font-size: 0.98rem;
+    line-height: 1.1;
+  }
+
+  .app-topbar-actions-mobile {
+    display: inline-flex !important;
+    gap: 8px;
+  }
+
+  .app-topbar-actions-mobile .ghost-button,
+  .app-topbar-actions-mobile form,
+  .app-topbar-actions-mobile button {
+    min-height: 44px;
+    padding-inline: 12px;
+    border-radius: 16px;
+  }
+
+  .dashboard-phaseE2 .dashboard-mobile-voice {
+    display: block;
+  }
+
+  .dashboard-phaseE2 .dashboard-mobile-voice .voice-control-bar {
+    max-width: none;
+  }
+
+  .dashboard-phaseE2 .dashboard-e2-layout,
+  .dashboard-phaseE2 .dashboard-e2-priority-grid,
+  .dashboard-phaseE2 .dashboard-actions-grid--three,
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-phaseE2 .dashboard-e2-kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-phaseE2 .dashboard-widget-head,
+  .dashboard-phaseE2 .dashboard-subcard-head {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .dashboard-phaseE2 .dashboard-widget-head .secondary-button,
+  .dashboard-phaseE2 .dashboard-widget-head .primary-button,
+  .dashboard-phaseE2 .dashboard-widget-head .ghost-button {
+    width: 100%;
+  }
+
+  .dashboard-phaseE2 .dashboard-widget,
+  .detail-hero-card,
+  .detail-card,
+  .entity-list-card,
+  .info-card-v2,
+  .timeline-card {
+    padding: 16px;
+    border-radius: 24px;
+  }
+
+  .mobile-nav {
+    left: 10px;
+    right: 10px;
+    width: auto !important;
+    bottom: calc(env(safe-area-inset-bottom) + 8px) !important;
+    padding: 7px 8px !important;
+    gap: 4px !important;
+    min-height: 70px !important;
+    border-radius: 24px !important;
+  }
+
+  .mobile-nav-link {
+    min-height: 54px !important;
+    border-radius: 18px !important;
+    padding: 6px 2px !important;
+  }
+
+  .mobile-nav-label {
+    font-size: .66rem !important;
+  }
+}
+
+/* iPhone landscape */
+@media (max-width: 932px) and (orientation: landscape) {
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 {
+    padding-top: max(env(safe-area-inset-top), 4px) !important;
+    gap: 8px !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 > .quadra-ambient {
+    opacity: .55;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-main {
+    padding-top: 0 !important;
+    padding-bottom: 96px !important;
+  }
+
+  .app-shell.quadra-shell-refresh.quadra-shell-phase2 .app-topbar {
+    top: max(env(safe-area-inset-top), 4px) !important;
+    min-height: 56px;
+    padding: 8px 10px;
+  }
+
+  .app-topbar-phase2 {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .app-topbar-actions-mobile .ghost-button,
+  .app-topbar-actions-mobile form,
+  .app-topbar-actions-mobile button {
+    min-height: 40px;
+    padding-inline: 10px;
+  }
+
+  .dashboard-phaseE2 .dashboard-mobile-voice {
+    display: none;
+  }
+
+  .dashboard-phaseE2 .dashboard-e2-kpis {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .dashboard-phaseE2 .dashboard-metric-value {
+    font-size: clamp(1.7rem, 4vw, 2.2rem);
+  }
+
+  .dashboard-phaseE2 .dashboard-widget,
+  .dashboard-phaseE2 .dashboard-e2-subcard {
+    padding: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-phaseE2 .dashboard-metric-value {
+    font-size: clamp(1.7rem, 10vw, 2.2rem);
+  }
+
+  .page-title {
+    font-size: clamp(1.8rem, 8vw, 2.3rem);
+  }
+}
