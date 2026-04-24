@@ -141,7 +141,7 @@ export function DashboardShell({ data }: { data: DashboardData }) {
           <article className="dashboard-command-item is-primary">
             <span>Cosa fare</span>
             <strong>{topAction?.title || 'Rivedi agenda e opportunità aperte'}</strong>
-            <p>{topAction?.detail || 'Non c'è un'urgenza dominante: presidia follow-up di oggi e deal da sbloccare.'}</p>
+            <p>{topAction?.detail || "Non c'è un'urgenza dominante: presidia follow-up di oggi e deal da sbloccare."}</p>
           </article>
           <article className="dashboard-command-item">
             <span>Con chi</span>
