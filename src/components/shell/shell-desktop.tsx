@@ -18,11 +18,11 @@ export function ShellDesktop({ children }: { children: React.ReactNode }) {
           <div className="sidebar-brand-mark">Q</div>
           <div>
             <p>Quadra</p>
-            <span>System of action</span>
+            <span>Focus first</span>
           </div>
         </div>
 
-        <div className="sidebar-section-label">Core</div>
+        <div className="sidebar-section-label">Vai</div>
         <nav className="sidebar-nav redesign-nav">
           {primaryNav.map((item) => {
             const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
@@ -48,15 +48,9 @@ export function ShellDesktop({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        <div className="quadra-sidebar-note redesign-note redesign-note-v4">
-          <div className="quadra-sidebar-note-label">Le 5 cose</div>
-          <ul className="sidebar-principles-list">
-            <li>Partire in fretta</li>
-            <li>Farsi usare ogni giorno</li>
-            <li>Essere più semplice</li>
-            <li>Dare insight azionabili</li>
-            <li>Essere piacevole da usare</li>
-          </ul>
+        <div className="quadra-sidebar-note redesign-note redesign-note-v4 apple-quiet-note">
+          <div className="quadra-sidebar-note-label">Principio</div>
+          <p>Prima decidi. Poi approfondisci.</p>
         </div>
       </aside>
 
@@ -64,12 +58,12 @@ export function ShellDesktop({ children }: { children: React.ReactNode }) {
         <header className="app-topbar app-topbar-phase2 redesign-topbar redesign-topbar-v4">
           <div className="app-topbar-leading redesign-leading">
             <div className="app-topbar-copy redesign-copy">
-              <div className="app-topbar-kicker">Quadra workspace</div>
+              <div className="app-topbar-kicker">Quadra</div>
               <h1 className="app-topbar-title">{currentItem.label}</h1>
               <p className="app-topbar-subtitle">{getPageDescription(pathname)}</p>
             </div>
             <div className="desktop-now-card">
-              <span>Ora conta questo</span>
+              <span>Adesso</span>
               <strong>{currentItem.label}</strong>
               <p>{currentItem.description}</p>
             </div>

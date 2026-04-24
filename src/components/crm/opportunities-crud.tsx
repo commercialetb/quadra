@@ -51,7 +51,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
 
   return (
     <>
-      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-opportunities crm-v3-panel">
+      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-opportunities crm-v3-panel quiet-card">
         <div className="list-head">
           <div>
             <p className="page-eyebrow">Opportunità</p>
@@ -71,17 +71,17 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
         </div>
 
         <section className="crm-focus-strip" aria-label="Lettura rapida opportunità">
-          <article className="crm-focus-card is-primary">
+          <article className="crm-focus-card is-primary quiet-card">
             <span>Cosa muovere</span>
             <strong>{nextDeal?.title || 'Nessun deal prioritario filtrato'}</strong>
             <p>{nextDeal?.next_action || 'Apri una opportunità e assegna un prossimo passo concreto.'}</p>
           </article>
-          <article className="crm-focus-card">
+          <article className="crm-focus-card quiet-card">
             <span>Fase prevalente</span>
             <strong>{filter === 'all' ? 'Pipeline completa' : stageLabel(filter)}</strong>
             <p>{openCount > proposalCount ? 'Prevale lavoro di avanzamento.' : 'Ci sono diversi deal vicini alla proposta.'}</p>
           </article>
-          <article className="crm-focus-card">
+          <article className="crm-focus-card quiet-card">
             <span>Perché agire</span>
             <strong>{pipelineValue}</strong>
             <p>Valore complessivo delle opportunità nel set corrente.</p>
@@ -101,8 +101,8 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
 
         <div className="cards-stack cards-stack-v3">
           {items.map((item) => (
-            <article key={item.id} className="entity-card opportunity-card entity-card-opportunity entity-card-v3">
-              <Link href={`/opportunities/${item.id}`} className="entity-card-copy stretch entity-card-main-link">
+            <article key={item.id} className="entity-card opportunity-card entity-card-opportunity entity-card-v3 quiet-card">
+              <Link href={`/opportunities/${item.id}`} className="entity-card-copy stretch entity-card-main-link quiet-card">
                 <div className="entity-card-top">
                   <div>
                     <h3>{item.title}</h3>

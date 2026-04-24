@@ -50,7 +50,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
 
   return (
     <>
-      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-contacts crm-v4-panel">
+      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-contacts crm-v4-panel quiet-card">
         <div className="list-head">
           <div>
             <p className="page-eyebrow">Contatti</p>
@@ -70,17 +70,17 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
         </div>
 
         <section className="crm-focus-strip" aria-label="Lettura rapida contatti">
-          <article className="crm-focus-card is-primary">
+          <article className="crm-focus-card is-primary quiet-card">
             <span>Chi sentire</span>
             <strong>{topContact ? `${topContact.first_name} ${topContact.last_name}` : 'Nessun contatto pronto'}</strong>
             <p>{topContact ? `${preferredChannel(topContact)} · ${topContact.companies?.name || 'Azienda non assegnata'}` : 'Aggiungi almeno un recapito utile per rendere la rubrica operativa.'}</p>
           </article>
-          <article className="crm-focus-card">
+          <article className="crm-focus-card quiet-card">
             <span>Canale prevalente</span>
             <strong>{whatsappCount >= emailCount ? 'WhatsApp' : 'Email'}</strong>
             <p>{whatsappCount >= emailCount ? 'Ideale per riattivazioni rapide e uso quotidiano.' : 'Buono per recap, proposte e contatti più formali.'}</p>
           </article>
-          <article className="crm-focus-card">
+          <article className="crm-focus-card quiet-card">
             <span>Perché conta</span>
             <strong>{linkedCount === items.length && items.length ? 'Relazioni ordinate' : 'Da collegare meglio'}</strong>
             <p>{linkedCount === items.length && items.length ? 'Quasi tutti i contatti hanno già un contesto aziendale chiaro.' : 'Collegare i contatti alle aziende rende la scheda più leggibile e azionabile.'}</p>
@@ -104,8 +104,8 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
 
         <div className="cards-stack cards-stack-v3">
           {items.map((contact) => (
-            <article key={contact.id} className="entity-card entity-card-contact entity-card-v3">
-              <Link href={`/contacts/${contact.id}`} className="entity-card-main entity-card-main-link">
+            <article key={contact.id} className="entity-card entity-card-contact entity-card-v3 quiet-card">
+              <Link href={`/contacts/${contact.id}`} className="entity-card-main entity-card-main-link quiet-card">
                 <ContactAvatar firstName={contact.first_name} lastName={contact.last_name} />
                 <div className="entity-card-copy stretch">
                   <div className="entity-card-top compact-gap">

@@ -55,7 +55,7 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
 
   return (
     <>
-      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-companies crm-v3-panel">
+      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-companies crm-v3-panel quiet-card">
         <div className="list-head">
           <div>
             <p className="page-eyebrow">Aziende</p>
@@ -75,17 +75,17 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
         </div>
 
         <section className="crm-focus-strip" aria-label="Lettura rapida aziende">
-          <article className="crm-focus-card is-primary">
+          <article className="crm-focus-card is-primary quiet-card">
             <span>Chi aprire</span>
             <strong>{items[0]?.name || 'Nessuna azienda filtrata'}</strong>
             <p>{items[0] ? `${labelize(items[0].status)} · ${(items[0].city || 'località non indicata')}` : 'Cambia ricerca o filtri per trovare un account da presidiare.'}</p>
           </article>
-          <article className="crm-focus-card">
+          <article className="crm-focus-card quiet-card">
             <span>Cosa stai guardando</span>
             <strong>{filter === 'all' ? 'Tutti gli stati' : labelize(filter)}</strong>
             <p>{industryFilter === 'all' ? 'Nessun settore filtrato' : industryFilter}</p>
           </article>
-          <article className="crm-focus-card">
+          <article className="crm-focus-card quiet-card">
             <span>Perché conta</span>
             <strong>{clientCount > prospectCount ? 'Presidio clienti' : 'Spinta prospect'}</strong>
             <p>{clientCount > prospectCount ? 'In questo set prevalgono aziende già calde o attive.' : 'Qui c’è più lavoro commerciale da attivare.'}</p>
@@ -111,8 +111,8 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
 
         <div className="cards-stack cards-stack-v3">
           {items.map((company) => (
-            <article key={company.id} className="entity-card entity-card-v3 company-card-v3">
-              <Link href={`/companies/${company.id}`} className="entity-card-main entity-card-main-link">
+            <article key={company.id} className="entity-card entity-card-v3 company-card-v3 quiet-card">
+              <Link href={`/companies/${company.id}`} className="entity-card-main entity-card-main-link quiet-card">
                 <CompanyAvatar name={company.name} website={company.website} />
                 <div className="entity-card-copy stretch">
                   <div className="entity-card-top">

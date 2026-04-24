@@ -78,7 +78,7 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
 
   return (
     <>
-      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-followups crm-v4-panel">
+      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-followups crm-v4-panel quiet-card">
         <div className="list-head">
           <div>
             <p className="page-eyebrow">Follow-up</p>
@@ -98,17 +98,17 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
         </div>
 
         <section className="crm-focus-strip" aria-label="Lettura rapida follow-up">
-          <article className="crm-focus-card is-primary">
+          <article className="crm-focus-card is-primary quiet-card">
             <span>Cosa fare adesso</span>
             <strong>{nextItem?.title || 'Nessun follow-up aperto'}</strong>
             <p>{nextItem ? `Scade ${formatDateTime(nextItem.due_at)} · ${followupStatusLabel(nextItem.status)}` : 'La tua agenda è pulita nel filtro corrente.'}</p>
           </article>
-          <article className="crm-focus-card">
+          <article className="crm-focus-card quiet-card">
             <span>Cosa rischia di bloccarti</span>
             <strong>{urgentCount > 0 ? `${urgentCount} urgenti` : 'Nessuna urgenza alta'}</strong>
             <p>{urgentCount > 0 ? 'Chiudi prima questi follow-up per evitare attrito operativo.' : 'Puoi lavorare per priorità senza rincorrere emergenze.'}</p>
           </article>
-          <article className="crm-focus-card">
+          <article className="crm-focus-card quiet-card">
             <span>Perché conta</span>
             <strong>{progressCount > overdueCount ? 'Pipeline in moto' : 'Serve pulizia agenda'}</strong>
             <p>{progressCount > overdueCount ? 'Hai più attività in avanzamento che attività fuori tempo.' : 'Vale la pena chiudere o ripianificare ciò che è rimasto indietro.'}</p>
@@ -134,8 +134,8 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
 
         <div className="cards-stack cards-stack-v3">
           {items.map((item) => (
-            <article key={item.id} className="entity-card entity-card-followup entity-card-v3">
-              <div className="entity-card-copy stretch">
+            <article key={item.id} className="entity-card entity-card-followup entity-card-v3 quiet-card">
+              <div className="entity-card-copy stretch quiet-card">
                 <div className="entity-card-top">
                   <div>
                     <h3>{item.title}</h3>

@@ -14,7 +14,7 @@ export function ShellTablet({ pathname, children }: { pathname: string; children
     <div className="shell-tablet shell-redesign-tablet shell-v4-tablet">
       <header className="shell-tablet-header redesign-tablet-header redesign-tablet-header-v4">
         <div className="shell-tablet-copy">
-          <div className="shell-tablet-kicker">Quadra</div>
+          <div className="shell-tablet-kicker">Vai</div>
           <h1 className="shell-tablet-title">{title}</h1>
           <p className="shell-tablet-subtitle">{subtitle}</p>
         </div>
@@ -27,10 +27,6 @@ export function ShellTablet({ pathname, children }: { pathname: string; children
       </header>
 
       <div className="shell-tablet-voice redesign-tablet-voice redesign-tablet-voice-v4">
-        <div className="tablet-focus-chip">
-          <span>Focus</span>
-          <strong>{title}</strong>
-        </div>
         <VoiceControlBar />
       </div>
 
