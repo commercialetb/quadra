@@ -35,7 +35,7 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
         </div>
         <div className="company-decision-board-grid detail-decision-grid">
           <article className="company-decision-focus-card">
-            <span>Con chi</span>
+            <span>Referente</span>
             <strong>{contact.full_name}</strong>
             <p>{contact.role || 'Ruolo non indicato'}</p>
           </article>

@@ -8,9 +8,9 @@
   --text: #0f172a;
   --muted: #6b7280;
   --soft: #8f9bb3;
-  --primary: #6b4eff;
-  --primary-2: #8d5cff;
-  --primary-soft: #efe9ff;
+  --primary: #2563eb;
+  --primary-2: #4f7cff;
+  --primary-soft: #eaf2ff;
   --accent: #0ea5a4;
   --success: #18a957;
   --warning: #d97706;
@@ -30,9 +30,7 @@ html, body { margin: 0; padding: 0; min-height: 100%; }
 body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: var(--text);
-  background:
-    radial-gradient(circle at top left, rgba(255,255,255,.9), transparent 28%),
-    linear-gradient(180deg, #fafbff 0%, var(--bg) 100%);
+  background: linear-gradient(180deg, #f8fafc 0%, #f3f6fb 100%);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
@@ -7038,5 +7036,587 @@ input { min-height: 46px; }
 
   .redesign-tablet-voice-v4 {
     grid-template-columns: 1fr;
+  }
+}
+
+/* V6 reductive dashboard */
+.dashboard-v6-page {
+  gap: 18px;
+}
+
+.dashboard-hero-v6 {
+  align-items: end;
+}
+
+.dashboard-hero-v6 .page-title {
+  letter-spacing: -0.05em;
+}
+
+.dashboard-v6-focus-card {
+  display: grid;
+  gap: 18px;
+}
+
+.dashboard-v6-focus-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
+  gap: 14px;
+}
+
+.dashboard-v6-primary-action {
+  display: grid;
+  gap: 12px;
+  padding: 22px;
+  border-radius: 28px;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(246,249,255,0.98) 100%);
+  box-shadow: 0 18px 36px rgba(129, 138, 170, 0.12);
+}
+
+.dashboard-v6-primary-action > span,
+.dashboard-v6-side-line > small {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7d879d;
+}
+
+.dashboard-v6-primary-action > strong {
+  font-size: clamp(1.3rem, 2vw, 1.8rem);
+  line-height: 1.08;
+  letter-spacing: -0.05em;
+  color: #162033;
+}
+
+.dashboard-v6-primary-action > p {
+  margin: 0;
+  max-width: 58ch;
+  color: #667287;
+  line-height: 1.55;
+}
+
+.dashboard-v6-inline-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.dashboard-v6-inline-meta > div,
+.dashboard-v6-side-line {
+  display: grid;
+  gap: 4px;
+}
+
+.dashboard-v6-inline-meta small {
+  color: #8591a7;
+  font-size: 0.77rem;
+  font-weight: 700;
+}
+
+.dashboard-v6-inline-meta strong,
+.dashboard-v6-side-line strong {
+  color: #1f2940;
+  font-size: 0.98rem;
+  line-height: 1.35;
+}
+
+.dashboard-v6-side-note {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 24px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  background: rgba(255,255,255,0.78);
+}
+
+.apple-kpi-grid-v6 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.apple-kpi-card-v6 {
+  min-height: 132px;
+}
+
+.dashboard-v6-priority-block,
+.dashboard-v6-best-block {
+  margin: 0;
+}
+
+.apple-dashboard-two-col-v6 {
+  align-items: start;
+}
+
+.apple-best-list-v6 {
+  gap: 10px;
+}
+
+.dashboard-v6-best-block .apple-best-row {
+  min-height: 82px;
+}
+
+.dashboard-secondary-details > summary {
+  font-weight: 800;
+}
+
+@media (max-width: 1180px) {
+  .dashboard-v6-focus-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 820px) {
+  .dashboard-v6-primary-action {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .dashboard-v6-inline-meta,
+  .apple-kpi-grid-v6 {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-v6-side-note {
+    border-radius: 20px;
+  }
+}
+
+.company-v7-hero,
+.opportunity-v7-hero {
+  gap: 18px;
+}
+
+.company-v7-focus-grid,
+.opportunity-v7-focus-grid {
+  align-items: stretch;
+}
+
+.company-v7-focus-card,
+.opportunity-v7-focus-card {
+  min-height: 100%;
+}
+
+.company-v7-metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.company-v7-scoreboard,
+.opportunity-v7-scoreboard {
+  margin-top: 18px;
+}
+
+.company-v7-essentials-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.company-v7-grid,
+.opportunity-v7-grid {
+  margin-top: 18px;
+}
+
+@media (max-width: 1100px) {
+  .company-v7-metrics,
+  .company-v7-essentials-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .company-v7-metrics,
+  .company-v7-essentials-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.dashboard-v8-page {
+  gap: 18px;
+}
+
+.dashboard-v8-decision-stage {
+  gap: 22px;
+  padding: 28px;
+}
+
+.dashboard-v8-stage-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.dashboard-v8-stage-actions {
+  align-self: center;
+}
+
+.dashboard-v8-decision-stage .dashboard-redesign-head {
+  margin-bottom: 0;
+}
+
+.dashboard-v8-side-note {
+  grid-template-columns: 1fr;
+}
+
+.apple-best-list-v8 {
+  max-width: 760px;
+}
+
+.apple-best-row-v8 {
+  min-height: 92px;
+}
+
+.company-v8-hero,
+.opportunity-v8-hero,
+.company-v8-scoreboard,
+.opportunity-v8-scoreboard {
+  max-width: 1100px;
+}
+
+.company-v8-grid,
+.opportunity-v8-grid {
+  align-items: start;
+}
+
+.company-v8-grid > .stack-lg:first-child .detail-collapse-card[open],
+.opportunity-v8-grid > .stack-lg:first-child .detail-collapse-card[open] {
+  padding-bottom: 20px;
+}
+
+@media (max-width: 900px) {
+  .dashboard-v8-decision-stage {
+    padding: 22px;
+  }
+
+  .dashboard-v8-stage-head {
+    flex-direction: column;
+  }
+}
+
+
+/* V9 — quieter UI, fewer competing patterns */
+.quiet-page {
+  gap: 18px;
+}
+
+.quiet-card {
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+}
+
+.simplified-list .card,
+.simplified-list .quiet-card {
+  border-radius: 18px;
+}
+
+.crm-hero,
+.crm-toolbar,
+.crm-section-header,
+.page-stack .page-header {
+  margin-bottom: 12px;
+}
+
+.crm-hero h1,
+.page-header h1 {
+  letter-spacing: -0.03em;
+}
+
+.crm-hero p,
+.page-header p,
+.crm-section-header p {
+  max-width: 56ch;
+  color: rgba(15, 23, 42, 0.66);
+}
+
+.crud-grid,
+.crm-grid,
+.crm-list,
+.followups-list,
+.opportunities-list,
+.contacts-list,
+.companies-list {
+  gap: 14px;
+}
+
+details {
+  border-radius: 18px;
+  background: rgba(255,255,255,0.66);
+}
+
+summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+
+/* V10 — final structural polish */
+.apple-quiet-note p {
+  margin: 0;
+  color: rgba(15, 23, 42, 0.66);
+  line-height: 1.45;
+}
+
+.sidebar-principles-list {
+  display: none;
+}
+
+.app-topbar-kicker,
+.shell-mobile-kicker,
+.shell-tablet-kicker,
+.quadra-sidebar-note-label {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+
+.app-topbar-title,
+.shell-mobile-title,
+.shell-tablet-title,
+.page-header h1,
+.crm-hero h1 {
+  letter-spacing: -0.04em;
+}
+
+.app-topbar-subtitle,
+.shell-mobile-subtitle,
+.shell-tablet-subtitle,
+.page-header p,
+.crm-hero p {
+  color: rgba(15, 23, 42, 0.64);
+  max-width: 48ch;
+}
+
+.desktop-now-card,
+.mobile-quick-strip,
+.tablet-secondary-links,
+.quadra-sidebar-note {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+  backdrop-filter: blur(10px);
+}
+
+.mobile-quick-strip,
+.tablet-secondary-links {
+  gap: 8px;
+}
+
+.mobile-quick-chip,
+.tablet-secondary-link,
+.shell-tablet-nav-link,
+.sidebar-link {
+  border-radius: 16px;
+}
+
+.apple-kpi-card,
+.apple-kpi-card-v6,
+.quiet-card,
+.dashboard-widget,
+.card {
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.035);
+}
+
+.dashboard-v2-page .dashboard-primary-grid,
+.dashboard-redesign-page .dashboard-primary-grid {
+  gap: 16px;
+}
+
+.dashboard-v2-page .dashboard-secondary-grid,
+.dashboard-redesign-page .dashboard-secondary-grid {
+  gap: 14px;
+}
+
+@media (max-width: 768px) {
+  .mobile-quick-strip {
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+}
+
+
+/* V11 — radical cleanup */
+:root {
+  --quadra-radius-card: 20px;
+  --quadra-radius-soft: 16px;
+  --quadra-border-soft: rgba(15, 23, 42, 0.08);
+  --quadra-shadow-soft: 0 8px 24px rgba(15, 23, 42, 0.035);
+  --quadra-shadow-quiet: 0 12px 34px rgba(15, 23, 42, 0.045);
+  --quadra-text-soft: rgba(15, 23, 42, 0.64);
+}
+
+.card,
+.quiet-card,
+.dashboard-widget,
+.apple-kpi-card,
+.apple-kpi-card-v6,
+.desktop-now-card,
+.mobile-quick-strip,
+.tablet-secondary-links,
+.quadra-sidebar-note,
+details {
+  border-radius: var(--quadra-radius-card);
+  border: 1px solid var(--quadra-border-soft);
+  box-shadow: var(--quadra-shadow-soft);
+}
+
+.page-stack,
+.dashboard-primary-grid,
+.dashboard-secondary-grid,
+.crm-grid,
+.crm-list,
+.crud-grid,
+.detail-grid {
+  gap: 14px;
+}
+
+.page-header,
+.crm-hero,
+.detail-shell-hero,
+.dashboard-hero {
+  gap: 10px;
+}
+
+.page-header h1,
+.crm-hero h1,
+.dashboard-hero h1,
+.detail-shell-hero h1 {
+  letter-spacing: -0.045em;
+  line-height: 0.96;
+}
+
+.page-header p,
+.crm-hero p,
+.dashboard-hero p,
+.detail-shell-hero p,
+.app-topbar-subtitle,
+.shell-mobile-subtitle,
+.shell-tablet-subtitle {
+  color: var(--quadra-text-soft);
+  max-width: 44ch;
+}
+
+.card > * + *,
+.quiet-card > * + *,
+.dashboard-widget > * + *,
+details > * + * {
+  margin-top: 10px;
+}
+
+summary {
+  padding: 2px 0;
+  font-weight: 600;
+}
+
+.sidebar-link,
+.shell-tablet-nav-link,
+.mobile-quick-chip,
+.tablet-secondary-link {
+  min-height: 40px;
+}
+
+.quadra-sidebar-note,
+.desktop-now-card {
+  box-shadow: var(--quadra-shadow-quiet);
+}
+
+.sidebar-principles-list,
+.tablet-focus-chip {
+  display: none !important;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-primary-grid {
+    gap: 18px;
+  }
+}
+
+
+/* V12 — final calm pass */
+.sidebar-brand-mark,
+.mobile-brand-mark,
+.tablet-brand-mark {
+  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+  color: #0f172a;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+}
+
+.sidebar-section-label,
+.app-topbar-kicker,
+.shell-mobile-kicker,
+.shell-tablet-kicker,
+.quadra-sidebar-note-label {
+  color: rgba(15, 23, 42, 0.52);
+}
+
+.sidebar-link,
+.shell-tablet-nav-link,
+.mobile-bottom-link,
+.mobile-quick-chip,
+.tablet-secondary-link {
+  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.sidebar-link:hover,
+.shell-tablet-nav-link:hover,
+.mobile-quick-chip:hover,
+.tablet-secondary-link:hover {
+  transform: translateY(-1px);
+}
+
+.sidebar-link.is-active,
+.shell-tablet-nav-link.is-active,
+.mobile-bottom-link.is-active {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+}
+
+.page-header,
+.crm-hero,
+.dashboard-hero,
+.detail-shell-hero {
+  margin-bottom: 4px;
+}
+
+.page-header p,
+.crm-hero p,
+.dashboard-hero p,
+.detail-shell-hero p {
+  font-size: 0.98rem;
+}
+
+.card,
+.quiet-card,
+.dashboard-widget,
+.apple-kpi-card,
+.apple-kpi-card-v6,
+.desktop-now-card,
+.mobile-quick-strip,
+.tablet-secondary-links,
+.quadra-sidebar-note,
+details {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 768px) {
+  .page-stack,
+  .crm-grid,
+  .crud-grid,
+  .detail-grid {
+    gap: 12px;
+  }
+
+  .page-header h1,
+  .crm-hero h1,
+  .dashboard-hero h1,
+  .detail-shell-hero h1 {
+    font-size: clamp(1.9rem, 5vw, 2.4rem);
   }
 }
