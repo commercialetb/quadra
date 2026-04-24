@@ -11,49 +11,49 @@ export type NavItem = {
 export const primaryNav: NavItem[] = [
   {
     href: '/',
-    label: 'Dashboard',
+    label: 'Home',
     shortLabel: 'Home',
-    description: "Priorità, pipeline e attività di oggi in un colpo d'occhio.",
+    description: "Capisci cosa fare, con chi, quando e perché in un colpo d'occhio.",
     icon: 'home',
   },
   {
     href: '/companies',
     label: 'Aziende',
     shortLabel: 'Aziende',
-    description: 'Gestisci account, relazioni e stato dei clienti.',
+    description: 'Apri subito gli account da seguire e il loro prossimo passo.',
     icon: 'companies',
   },
   {
     href: '/contacts',
     label: 'Contatti',
     shortLabel: 'Contatti',
-    description: 'Apri contatti, ruoli e canali principali.',
+    description: 'Vedi chi sentire, tramite quale canale e in quale contesto.',
     icon: 'contacts',
   },
   {
     href: '/opportunities',
     label: 'Opportunità',
-    shortLabel: 'Opportunità',
-    description: 'Segui pipeline, valore stimato e prossime azioni.',
+    shortLabel: 'Deal',
+    description: 'Segui fase, valore e next action senza disperdere la pipeline.',
     icon: 'opportunities',
   },
   {
     href: '/followups',
     label: 'Follow-up',
-    shortLabel: 'Follow-up',
-    description: 'Chiudi azioni, promemoria e scadenze operative.',
+    shortLabel: 'Agenda',
+    description: 'Chiudi attività, scadenze e promemoria operativi di oggi.',
     icon: 'followups',
-  },
-  {
-    href: '/analysis',
-    label: 'Analisi',
-    shortLabel: 'Analisi',
-    description: 'Unifica CRM, ordini importati e segnali operativi.',
-    icon: 'analysis',
   },
 ]
 
 export const secondaryNav: NavItem[] = [
+  {
+    href: '/analysis',
+    label: 'Insight',
+    shortLabel: 'Insight',
+    description: 'Leggi segnali e trend solo quando servono per agire meglio.',
+    icon: 'analysis',
+  },
   {
     href: '/assistant',
     label: 'Assistente AI',

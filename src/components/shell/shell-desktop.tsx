@@ -4,25 +4,27 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { LogoutButton } from '@/components/auth/logout-button'
-import { navItems, secondaryNav, getPageDescription, NavIcon } from '@/components/shell/nav-config'
+import { navItems, primaryNav, secondaryNav, getPageDescription, NavIcon } from '@/components/shell/nav-config'
 import { VoiceControlBar } from '@/components/voice-control-bar'
 
 export function ShellDesktop({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const currentItem = navItems.find((item) => pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))) ?? navItems[0]
 
   return (
-    <div className="shell-desktop shell-redesign">
-      <aside className="app-sidebar quadra-sidebar redesign-sidebar">
+    <div className="shell-desktop shell-redesign shell-v4-desktop">
+      <aside className="app-sidebar quadra-sidebar redesign-sidebar redesign-sidebar-v4">
         <div className="sidebar-brand-phase2 redesign-brand">
           <div className="sidebar-brand-mark">Q</div>
           <div>
             <p>Quadra</p>
-            <span>Apple Pro CRM</span>
+            <span>System of action</span>
           </div>
         </div>
 
+        <div className="sidebar-section-label">Core</div>
         <nav className="sidebar-nav redesign-nav">
-          {navItems.map((item) => {
+          {primaryNav.map((item) => {
             const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
             return (
               <Link key={item.href} href={item.href} className={`sidebar-link redesign-sidebar-link ${active ? 'is-active' : ''}`}>
@@ -33,20 +35,43 @@ export function ShellDesktop({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        <div className="quadra-sidebar-note redesign-note">
-          <div className="quadra-sidebar-note-label">Simply is better</div>
-          <strong>Meno dashboard, più decisioni.</strong>
-          <p>Ogni schermata deve aiutarti a capire cosa fare adesso.</p>
+        <div className="sidebar-section-label compact">Altro</div>
+        <nav className="sidebar-nav redesign-nav redesign-nav-secondary">
+          {secondaryNav.map((item) => {
+            const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
+            return (
+              <Link key={item.href} href={item.href} className={`sidebar-link redesign-sidebar-link ${active ? 'is-active' : ''}`}>
+                <NavIcon name={item.icon} className="sidebar-nav-icon" />
+                <span className="sidebar-link-label">{item.shortLabel ?? item.label}</span>
+              </Link>
+            )
+          })}
+        </nav>
+
+        <div className="quadra-sidebar-note redesign-note redesign-note-v4">
+          <div className="quadra-sidebar-note-label">Le 5 cose</div>
+          <ul className="sidebar-principles-list">
+            <li>Partire in fretta</li>
+            <li>Farsi usare ogni giorno</li>
+            <li>Essere più semplice</li>
+            <li>Dare insight azionabili</li>
+            <li>Essere piacevole da usare</li>
+          </ul>
         </div>
       </aside>
 
       <div className="app-main redesign-main">
-        <header className="app-topbar app-topbar-phase2 redesign-topbar">
+        <header className="app-topbar app-topbar-phase2 redesign-topbar redesign-topbar-v4">
           <div className="app-topbar-leading redesign-leading">
             <div className="app-topbar-copy redesign-copy">
               <div className="app-topbar-kicker">Quadra workspace</div>
-              <h1 className="app-topbar-title">{pathname === '/' ? 'Home' : (navItems.find((i) => pathname === i.href || (i.href !== '/' && pathname.startsWith(i.href)))?.label ?? 'Quadra')}</h1>
+              <h1 className="app-topbar-title">{currentItem.label}</h1>
               <p className="app-topbar-subtitle">{getPageDescription(pathname)}</p>
+            </div>
+            <div className="desktop-now-card">
+              <span>Ora conta questo</span>
+              <strong>{currentItem.label}</strong>
+              <p>{currentItem.description}</p>
             </div>
           </div>
 
@@ -55,11 +80,8 @@ export function ShellDesktop({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="app-topbar-actions redesign-actions">
-            {secondaryNav.map((item) => (
-              <Link key={item.href} href={item.href} className="quadra-pill-button ghost">
-                {item.shortLabel ?? item.label}
-              </Link>
-            ))}
+            <Link href="/assistant" className="quadra-pill-button ghost">Assistente</Link>
+            <Link href="/analysis" className="quadra-pill-button ghost">Insight</Link>
             <LogoutButton className="quadra-pill-button" />
           </div>
         </header>

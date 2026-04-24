@@ -51,68 +51,102 @@ export function CompanyAnalysisCard({ data }: { data: CompanyAnalysisData | null
   if (!data) return null
 
   const topAction = data.actionPlan[0] ?? null
-  const summary = [
-    { label: 'Ultimo contatto', value: data.activeFollowups[0]?.due_at ? formatDate(data.activeFollowups[0].due_at) : (data.companyRow.pendingFollowups > 0 ? `${data.companyRow.pendingFollowups} attivi` : 'Nessuno') },
-    { label: 'Opportunità aperte', value: String(data.companyRow.opportunities) },
-    { label: 'Ultimo ordine', value: data.companyRow.lastOrderDate ? formatDate(data.companyRow.lastOrderDate) : 'Nessun dato' },
-    { label: 'Pipeline', value: formatCurrency(data.companyRow.pipelineValue) },
-  ]
+  const topSuggestion = data.suggestions[0] ?? null
+  const topSignal = data.signals[0] ?? null
+  const primaryOpportunity = data.openOpportunities[0] ?? null
 
   return (
-    <section className="panel-card company-analysis-redesign">
+    <section className="panel-card company-analysis-redesign simplified-company-analysis">
       <div className="dashboard-redesign-head">
         <div>
-          <p className="page-eyebrow">Scheda decisione</p>
-          <h2>Sintesi azienda</h2>
+          <p className="page-eyebrow">Insight operativo</p>
+          <h2>Perché questa azienda richiede attenzione</h2>
         </div>
         <div className="cluster-wrap company-analysis-top-actions">
           <span className={`dashboard-pill-badge ${toneForSignal(data.companyRow.signal)}`}>{data.companyRow.signal}</span>
-          <span className={`dashboard-pill-badge ${data.companyRow.priorityBand === 'alta' ? 'danger' : data.companyRow.priorityBand === 'media' ? 'warning' : ''}`}>{data.companyRow.priorityScore}/100</span>
+          <span className={`dashboard-pill-badge ${data.companyRow.priorityBand === 'alta' ? 'danger' : data.companyRow.priorityBand === 'media' ? 'warning' : ''}`}>
+            {data.companyRow.priorityScore}/100
+          </span>
           <Link href="/analysis" className="ghost-button">Apri insight</Link>
         </div>
       </div>
 
       <p className="company-analysis-lead-redesign">{data.companyRow.insight}</p>
 
-      <div className="company-decision-grid">
-        <div className="company-next-action-card">
-          <span>Prossima azione</span>
-          {topAction ? (
-            <>
-              <strong>{topAction.title}</strong>
-              <p>{topAction.detail}</p>
-              <div className="cluster-wrap">
-                <span className={`dashboard-pill-badge ${toneForPriority(topAction.priority)}`}>{topAction.priority}</span>
-                <CreateFollowupButton
-                  companyId={data.companyRow.companyId}
-                  title={topAction.title}
-                  description={topAction.detail}
-                  priority={topAction.priority}
-                  defaultDueInDays={topAction.priority === 'urgent' ? 1 : topAction.priority === 'high' ? 2 : 7}
-                  compact
-                />
-              </div>
-            </>
-          ) : (
-            <>
-              <strong>Continuare presidio</strong>
-              <p>Nessuna urgenza critica. Mantieni il contatto attivo.</p>
-            </>
-          )}
-        </div>
+      <div className="company-analysis-snapshot-grid">
+        <article className="company-summary-card-redesign panel-card">
+          <span>Pipeline</span>
+          <strong>{formatCurrency(data.companyRow.pipelineValue)}</strong>
+          <small>{data.companyRow.opportunities} opportunità aperte</small>
+        </article>
+        <article className="company-summary-card-redesign panel-card">
+          <span>Follow-up attivi</span>
+          <strong>{data.companyRow.pendingFollowups}</strong>
+          <small>{data.companyRow.overdueFollowups} in ritardo</small>
+        </article>
+        <article className="company-summary-card-redesign panel-card">
+          <span>Ordini collegati</span>
+          <strong>{data.companyRow.importedOrders}</strong>
+          <small>{formatCurrency(data.companyRow.importedValue)}</small>
+        </article>
+      </div>
 
-        <div className="company-summary-grid-redesign">
-          {summary.map((item) => (
-            <article key={item.label} className="company-summary-card-redesign">
-              <span>{item.label}</span>
-              <strong>{item.value}</strong>
-            </article>
-          ))}
+      <div className="company-analysis-why-grid">
+        <article className="company-next-action-card panel-card">
+          <span>Priorità consigliata</span>
+          <strong>{topAction?.title || 'Mantieni presidio'}</strong>
+          <p>{topAction?.detail || 'Non ci sono urgenze critiche, ma la relazione va tenuta calda.'}</p>
+          {topAction ? (
+            <CreateFollowupButton
+              companyId={data.companyRow.companyId}
+              title={topAction.title}
+              description={topAction.detail}
+              priority={topAction.priority}
+              defaultDueInDays={topAction.priority === 'urgent' ? 1 : topAction.priority === 'high' ? 2 : 7}
+              compact
+            />
+          ) : null}
+        </article>
+
+        <div className="apple-list-stack">
+          {topSignal ? (
+            <div className="apple-list-row static-row">
+              <div>
+                <strong>Segnale principale</strong>
+                <span>{topSignal.title}{topSignal.description ? ` · ${topSignal.description}` : ''}</span>
+              </div>
+              <span className={`dashboard-pill-badge ${topSignal.severity === 'high' ? 'danger' : topSignal.severity === 'medium' ? 'warning' : ''}`}>{topSignal.severity}</span>
+            </div>
+          ) : null}
+
+          {primaryOpportunity ? (
+            <Link href={`/opportunities/${primaryOpportunity.id}`} className="apple-list-row">
+              <div>
+                <strong>Opportunità da seguire</strong>
+                <span>{primaryOpportunity.title || 'Opportunità'} · {primaryOpportunity.stage}</span>
+              </div>
+              <strong>{formatCurrency(primaryOpportunity.value_estimate ?? 0)}</strong>
+            </Link>
+          ) : null}
+
+          {topSuggestion ? (
+            <div className="apple-list-row static-row">
+              <div>
+                <strong>Suggerimento utile</strong>
+                <span>{topSuggestion.title} · {topSuggestion.description}</span>
+              </div>
+              <span className={`dashboard-pill-badge ${toneForPriority(topSuggestion.priority)}`}>{topSuggestion.priority}</span>
+            </div>
+          ) : null}
+
+          {!topSignal && !primaryOpportunity && !topSuggestion ? (
+            <div className="dashboard-widget-empty apple-empty">Nessun segnale rilevante da mostrare adesso.</div>
+          ) : null}
         </div>
       </div>
 
       <details className="analysis-details-block redesigned-details">
-        <summary>Approfondisci</summary>
+        <summary>Apri dettaglio completo</summary>
         <div className="company-analysis-details-grid-redesign">
           <section className="panel-card subtle-panel">
             <div className="dashboard-redesign-head compact"><h3>Azioni suggerite</h3></div>

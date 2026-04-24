@@ -8,50 +8,103 @@ import { ContactAvatar } from '@/components/ui/contact-avatar'
 import { CONTACT_METHOD_OPTIONS } from '@/lib/crm-options'
 import { labelize } from '@/lib/crm-labels'
 
+function preferredChannel(contact: any) {
+  if (contact.preferred_contact_method) return labelize(contact.preferred_contact_method)
+  if (contact.whatsapp) return 'WhatsApp'
+  if (contact.email) return 'Email'
+  if (contact.phone) return 'Telefono'
+  return 'Da definire'
+}
+
+function bestReach(contact: any) {
+  return contact.whatsapp || contact.email || contact.phone || 'Recapito non indicato'
+}
+
 export function ContactsCrud({ contacts, companies }: { contacts: any[]; companies: any[] }) {
   const [query, setQuery] = useState('')
   const [showCreate, setShowCreate] = useState(false)
+  const [companyFilter, setCompanyFilter] = useState('all')
+  const [methodFilter, setMethodFilter] = useState('all')
+
+  const sortedCompanies = useMemo(
+    () => [...companies].sort((a, b) => a.name.localeCompare(b.name, 'it', { sensitivity: 'base' })),
+    [companies],
+  )
 
   const items = useMemo(() => {
     return contacts.filter((contact) => {
-      const text = `${contact.first_name} ${contact.last_name} ${contact.role ?? ''} ${contact.email ?? ''} ${contact.companies?.name ?? ''}`.toLowerCase()
-      return text.includes(query.toLowerCase())
+      const text = `${contact.first_name} ${contact.last_name} ${contact.role ?? ''} ${contact.email ?? ''} ${contact.phone ?? ''} ${contact.whatsapp ?? ''} ${contact.companies?.name ?? ''}`.toLowerCase()
+      const matchesQuery = text.includes(query.toLowerCase())
+      const matchesCompany = companyFilter === 'all' ? true : contact.company_id === companyFilter
+      const channel = (contact.preferred_contact_method || (contact.whatsapp ? 'whatsapp' : contact.email ? 'email' : contact.phone ? 'phone' : '')).toLowerCase()
+      const matchesMethod = methodFilter === 'all' ? true : channel === methodFilter
+      return matchesQuery && matchesCompany && matchesMethod
     })
-  }, [contacts, query])
-
-  const sortedCompanies = useMemo(() => [...companies].sort((a, b) => a.name.localeCompare(b.name, 'it', { sensitivity: 'base' })), [companies])
+  }, [companyFilter, contacts, methodFilter, query])
 
   const linkedCount = items.filter((contact) => contact.companies?.name).length
   const emailCount = items.filter((contact) => contact.email).length
   const whatsappCount = items.filter((contact) => contact.whatsapp).length
+  const readyToReachCount = items.filter((contact) => contact.email || contact.whatsapp || contact.phone).length
+  const topContact = items.find((contact) => contact.email || contact.whatsapp || contact.phone)
 
   return (
     <>
-      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-contacts">
+      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-contacts crm-v4-panel">
         <div className="list-head">
           <div>
-            <h2>Rubrica</h2>
-            <p>Contatti chiave, canali e relazioni da riattivare subito.</p>
+            <p className="page-eyebrow">Contatti</p>
+            <h2>Rubrica utile, non lunga da scorrere</h2>
+            <p>Devi capire subito chi sentire, con quale canale e dentro quale azienda si muove la relazione.</p>
           </div>
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
             + Nuovo contatto
           </button>
         </div>
 
-        <div className="entity-summary-row" aria-label="Panoramica contatti">
+        <div className="entity-summary-row entity-summary-row-v3" aria-label="Panoramica contatti">
           <div className="entity-summary-pill"><span>Totale</span><strong>{items.length}</strong></div>
-          <div className="entity-summary-pill"><span>Con azienda</span><strong>{items.filter((contact) => contact.companies?.name).length}</strong></div>
-          <div className="entity-summary-pill"><span>Con email</span><strong>{items.filter((contact) => contact.email).length}</strong></div>
-          <div className="entity-summary-pill"><span>WhatsApp</span><strong>{items.filter((contact) => contact.whatsapp).length}</strong></div>
+          <div className="entity-summary-pill"><span>Con azienda</span><strong>{linkedCount}</strong></div>
+          <div className="entity-summary-pill"><span>Contattabili</span><strong>{readyToReachCount}</strong></div>
+          <div className="entity-summary-pill"><span>WhatsApp</span><strong>{whatsappCount}</strong></div>
         </div>
 
-        <div className="toolbar-row single">
-          <SearchInput value={query} onChange={setQuery} placeholder="Cerca per nome, azienda, email o ruolo" />
+        <section className="crm-focus-strip" aria-label="Lettura rapida contatti">
+          <article className="crm-focus-card is-primary">
+            <span>Chi sentire</span>
+            <strong>{topContact ? `${topContact.first_name} ${topContact.last_name}` : 'Nessun contatto pronto'}</strong>
+            <p>{topContact ? `${preferredChannel(topContact)} · ${topContact.companies?.name || 'Azienda non assegnata'}` : 'Aggiungi almeno un recapito utile per rendere la rubrica operativa.'}</p>
+          </article>
+          <article className="crm-focus-card">
+            <span>Canale prevalente</span>
+            <strong>{whatsappCount >= emailCount ? 'WhatsApp' : 'Email'}</strong>
+            <p>{whatsappCount >= emailCount ? 'Ideale per riattivazioni rapide e uso quotidiano.' : 'Buono per recap, proposte e contatti più formali.'}</p>
+          </article>
+          <article className="crm-focus-card">
+            <span>Perché conta</span>
+            <strong>{linkedCount === items.length && items.length ? 'Relazioni ordinate' : 'Da collegare meglio'}</strong>
+            <p>{linkedCount === items.length && items.length ? 'Quasi tutti i contatti hanno già un contesto aziendale chiaro.' : 'Collegare i contatti alle aziende rende la scheda più leggibile e azionabile.'}</p>
+          </article>
+        </section>
+
+        <div className="toolbar-row toolbar-row-v3">
+          <SearchInput value={query} onChange={setQuery} placeholder="Cerca per nome, azienda, ruolo o recapito" />
+          <div className="toolbar-row-inline toolbar-row-inline-double">
+            <select className="field-control toolbar-select" value={companyFilter} onChange={(event) => setCompanyFilter(event.target.value)}>
+              <option value="all">Tutte le aziende</option>
+              {sortedCompanies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
+            </select>
+            <select className="field-control toolbar-select" value={methodFilter} onChange={(event) => setMethodFilter(event.target.value)}>
+              <option value="all">Tutti i canali</option>
+              {CONTACT_METHOD_OPTIONS.map((item) => <option key={item} value={item}>{labelize(item)}</option>)}
+              <option value="phone">Telefono</option>
+            </select>
+          </div>
         </div>
 
-        <div className="cards-stack">
+        <div className="cards-stack cards-stack-v3">
           {items.map((contact) => (
-            <article key={contact.id} className="entity-card entity-card-contact">
+            <article key={contact.id} className="entity-card entity-card-contact entity-card-v3">
               <Link href={`/contacts/${contact.id}`} className="entity-card-main entity-card-main-link">
                 <ContactAvatar firstName={contact.first_name} lastName={contact.last_name} />
                 <div className="entity-card-copy stretch">
@@ -60,14 +113,26 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
                       <h3>{contact.first_name} {contact.last_name}</h3>
                       <p>{contact.role || 'Ruolo non indicato'} · {contact.companies?.name || 'Nessuna azienda'}</p>
                     </div>
+                    <span className="tone-badge neutral">{preferredChannel(contact)}</span>
                   </div>
-                  <div className="entity-inline-meta wrap">
-                    {contact.email ? <span>{contact.email}</span> : null}
-                    {contact.whatsapp ? <span>WhatsApp disponibile</span> : null}
-                    {contact.preferred_contact_method ? <span>{labelize(contact.preferred_contact_method)}</span> : null}
+                  <div className="entity-glance-grid entity-glance-grid-contacts">
+                    <div className="entity-glance-item"><span>Azienda</span><strong>{contact.companies?.name || 'Da collegare'}</strong></div>
+                    <div className="entity-glance-item"><span>Canale</span><strong>{preferredChannel(contact)}</strong></div>
+                    <div className="entity-glance-item"><span>Recapito</span><strong>{bestReach(contact)}</strong></div>
+                    <div className="entity-glance-item"><span>Ruolo</span><strong>{contact.role || 'Da indicare'}</strong></div>
                   </div>
                 </div>
               </Link>
+
+              <details className="entity-more-details">
+                <summary>Altri dettagli</summary>
+                <div className="entity-inline-meta wrap">
+                  {contact.email ? <span>{contact.email}</span> : null}
+                  {contact.phone ? <span>{contact.phone}</span> : null}
+                  {contact.whatsapp ? <span>{contact.whatsapp}</span> : null}
+                  {contact.notes_summary ? <span>{contact.notes_summary}</span> : <span>Nessuna nota rapida</span>}
+                </div>
+              </details>
 
               <div className="entity-card-actions cleaner-actions">
                 <Link href={`/contacts/${contact.id}`} className="secondary-button">Apri scheda</Link>

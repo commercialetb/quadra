@@ -32,9 +32,17 @@ function SaveButton({ idleLabel = 'Salva' }: { idleLabel?: string }) {
   )
 }
 
+function isDueToday(value?: string | null) {
+  if (!value) return false
+  const due = new Date(value)
+  const now = new Date()
+  return due.getFullYear() === now.getFullYear() && due.getMonth() === now.getMonth() && due.getDate() === now.getDate()
+}
+
 export function FollowupsCrud({ followups, companies, contacts, opportunities }: { followups: any[]; companies: any[]; contacts: any[]; opportunities: any[] }) {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
+  const [priorityFilter, setPriorityFilter] = useState('all')
   const [showCreate, setShowCreate] = useState(false)
 
   const sortedCompanies = useMemo(() => [...companies].sort((a, b) => a.name.localeCompare(b.name, 'it', { sensitivity: 'base' })), [companies])
@@ -44,21 +52,25 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
   const items = useMemo(() => {
     return followups
       .filter((item) => {
-        const text = `${item.title} ${item.status ?? ''} ${item.priority ?? ''}`.toLowerCase()
+        const text = `${item.title} ${item.status ?? ''} ${item.priority ?? ''} ${item.description ?? ''}`.toLowerCase()
         const matchesQuery = text.includes(query.toLowerCase())
         const matchesFilter = filter === 'all' ? true : item.status === filter
-        return matchesQuery && matchesFilter
+        const matchesPriority = priorityFilter === 'all' ? true : item.priority === priorityFilter
+        return matchesQuery && matchesFilter && matchesPriority
       })
       .sort((a, b) => {
         const aTime = a.due_at ? new Date(a.due_at).getTime() : Number.MAX_SAFE_INTEGER
         const bTime = b.due_at ? new Date(b.due_at).getTime() : Number.MAX_SAFE_INTEGER
         return aTime - bTime
       })
-  }, [followups, query, filter])
+  }, [filter, followups, priorityFilter, query])
 
   const overdueCount = items.filter((item) => item.status === 'overdue').length
   const progressCount = items.filter((item) => item.status === 'in_progress').length
   const completedCount = items.filter((item) => item.status === 'completed').length
+  const todayCount = items.filter((item) => item.status !== 'completed' && isDueToday(item.due_at)).length
+  const urgentCount = items.filter((item) => item.priority === 'urgent' && item.status !== 'completed').length
+  const nextItem = items.find((item) => item.status !== 'completed')
 
   const companyMap = useMemo(() => new Map(companies.map((company) => [company.id, company.name])), [companies])
   const contactMap = useMemo(() => new Map(contacts.map((contact) => [contact.id, `${contact.first_name} ${contact.last_name}`.trim()])), [contacts])
@@ -66,38 +78,63 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
 
   return (
     <>
-      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-followups">
+      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-followups crm-v4-panel">
         <div className="list-head">
           <div>
-            <h2>Agenda operativa</h2>
-            <p>Priorità, scadenze e chiusure rapide senza perdere il contesto.</p>
+            <p className="page-eyebrow">Follow-up</p>
+            <h2>Agenda che spinge all’azione</h2>
+            <p>Qui devi vedere subito cosa chiudere oggi, cosa è in ritardo e quale passaggio sblocca il lavoro commerciale.</p>
           </div>
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
             + Nuovo follow-up
           </button>
         </div>
 
-        <div className="entity-summary-row" aria-label="Panoramica follow-up">
+        <div className="entity-summary-row entity-summary-row-v3" aria-label="Panoramica follow-up">
           <div className="entity-summary-pill"><span>Totale</span><strong>{items.length}</strong></div>
-          <div className="entity-summary-pill"><span>Scaduti</span><strong>{items.filter((item) => item.status === 'overdue').length}</strong></div>
-          <div className="entity-summary-pill"><span>In corso</span><strong>{items.filter((item) => item.status === 'in_progress').length}</strong></div>
-          <div className="entity-summary-pill"><span>Completati</span><strong>{items.filter((item) => item.status === 'completed').length}</strong></div>
+          <div className="entity-summary-pill"><span>Oggi</span><strong>{todayCount}</strong></div>
+          <div className="entity-summary-pill"><span>Scaduti</span><strong>{overdueCount}</strong></div>
+          <div className="entity-summary-pill"><span>Completati</span><strong>{completedCount}</strong></div>
         </div>
 
-        <div className="toolbar-row">
-          <SearchInput value={query} onChange={setQuery} placeholder="Cerca per titolo, stato o priorità" />
-          <div className="segmented-control">
-            {['all', 'pending', 'in_progress', 'overdue', 'completed'].map((item) => (
-              <button key={item} type="button" className={filter === item ? 'is-active' : ''} onClick={() => setFilter(item)}>
-                {item === 'all' ? 'Tutti' : followupStatusLabel(item)}
-              </button>
-            ))}
+        <section className="crm-focus-strip" aria-label="Lettura rapida follow-up">
+          <article className="crm-focus-card is-primary">
+            <span>Cosa fare adesso</span>
+            <strong>{nextItem?.title || 'Nessun follow-up aperto'}</strong>
+            <p>{nextItem ? `Scade ${formatDateTime(nextItem.due_at)} · ${followupStatusLabel(nextItem.status)}` : 'La tua agenda è pulita nel filtro corrente.'}</p>
+          </article>
+          <article className="crm-focus-card">
+            <span>Cosa rischia di bloccarti</span>
+            <strong>{urgentCount > 0 ? `${urgentCount} urgenti` : 'Nessuna urgenza alta'}</strong>
+            <p>{urgentCount > 0 ? 'Chiudi prima questi follow-up per evitare attrito operativo.' : 'Puoi lavorare per priorità senza rincorrere emergenze.'}</p>
+          </article>
+          <article className="crm-focus-card">
+            <span>Perché conta</span>
+            <strong>{progressCount > overdueCount ? 'Pipeline in moto' : 'Serve pulizia agenda'}</strong>
+            <p>{progressCount > overdueCount ? 'Hai più attività in avanzamento che attività fuori tempo.' : 'Vale la pena chiudere o ripianificare ciò che è rimasto indietro.'}</p>
+          </article>
+        </section>
+
+        <div className="toolbar-row toolbar-row-v3">
+          <SearchInput value={query} onChange={setQuery} placeholder="Cerca per titolo, stato, priorità o descrizione" />
+          <div className="toolbar-row-inline toolbar-row-inline-double">
+            <div className="segmented-control">
+              {['all', 'pending', 'in_progress', 'overdue', 'completed'].map((item) => (
+                <button key={item} type="button" className={filter === item ? 'is-active' : ''} onClick={() => setFilter(item)}>
+                  {item === 'all' ? 'Tutti' : followupStatusLabel(item)}
+                </button>
+              ))}
+            </div>
+            <select className="field-control toolbar-select" value={priorityFilter} onChange={(event) => setPriorityFilter(event.target.value)}>
+              <option value="all">Tutte le priorità</option>
+              {priorities.map((item) => <option key={item} value={item}>{priorityLabel(item)}</option>)}
+            </select>
           </div>
         </div>
 
-        <div className="cards-stack">
+        <div className="cards-stack cards-stack-v3">
           {items.map((item) => (
-            <article key={item.id} className="entity-card entity-card-followup">
+            <article key={item.id} className="entity-card entity-card-followup entity-card-v3">
               <div className="entity-card-copy stretch">
                 <div className="entity-card-top">
                   <div>
@@ -109,13 +146,22 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
                     <span className={`tone-badge ${priorityTone(item.priority)}`}>{priorityLabel(item.priority)}</span>
                   </div>
                 </div>
-                {item.description ? <div className="entity-body-copy">{item.description}</div> : null}
+                <div className="entity-glance-grid entity-glance-grid-followups">
+                  <div className="entity-glance-item"><span>Azienda</span><strong>{item.company_id && companyMap.get(item.company_id) ? companyMap.get(item.company_id) : 'Non collegata'}</strong></div>
+                  <div className="entity-glance-item"><span>Contatto</span><strong>{item.contact_id && contactMap.get(item.contact_id) ? contactMap.get(item.contact_id) : 'Non collegato'}</strong></div>
+                  <div className="entity-glance-item"><span>Deal</span><strong>{item.opportunity_id && opportunityMap.get(item.opportunity_id) ? opportunityMap.get(item.opportunity_id) : 'Non collegato'}</strong></div>
+                  <div className="entity-glance-item"><span>Quando</span><strong>{item.due_at ? formatDateTime(item.due_at) : 'Senza data'}</strong></div>
+                </div>
+                {item.description ? <div className="entity-body-copy entity-body-copy-compact">{item.description}</div> : null}
+              </div>
+              <details className="entity-more-details">
+                <summary>Azioni rapide</summary>
                 <div className="entity-inline-meta wrap entity-inline-meta-soft">
+                  <span>{item.status === 'completed' ? 'Già chiuso' : 'Puoi chiuderlo o cambiare stato da qui sotto.'}</span>
                   {item.company_id && companyMap.get(item.company_id) ? <span>{companyMap.get(item.company_id)}</span> : null}
                   {item.contact_id && contactMap.get(item.contact_id) ? <span>{contactMap.get(item.contact_id)}</span> : null}
-                  {item.opportunity_id && opportunityMap.get(item.opportunity_id) ? <span>{opportunityMap.get(item.opportunity_id)}</span> : null}
                 </div>
-              </div>
+              </details>
               <div className="entity-card-actions cleaner-actions">
                 {item.status !== 'completed' ? (
                   <form action={updateFollowupStatus}>

@@ -26,6 +26,14 @@ export function ShellMobile({ pathname, children }: { pathname: string; children
         </div>
       </header>
 
+      <div className="mobile-quick-strip">
+        <Link href={pathname.startsWith('/followups') ? '/dashboard' : '/followups'} className="mobile-quick-chip">
+          {pathname.startsWith('/followups') ? 'Home operativa' : 'Agenda oggi'}
+        </Link>
+        <Link href="/assistant" className="mobile-quick-chip">Assistente</Link>
+        <Link href="/companies" className="mobile-quick-chip">Aziende</Link>
+      </div>
+
       {showVoice ? <div className="shell-mobile-voice redesign-mobile-voice"><VoiceControlBar /></div> : null}
 
       <main className="shell-mobile-main redesign-mobile-main">{children}</main>

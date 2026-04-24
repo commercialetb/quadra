@@ -47,28 +47,48 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
   const openCount = items.filter((item) => !['won', 'lost'].includes(item.stage)).length
   const proposalCount = items.filter((item) => item.stage === 'proposal').length
   const pipelineValue = formatCurrency(items.reduce((sum, item) => sum + Number(item.value_estimate || 0), 0))
+  const nextDeal = items.find((item) => item.next_action || item.next_action_due_at)
 
   return (
     <>
-      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-opportunities">
+      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-opportunities crm-v3-panel">
         <div className="list-head">
           <div>
-            <h2>Pipeline</h2>
-            <p>Deal attivi, valore e prossimi step in una lettura più operativa.</p>
+            <p className="page-eyebrow">Opportunità</p>
+            <h2>Pipeline leggibile, non dispersiva</h2>
+            <p>Ogni card deve farti capire fase, valore e prossimo passo senza aprire dieci pannelli.</p>
           </div>
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
             + Nuova opportunità
           </button>
         </div>
 
-        <div className="entity-summary-row" aria-label="Panoramica opportunità">
+        <div className="entity-summary-row entity-summary-row-v3" aria-label="Panoramica opportunità">
           <div className="entity-summary-pill"><span>Totale</span><strong>{items.length}</strong></div>
-          <div className="entity-summary-pill"><span>Aperte</span><strong>{items.filter((item) => !['won', 'lost'].includes(item.stage)).length}</strong></div>
-          <div className="entity-summary-pill"><span>In proposta</span><strong>{items.filter((item) => item.stage === 'proposal').length}</strong></div>
-          <div className="entity-summary-pill"><span>Valore</span><strong>{formatCurrency(items.reduce((sum, item) => sum + Number(item.value_estimate || 0), 0))}</strong></div>
+          <div className="entity-summary-pill"><span>Aperte</span><strong>{openCount}</strong></div>
+          <div className="entity-summary-pill"><span>In proposta</span><strong>{proposalCount}</strong></div>
+          <div className="entity-summary-pill"><span>Valore</span><strong>{pipelineValue}</strong></div>
         </div>
 
-        <div className="toolbar-row">
+        <section className="crm-focus-strip" aria-label="Lettura rapida opportunità">
+          <article className="crm-focus-card is-primary">
+            <span>Cosa muovere</span>
+            <strong>{nextDeal?.title || 'Nessun deal prioritario filtrato'}</strong>
+            <p>{nextDeal?.next_action || 'Apri una opportunità e assegna un prossimo passo concreto.'}</p>
+          </article>
+          <article className="crm-focus-card">
+            <span>Fase prevalente</span>
+            <strong>{filter === 'all' ? 'Pipeline completa' : stageLabel(filter)}</strong>
+            <p>{openCount > proposalCount ? 'Prevale lavoro di avanzamento.' : 'Ci sono diversi deal vicini alla proposta.'}</p>
+          </article>
+          <article className="crm-focus-card">
+            <span>Perché agire</span>
+            <strong>{pipelineValue}</strong>
+            <p>Valore complessivo delle opportunità nel set corrente.</p>
+          </article>
+        </section>
+
+        <div className="toolbar-row toolbar-row-v3">
           <SearchInput value={query} onChange={setQuery} placeholder="Cerca per titolo, azienda, fase o next action" />
           <div className="segmented-control">
             {['all', 'new_lead', 'proposal', 'negotiation', 'won'].map((item) => (
@@ -79,9 +99,9 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
           </div>
         </div>
 
-        <div className="cards-stack">
+        <div className="cards-stack cards-stack-v3">
           {items.map((item) => (
-            <article key={item.id} className="entity-card opportunity-card entity-card-opportunity">
+            <article key={item.id} className="entity-card opportunity-card entity-card-opportunity entity-card-v3">
               <Link href={`/opportunities/${item.id}`} className="entity-card-copy stretch entity-card-main-link">
                 <div className="entity-card-top">
                   <div>
@@ -90,13 +110,21 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
                   </div>
                   <span className={`tone-badge ${stageTone(item.stage)}`}>{stageLabel(item.stage)}</span>
                 </div>
-                <div className="entity-inline-meta wrap">
-                  <span>{formatCurrency(item.value_estimate)}</span>
-                  {item.next_action ? <span>Prossimo passo: {item.next_action}</span> : null}
-                  {item.next_action_due_at ? <span>Entro {formatDate(item.next_action_due_at)}</span> : null}
-                  {item.primary_contact?.full_name ? <span>{item.primary_contact.full_name}</span> : null}
+                <div className="entity-glance-grid">
+                  <div className="entity-glance-item"><span>Valore</span><strong>{formatCurrency(item.value_estimate)}</strong></div>
+                  <div className="entity-glance-item"><span>Probabilità</span><strong>{typeof item.probability === 'number' ? `${item.probability}%` : '—'}</strong></div>
+                  <div className="entity-glance-item"><span>Next action</span><strong>{item.next_action || 'Da definire'}</strong></div>
+                  <div className="entity-glance-item"><span>Entro</span><strong>{item.next_action_due_at ? formatDate(item.next_action_due_at) : 'Senza data'}</strong></div>
                 </div>
               </Link>
+              <details className="entity-more-details">
+                <summary>Altri dettagli</summary>
+                <div className="entity-inline-meta wrap">
+                  {item.primary_contact?.full_name ? <span>{item.primary_contact.full_name}</span> : <span>Nessun contatto principale</span>}
+                  {item.source ? <span>Fonte: {item.source}</span> : null}
+                  {item.description ? <span>{item.description}</span> : null}
+                </div>
+              </details>
               <div className="entity-card-actions cleaner-actions">
                 <Link href={`/opportunities/${item.id}`} className="secondary-button">Apri scheda</Link>
                 <form action={updateOpportunityStage} className="inline-mini-form compact-inline-form">

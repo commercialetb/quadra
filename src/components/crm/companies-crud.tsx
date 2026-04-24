@@ -35,51 +35,83 @@ function SaveButton({ idleLabel = 'Salva' }: { idleLabel?: string }) {
 export function CompaniesCrud({ companies }: { companies: any[] }) {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
+  const [industryFilter, setIndustryFilter] = useState('all')
   const [showCreate, setShowCreate] = useState(false)
 
   const items = useMemo(() => {
     return companies.filter((company) => {
-      const text = `${company.name} ${company.city ?? ''} ${company.website ?? ''} ${company.status ?? ''}`.toLowerCase()
+      const text = `${company.name} ${company.city ?? ''} ${company.website ?? ''} ${company.status ?? ''} ${company.industry ?? ''}`.toLowerCase()
       const matchesQuery = text.includes(query.toLowerCase())
       const matchesFilter = filter === 'all' ? true : company.status === filter
-      return matchesQuery && matchesFilter
+      const matchesIndustry = industryFilter === 'all' ? true : company.industry === industryFilter
+      return matchesQuery && matchesFilter && matchesIndustry
     })
-  }, [companies, query, filter])
+  }, [companies, filter, industryFilter, query])
+
+  const totalCount = items.length
+  const clientCount = items.filter((company) => company.status === 'client').length
+  const prospectCount = items.filter((company) => company.status === 'prospect').length
+  const partnerCount = items.filter((company) => company.status === 'partner').length
 
   return (
     <>
-      <section className="panel-card page-section-card">
+      <section className="panel-card page-section-card crm-entity-panel crm-entity-panel-companies crm-v3-panel">
         <div className="list-head">
           <div>
-            <h2>Aziende attive</h2>
-            <p>{items.length} risultati</p>
+            <p className="page-eyebrow">Aziende</p>
+            <h2>Account chiari, non schede rumorose</h2>
+            <p>Qui devi capire subito chi è cliente, chi è da coltivare e quale account vale la pena aprire adesso.</p>
           </div>
           <button className="primary-button" type="button" onClick={() => setShowCreate(true)}>
             + Nuova azienda
           </button>
         </div>
 
-        <div className="entity-summary-row" aria-label="Panoramica aziende">
-          <div className="entity-summary-pill"><span>Totale</span><strong>{items.length}</strong></div>
-          <div className="entity-summary-pill"><span>Clienti</span><strong>{items.filter((company) => company.status === 'client').length}</strong></div>
-          <div className="entity-summary-pill"><span>Prospect</span><strong>{items.filter((company) => company.status === 'prospect').length}</strong></div>
-          <div className="entity-summary-pill"><span>Partner</span><strong>{items.filter((company) => company.status === 'partner').length}</strong></div>
+        <div className="entity-summary-row entity-summary-row-v3" aria-label="Panoramica aziende">
+          <div className="entity-summary-pill"><span>Totale</span><strong>{totalCount}</strong></div>
+          <div className="entity-summary-pill"><span>Clienti</span><strong>{clientCount}</strong></div>
+          <div className="entity-summary-pill"><span>Prospect</span><strong>{prospectCount}</strong></div>
+          <div className="entity-summary-pill"><span>Partner</span><strong>{partnerCount}</strong></div>
         </div>
 
-        <div className="toolbar-row">
-          <SearchInput value={query} onChange={setQuery} placeholder="Cerca per nome, città o stato" />
-          <div className="segmented-control">
-            {['all', 'lead', 'prospect', 'client', 'partner'].map((item) => (
-              <button key={item} type="button" className={filter === item ? 'is-active' : ''} onClick={() => setFilter(item)}>
-                {item === 'all' ? 'Tutte' : labelize(item)}
-              </button>
-            ))}
+        <section className="crm-focus-strip" aria-label="Lettura rapida aziende">
+          <article className="crm-focus-card is-primary">
+            <span>Chi aprire</span>
+            <strong>{items[0]?.name || 'Nessuna azienda filtrata'}</strong>
+            <p>{items[0] ? `${labelize(items[0].status)} · ${(items[0].city || 'località non indicata')}` : 'Cambia ricerca o filtri per trovare un account da presidiare.'}</p>
+          </article>
+          <article className="crm-focus-card">
+            <span>Cosa stai guardando</span>
+            <strong>{filter === 'all' ? 'Tutti gli stati' : labelize(filter)}</strong>
+            <p>{industryFilter === 'all' ? 'Nessun settore filtrato' : industryFilter}</p>
+          </article>
+          <article className="crm-focus-card">
+            <span>Perché conta</span>
+            <strong>{clientCount > prospectCount ? 'Presidio clienti' : 'Spinta prospect'}</strong>
+            <p>{clientCount > prospectCount ? 'In questo set prevalgono aziende già calde o attive.' : 'Qui c’è più lavoro commerciale da attivare.'}</p>
+          </article>
+        </section>
+
+        <div className="toolbar-row toolbar-row-v3">
+          <SearchInput value={query} onChange={setQuery} placeholder="Cerca per nome, città, sito o settore" />
+          <div className="toolbar-row-inline">
+            <div className="segmented-control">
+              {['all', 'lead', 'prospect', 'client', 'partner'].map((item) => (
+                <button key={item} type="button" className={filter === item ? 'is-active' : ''} onClick={() => setFilter(item)}>
+                  {item === 'all' ? 'Tutte' : labelize(item)}
+                </button>
+              ))}
+            </div>
+            <select className="field-control toolbar-select" value={industryFilter} onChange={(event) => setIndustryFilter(event.target.value)}>
+              <option value="all">Tutti i settori</option>
+              {COMPANY_INDUSTRY_OPTIONS.map((item) => <option key={item} value={item}>{item}</option>)}
+            </select>
           </div>
         </div>
 
-        <div className="cards-stack">
+        <div className="cards-stack cards-stack-v3">
           {items.map((company) => (
-            <article key={company.id} className="entity-card">
+            <article key={company.id} className="entity-card entity-card-v3 company-card-v3">
               <Link href={`/companies/${company.id}`} className="entity-card-main entity-card-main-link">
                 <CompanyAvatar name={company.name} website={company.website} />
                 <div className="entity-card-copy stretch">
@@ -90,18 +122,24 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                     </div>
                     <span className={`tone-badge ${badgeTone(company.status)}`}>{labelize(company.status)}</span>
                   </div>
-                  <div className="entity-inline-meta wrap">
-                    {company.website ? (
-                      <span>{sanitizeWebsite(company.website)}</span>
-                    ) : (
-                      <span>Sito non indicato</span>
-                    )}
-                    {company.email ? <span>{company.email}</span> : null}
-                    {company.phone ? <span>{company.phone}</span> : null}
-                    {company.address_line1 ? <span>{company.address_line1}</span> : null}
+
+                  <div className="entity-glance-grid">
+                    <div className="entity-glance-item"><span>Sito</span><strong>{company.website ? sanitizeWebsite(company.website) : 'Non indicato'}</strong></div>
+                    <div className="entity-glance-item"><span>Settore</span><strong>{company.industry || 'Non indicato'}</strong></div>
+                    <div className="entity-glance-item"><span>Email</span><strong>{company.email || 'Non indicata'}</strong></div>
+                    <div className="entity-glance-item"><span>Telefono</span><strong>{company.phone || 'Non indicato'}</strong></div>
                   </div>
                 </div>
               </Link>
+
+              <details className="entity-more-details">
+                <summary>Altri dettagli</summary>
+                <div className="entity-inline-meta wrap">
+                  {company.address_line1 ? <span>{company.address_line1}</span> : <span>Indirizzo non indicato</span>}
+                  {company.vat_number ? <span>P.IVA {company.vat_number}</span> : null}
+                  {company.notes_summary ? <span>{company.notes_summary}</span> : null}
+                </div>
+              </details>
 
               <div className="entity-card-actions cleaner-actions">
                 <Link href={`/companies/${company.id}`} className="secondary-button">Apri scheda</Link>
@@ -137,15 +175,13 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
             <form action={createCompany} className="sheet-form">
               <div className="form-grid two-col">
                 <label className="field-stack"><span>Nome azienda</span><input className="field-control" name="name" required /></label>
-                <label className="field-stack"><span>Sito web</span><input className="field-control" name="website" placeholder="https://" /></label>
+                <label className="field-stack"><span>Settore</span><select className="field-control" name="industry" defaultValue=""><option value="">Seleziona</option>{COMPANY_INDUSTRY_OPTIONS.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+                <label className="field-stack"><span>Stato</span><select className="field-control" name="status" defaultValue="lead">{companyStatuses.map((item) => <option key={item} value={item}>{labelize(item)}</option>)}</select></label>
+                <label className="field-stack"><span>Città</span><input className="field-control" name="city" /></label>
+                <label className="field-stack"><span>Sito</span><input className="field-control" name="website" /></label>
                 <label className="field-stack"><span>Email</span><input className="field-control" name="email" type="email" /></label>
                 <label className="field-stack"><span>Telefono</span><input className="field-control" name="phone" /></label>
-                <label className="field-stack field-span-2"><span>Indirizzo</span><input className="field-control" name="address_line1" placeholder="Via, numero civico" /></label>
-                <label className="field-stack"><span>Città</span><input className="field-control" name="city" /></label>
-                <label className="field-stack"><span>Provincia</span><input className="field-control" name="province" /></label>
-                <label className="field-stack"><span>Stato</span><select className="field-control" name="status" defaultValue="lead">{companyStatuses.map((item) => <option key={item} value={item}>{labelize(item)}</option>)}</select></label>
-                <label className="field-stack"><span>Settore</span><select className="field-control" name="industry" defaultValue=""><option value="">Seleziona</option>{COMPANY_INDUSTRY_OPTIONS.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
-                <label className="field-stack field-span-2"><span>Fonte</span><input className="field-control" name="source" /></label>
+                <label className="field-stack"><span>Indirizzo</span><input className="field-control" name="address_line1" /></label>
               </div>
               <label className="field-stack"><span>Note</span><textarea className="field-control field-area" name="notes_summary" /></label>
               <div className="sheet-actions">

@@ -6,12 +6,14 @@ export function DetailShell({
   subtitle,
   backHref,
   backLabel,
+  eyebrow = 'Scheda',
   children,
 }: {
   title: string
   subtitle?: string | null
   backHref: string
   backLabel: string
+  eyebrow?: string
   children: ReactNode
 }) {
   return (
@@ -21,7 +23,7 @@ export function DetailShell({
       </div>
       <section className="page-hero detail-hero-card redesign-detail-hero">
         <div>
-          <p className="page-eyebrow">Scheda azienda</p>
+          <p className="page-eyebrow">{eyebrow}</p>
           <h1 className="page-title">{title}</h1>
           {subtitle ? <p className="page-subtitle">{subtitle}</p> : null}
         </div>
