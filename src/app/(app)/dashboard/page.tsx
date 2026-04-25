@@ -2,10 +2,17 @@
 
 import React from 'react'
 import Link from 'next/link'
-// L'import ora è locale, garantito al 100% che Webpack lo trovi!
+import { useAuth } from '@/lib/hooks/use-auth' // Utilizziamo il tuo hook esistente
 import './dashboard-home.css'
 
 export default function DashboardPage() {
+  const { user } = useAuth()
+  
+  // Estraiamo il nome: prova prima dal metadata, poi dalla mail, altrimenti "User"
+  const firstName = user?.user_metadata?.full_name?.split(' ')[0] || 
+                    user?.email?.split('@')[0] || 
+                    "Antonio"
+
   const actions = [
     {
       id: 1,
@@ -26,15 +33,15 @@ export default function DashboardPage() {
   return (
     <div className="home-container">
       
-      {/* 1. AI HEADER */}
+      {/* 1. AI HEADER DINAMICO */}
       <header className="ai-hero-card">
         <div className="ai-badge">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" className="mr-1">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="mr-1">
             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
           </svg>
           QUADRA AI BRIEFING
         </div>
-        <h1 className="home-title">Buongiorno, Marco.</h1>
+        <h1 className="home-title">Buongiorno, {firstName}.</h1>
         <p className="ai-summary-text">
           Oggi hai <strong>2 azioni urgenti</strong>. Luce e Design richiede un'opportunità immediata basata sullo storico ordini.
         </p>
@@ -43,7 +50,7 @@ export default function DashboardPage() {
       {/* 2. GRID PRINCIPALE */}
       <main className="home-grid">
         
-        {/* SEZIONE AZIONI (Principale) */}
+        {/* SEZIONE AZIONI */}
         <section className="home-card col-span-desktop-8">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-xl font-bold">Azioni immediate</h2>
@@ -82,7 +89,7 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        {/* SEZIONE MONITORAGGIO (Sidebar) */}
+        {/* SEZIONE MONITORAGGIO */}
         <aside className="home-card col-span-desktop-4">
           <div className="flex items-center gap-2 mb-6">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
