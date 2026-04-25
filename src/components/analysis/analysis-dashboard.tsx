@@ -469,7 +469,7 @@ function CustomerActionTable({
   )
 }
 
-export function AnalysisDashboard({ data }: { data: AnalysisDashboardData }) {
+export function AnalysisDashboard({ data }: {  AnalysisDashboardData }) {
   const [industryFilter, setIndustryFilter] = useState<string>('all')
 
   const industryOptions = useMemo(
@@ -670,17 +670,17 @@ export function AnalysisDashboard({ data }: { data: AnalysisDashboardData }) {
         </section>
       ) : null}
 
-      {data.imports.length ? (
-        <section className="analysis-imports-grid">
-          {data.imports.slice(0, 2).map((item) => (
-            <AnalysisImportCard
-              key={item.id}
-              importRecord={item}
-              companies={data.companiesForImport}
-            />
-          ))}
-        </section>
-      ) : null}
+      <section className="panel-card analysis-chart-card">
+        <AnalysisImportCard
+          companies={data.companiesForImport}
+          compact
+          simplified
+          title="Importa ordini per alimentare l’analisi"
+          eyebrow="Data intake"
+          description="Carica i CSV ordini per arricchire fatturato clienti, trend regionali e suggerimenti AI."
+          submitLabel="Importa ordini"
+        />
+      </section>
     </div>
   )
 }
