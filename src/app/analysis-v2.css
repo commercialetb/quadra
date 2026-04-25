@@ -1,56 +1,185 @@
-/* --- FIX FINALE RIGHE AZIONI --- */
+.analysis-v2-page {
+  gap: 20px;
+}
+
+.analysis-hero-v2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 28px;
+  border-radius: 28px;
+}
+
+.analysis-hero-v2 .page-title {
+  margin: 0;
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+}
+
+.analysis-hero-v2 .page-subtitle {
+  margin-top: 10px;
+  max-width: 70ch;
+  color: var(--muted);
+}
+
+.analysis-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.analysis-kpi-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+}
+
+.analysis-kpi-label {
+  font-size: .78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.analysis-kpi-value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.analysis-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.analysis-grid-top { grid-template-columns: 1.4fr 1fr; }
+.analysis-grid-middle { grid-template-columns: 1fr 1.4fr; }
+.analysis-grid-bottom { grid-template-columns: 1fr 1fr; }
+
+.analysis-chart-card {
+  padding: 24px;
+}
+
+.analysis-mini-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.analysis-mini-bar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.analysis-mini-bar-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: .9rem;
+}
+
+.analysis-mini-bar-track {
+  height: 6px;
+  background: rgba(15,23,42,.04);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.analysis-mini-bar-track i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+.analysis-top-customers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.analysis-top-customer-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  border-radius: 16px;
+}
+
+.analysis-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.analysis-table td, .analysis-table th {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(15,23,42,.05);
+}
+
+.analysis-movers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* --- FIX AZIONI IMMEDIATE: LAYOUT TESTO SOPRA/SOTTO --- */
 
 .apple-list-stack {
   display: flex;
   flex-direction: column;
-  gap: 12px; /* Più spazio tra una card e l'altra */
+  gap: 12px;
 }
 
-.apple-action-row {
+.apple-action-row, .apple-best-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px; /* Più respiro interno */
+  padding: 16px 20px;
   background: rgba(15, 23, 42, 0.02);
   border: 1px solid rgba(15, 23, 42, 0.04);
   border-radius: 16px;
-  gap: 20px;
-  min-height: 80px; /* Altezza minima garantita */
+  gap: 16px;
+  min-height: 85px;
 }
 
-.apple-action-row > div:first-child {
+.apple-action-row > div:first-child,
+.apple-best-row > div:first-child {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px; /* Spazio tra Titolo e Sottotitolo */
+  gap: 6px; /* Spazio tra riga sopra e riga sotto */
 }
 
-.apple-action-row strong {
-  font-size: 1rem;
+.apple-action-row strong, .apple-best-row strong {
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--foreground);
   display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.apple-action-row span {
+.apple-action-row span, .apple-best-row span {
   font-size: 0.88rem;
   color: var(--muted);
   line-height: 1.4;
   display: block;
 }
 
-.apple-action-side {
+.apple-action-side, .apple-best-meta {
   display: flex;
   align-items: center;
-  gap: 16px; /* Spazio tra Badge e Bottone */
+  gap: 12px;
   flex-shrink: 0;
 }
 
-.dashboard-pill-badge {
-  padding: 4px 10px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  border-radius: 20px;
+@media (max-width: 1280px) {
+  .analysis-grid-top, .analysis-grid-middle, .analysis-grid-bottom { grid-template-columns: 1fr; }
+  .analysis-kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
