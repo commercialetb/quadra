@@ -92,15 +92,15 @@ export default function SettingsPage() {
             <div className="panel-head compact">
               <div>
                 <p className="page-eyebrow">Data</p>
-                <h2>Import</h2>
+                <h2>Importa CSV</h2>
               </div>
             </div>
             <p className="settings-copy">
-              Carica file Excel o CSV e importa aziende, contatti e opportunità senza sporcare il CRM.
+              Importa dati nel CRM da CSV o Excel. Questo è l'unico punto giusto per l'import.
             </p>
             <div className="cluster-wrap">
-              <Link href="/import" className="primary-button">Apri import</Link>
-              <Link href="/import" className="ghost-button">Mappatura campi</Link>
+              <Link href="/import" className="primary-button">Importa CSV</Link>
+              <Link href="/import" className="ghost-button">Controlla mapping</Link>
             </div>
           </section>
 
@@ -158,11 +158,11 @@ export default function SettingsPage() {
             <div className="panel-head compact">
               <div>
                 <p className="page-eyebrow">Voice</p>
-                <h2>Shortcut Siri</h2>
+                <h2>Shortcut Siri fondamentali</h2>
               </div>
             </div>
             <p className="settings-copy">
-              Tieni i comandi davvero utili, senza trasformare la pagina in un elenco lunghissimo da scorrere.
+              Qui devi capire subito se Siri è collegato bene: dettare, cercare record, vedere oggi e registrare esiti.
             </p>
             <div className="shortcut-mini-list shortcut-mini-list-compact">
               {shortcutCards.map((item) => {
@@ -179,8 +179,8 @@ export default function SettingsPage() {
               })}
             </div>
             <div className="cluster-wrap">
-              <Link href="/capture/siri/install" className="primary-button">Gestisci shortcut</Link>
-              <Link href="/capture/siri/review" className="ghost-button">Apri review</Link>
+              <Link href="/capture/siri/install" className="primary-button">Apri setup Siri</Link>
+              <Link href="/capture/siri/review" className="ghost-button">Apri review queue</Link>
             </div>
           </section>
 
@@ -210,58 +210,6 @@ export default function SettingsPage() {
           </section>
         </div>
       </div>
-
-      <section className="panel-card milestone-panel">
-        <div className="panel-head compact">
-          <div>
-            <p className="page-eyebrow">Milestone board</p>
-            <h2>Stato lavori</h2>
-          </div>
-        </div>
-
-        <div className="milestone-board-grid">
-          <div className="milestone-column milestone-column-done">
-            <div className="milestone-column-head">
-              <strong>Done</strong>
-              <span>Base stabile</span>
-            </div>
-            <ul className="milestone-list">
-              <li>Shell molto più pulita rispetto all’inizio</li>
-              <li>Sidebar desktop credibile e topbar più coerente</li>
-              <li>Dashboard meno caotica e con meno duplicazioni</li>
-              <li>CRUD principali molto più ordinati</li>
-              <li>Voice e AI riportate in una gerarchia più leggibile</li>
-            </ul>
-          </div>
-
-          <div className="milestone-column milestone-column-progress">
-            <div className="milestone-column-head">
-              <strong>In corso</strong>
-              <span>Rifinitura</span>
-            </div>
-            <ul className="milestone-list">
-              <li>Dashboard iPad da alleggerire ancora</li>
-              <li>Colonna destra dashboard da compattare meglio</li>
-              <li>Copilota AI da rifinire come modulo definitivo</li>
-              <li>Pagina Strumenti da semplificare</li>
-              <li>Coerenza totale tra desktop, iPad e iPhone</li>
-            </ul>
-          </div>
-
-          <div className="milestone-column milestone-column-next">
-            <div className="milestone-column-head">
-              <strong>Da fare</strong>
-              <span>Step successivi</span>
-            </div>
-            <ul className="milestone-list">
-              <li>Milestone 2: dashboard production-ready</li>
-              <li>Milestone 3: tools redesign completo</li>
-              <li>Milestone 4: AI operativa e query complesse più affidabili</li>
-              <li>Milestone 5: polish finale di Aziende, Contatti, Opportunità e Follow-up</li>
-            </ul>
-          </div>
-        </div>
-      </section>
     </div>
   )
 }

@@ -42,7 +42,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
         </div>
         <div className="company-decision-board-grid detail-decision-grid opportunity-v7-focus-grid">
           <article className="company-decision-focus-card opportunity-v7-focus-card">
-            <span>Prossimo passo</span>
+            <span>Prossima mossa</span>
             <strong>{nextStep}</strong>
             <p>{opportunity.description || 'Rendi esplicita la prossima azione e chiudila nel minor numero di passaggi possibile.'}</p>
           </article>
@@ -97,7 +97,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
 
         <div className="stack-lg">
           <details className="panel-card detail-collapse-card">
-            <summary>Apri AI, timeline e modifica</summary>
+            <summary>Apri dettagli</summary>
             <div className="stack-lg detail-inner-stack">
               <OpportunityAiCard opportunityId={id} />
               <TimelineCard items={timeline} />
@@ -105,8 +105,8 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
             </div>
           </details>
           <details className="panel-card detail-collapse-card" open>
-            <summary>Apri panoramica completa</summary>
-            <InfoCard title="Dettagli essenziali">
+            <summary>Apri dettagli</summary>
+            <InfoCard title="Essenziali">
               <InfoRow label="Fase" value={stageLabel(opportunity.stage)} />
               <InfoRow label="Valore stimato" value={formatCurrency(opportunity.value_estimate)} />
               <InfoRow label="Probabilità" value={typeof opportunity.probability === 'number' ? `${opportunity.probability}%` : '—'} />
@@ -119,7 +119,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
           </details>
 
           <details className="panel-card detail-collapse-card">
-            <summary>Note recenti</summary>
+            <summary>Note</summary>
             <EntityListCard
               title="Appunti collegati"
               empty="Nessuna nota collegata."

@@ -60,8 +60,8 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
       <ContactEditCard contact={contact} companies={companies} primaryPhone={primaryPhone} />
 
       <details className="panel-card detail-collapse-card" open>
-        <summary>Panoramica contatto</summary>
-        <InfoCard title="Dettagli essenziali">
+        <summary>Contesto</summary>
+        <InfoCard title="Essenziali">
           <InfoRow label="Email" value={contact.email} />
           <InfoRow label="WhatsApp" value={contact.whatsapp} />
           <InfoRow label="Metodo preferito" value={contact.preferred_contact_method} />
@@ -74,7 +74,7 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
       <div className="detail-grid">
         <div className="stack-lg">
           <details className="panel-card detail-collapse-card" open>
-            <summary>Opportunità e telefoni</summary>
+            <summary>Contatti utili</summary>
             <div className="stack-lg detail-inner-stack">
               <EntityListCard
                 title="Telefoni"
@@ -103,7 +103,7 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
 
         <div className="stack-lg">
           <details className="panel-card detail-collapse-card" open>
-            <summary>Note recenti</summary>
+            <summary>Note</summary>
             <EntityListCard
               title="Appunti collegati"
               empty="Nessuna nota collegata."

@@ -137,7 +137,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
               />
 
               <EntityListCard
-                title="Note recenti"
+                title="Note"
                 empty="Nessuna nota collegata."
                 items={notes.map((note) => ({ id: note.id, label: note.title || 'Nota', meta: note.body }))}
               />
