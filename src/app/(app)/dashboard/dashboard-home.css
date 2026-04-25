@@ -1,6 +1,6 @@
 /* --- DASHBOARD MATTER INTEGRALE --- */
 
-.dashboard-home-v3 {
+.home-container {
   padding: clamp(16px, 4vw, 32px);
   background: #f5f5f7;
   min-height: 100vh;
@@ -9,8 +9,7 @@
   gap: 24px;
 }
 
-/* Header AI - Senza sovrapposizioni */
-.ai-welcome-section {
+.ai-hero-card {
   background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
   border: 1px solid rgba(0, 122, 255, 0.1);
   border-radius: 24px;
@@ -18,7 +17,22 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.02);
 }
 
-.ai-greeting h1 {
+.ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(0, 122, 255, 0.08);
+  color: #007AFF;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.home-title {
   font-size: clamp(1.8rem, 5vw, 2.8rem);
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -26,81 +40,45 @@
   margin-bottom: 8px;
 }
 
-/* Grid Responsiva 12 colonne */
-.op-grid {
+.ai-summary-text {
+  font-size: 1rem;
+  color: #424245;
+  max-width: 800px;
+  line-height: 1.5;
+}
+
+.home-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 20px;
 }
 
-.op-card {
+.home-card {
   background: white;
   border-radius: 24px;
   padding: 24px;
   border: 1px solid rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
 }
 
-/* Gestione colonne per iPhone (12), iPad (12), Desktop (8+4) */
-.col-main, .col-side {
+.col-span-desktop-8, .col-span-desktop-4 {
   grid-column: span 12;
 }
 
 @media (min-width: 1024px) {
-  .col-main { grid-column: span 8; }
-  .col-side { grid-column: span 4; }
+  .col-span-desktop-8 { grid-column: span 8; }
+  .col-span-desktop-4 { grid-column: span 4; }
 }
 
-/* Fix sovrapposizione testi (Aziende e Azioni) */
-.action-item-card {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 20px;
-  background: #f9f9fb;
-  border-radius: 20px;
-  margin-bottom: 12px;
-  border: 1px solid transparent;
+.matter-action-row {
+  transition: all 0.2s ease;
 }
 
-.action-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
+.matter-action-row:active {
+  transform: scale(0.98);
+  background: #f2f2f7;
 }
 
-.action-title-group {
-  max-width: 70%;
-}
-
-.action-title-group strong {
-  display: block;
-  font-size: 1.1rem;
-  line-height: 1.2;
-  color: #1d1d1f;
-}
-
-.action-body-text {
-  font-size: 0.95rem;
-  color: #424245;
-  line-height: 1.5;
-  margin-top: 8px;
-}
-
-/* Badge Priorità */
-.priority-pill {
-  padding: 4px 10px;
-  border-radius: 100px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-.pill-high { background: #fee2e2; color: #ef4444; }
-
-/* FAB Mobile */
-.mobile-fab-btn {
+.fab-apple {
   display: none;
   position: fixed;
   bottom: 24px;
@@ -117,5 +95,5 @@
 }
 
 @media (max-width: 768px) {
-  .mobile-fab-btn { display: flex; }
+  .fab-apple { display: flex; }
 }
