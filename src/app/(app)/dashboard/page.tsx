@@ -2,8 +2,8 @@
 
 import React from 'react'
 import Link from 'next/link'
-// Puntiamo al file esatto che hai creato tu nello screenshot!
-import '../home-matter.css'
+// L'import ora è locale, garantito al 100% che Webpack lo trovi!
+import './dashboard-home.css'
 
 export default function DashboardPage() {
   const actions = [
@@ -29,7 +29,6 @@ export default function DashboardPage() {
       {/* 1. AI HEADER */}
       <header className="ai-hero-card">
         <div className="ai-badge">
-          {/* Icona SVG Nativa (Nessun pacchetto richiesto) */}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" className="mr-1">
             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
           </svg>
@@ -61,7 +60,7 @@ export default function DashboardPage() {
               <div 
                 key={action.id} 
                 className="matter-action-row" 
-                style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '20px' }}
+                style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '20px', background: '#f9f9fb', borderRadius: '20px' }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'flex-start' }}>
                   <div>
