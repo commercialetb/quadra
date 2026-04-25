@@ -96,7 +96,7 @@ export function DashboardShell({ data }: { data: DashboardData }) {
   const staleOpportunities = (data.staleOpportunities || []).slice(0, 3)
   const topSignals = (data.dashboardSignals || []).slice(0, 3)
   const topSuggestions = (data.suggestedFollowups || []).slice(0, 3)
-  const bestCompanies = [
+  const bestCompaniesAll = [
     ...(data.priorityBuckets?.callNow || []).slice(0, 2),
     ...(data.priorityBuckets?.reactivate || []).slice(0, 1),
     ...(data.priorityBuckets?.monitor || []).slice(0, 1),
@@ -108,6 +108,8 @@ export function DashboardShell({ data }: { data: DashboardData }) {
   const overdueCount = data.kpis.overdueCount || 0
   const topAction = data.actionPlan?.[0]
   const topSignal = topSignals[0]
+  const bestCompanies = bestCompaniesAll.slice(0, 4)
+  const extraBestCompanies = bestCompaniesAll.slice(4)
   const nextCompany = bestCompanies[0]
 
   return (
@@ -120,8 +122,8 @@ export function DashboardShell({ data }: { data: DashboardData }) {
         <div className="dashboard-v8-stage-head">
           <div>
             <p className="page-eyebrow">Home</p>
-            <h1 className="page-title">Oggi</h1>
-            <p className="page-subtitle">Una sola priorità sopra la piega. Il resto deve stare zitto.</p>
+            <h1 className="page-title">Focus di oggi</h1>
+            <p className="page-subtitle">Una priorita chiara sopra la piega. Il resto sotto.</p>
           </div>
           <div className="cluster-wrap dashboard-v8-stage-actions">
             <Link href="/followups" className="primary-button">Apri agenda</Link>
@@ -138,7 +140,7 @@ export function DashboardShell({ data }: { data: DashboardData }) {
 
         <div className="dashboard-v6-focus-grid">
           <article className="dashboard-v6-primary-action">
-            <span>Cosa fare</span>
+            <span>Focus</span>
             <strong>{topAction?.title || 'Rivedi agenda e opportunità aperte'}</strong>
             <p>{topAction?.detail || "Non c'è un'urgenza dominante: presidia follow-up di oggi e deal da sbloccare."}</p>
             <div className="dashboard-v6-inline-meta">
@@ -159,7 +161,7 @@ export function DashboardShell({ data }: { data: DashboardData }) {
 
           <aside className="dashboard-v6-side-note dashboard-v8-side-note">
             <div className="dashboard-v6-side-line">
-              <small>Da seguire ora</small>
+              <small>Da seguire</small>
               <strong>{overdueCount > 0 ? `${overdueCount} attività in ritardo` : 'Nessun arretrato critico'}</strong>
             </div>
             <div className="dashboard-v6-side-line">

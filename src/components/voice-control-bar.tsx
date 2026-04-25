@@ -79,13 +79,14 @@ export function VoiceControlBar({ compact = false }: { compact?: boolean }) {
 
     recognition.onerror = (event) => {
       setListening(false)
-      setStatus(event.error === 'not-allowed' ? 'Microfono non autorizzato.' : 'Dettatura non disponibile.')
+      setStatus(event.error === 'not-allowed' ? 'Microfono non autorizzato.' : 'Detta notatura non disponibile.')
     }
 
     recognition.onend = () => {
       setListening(false)
       const note = finalTranscript.trim()
       if (note) goToVoicePage(note)
+      else setStatus('Nessuna voce rilevata. Riprova o apri la cattura.')
     }
 
     recognitionRef.current = recognition
@@ -104,19 +105,19 @@ export function VoiceControlBar({ compact = false }: { compact?: boolean }) {
       >
         <span className="voice-trigger-dot" />
         <span className="voice-trigger-wave" aria-hidden="true"><i /><i /><i /><i /></span>
-        <span className="voice-trigger-label">{listening ? 'Ascolto in corso' : 'Voice Control Bar'}</span>
+        <span className="voice-trigger-label">{listening ? 'Ascolto in corso' : 'Parla con Quadra'}</span>
       </button>
 
       {!compact ? (
         <div className="voice-control-actions">
-          <Link href="/capture/voice" className="voice-link">Detta</Link>
+          <Link href="/capture/voice" className="voice-link">Detta nota</Link>
           <Link href="/assistant" className="voice-link">Assistente</Link>
-          <Link href="/capture/siri" className="voice-link">Shortcut</Link>
+          <Link href="/capture/siri" className="voice-link">Siri</Link>
         </div>
       ) : null}
 
       <div className="voice-control-status" aria-live="polite">
-        {status || (supported ? 'Tocca per dettare e aprire la nota vocale.' : 'Apre il workspace vocale.')}
+        {status || (supported ? 'Tocca, parla e apri subito la cattura vocale.' : 'Apre la cattura vocale.')}
       </div>
     </div>
   )

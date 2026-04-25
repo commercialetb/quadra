@@ -48,6 +48,9 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
     })
   }, [companies, filter, industryFilter, query])
 
+  const visibleItems = items.slice(0, 5)
+  const hiddenItems = items.slice(5)
+
   const totalCount = items.length
   const clientCount = items.filter((company) => company.status === 'client').length
   const prospectCount = items.filter((company) => company.status === 'prospect').length
@@ -110,7 +113,7 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
         </div>
 
         <div className="cards-stack cards-stack-v3">
-          {items.map((company) => (
+          {visibleItems.map((company) => (
             <article key={company.id} className="entity-card entity-card-v3 company-card-v3 quiet-card">
               <Link href={`/companies/${company.id}`} className="entity-card-main entity-card-main-link quiet-card">
                 <CompanyAvatar name={company.name} website={company.website} />
@@ -159,6 +162,62 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
           ))}
           {!items.length ? <div className="empty-state-box">Nessuna azienda trovata con questi filtri.</div> : null}
         </div>
+        {hiddenItems.length ? (
+          <details className="crm-more-details">
+            <summary>Apri altre {hiddenItems.length} voci</summary>
+            <div className="cards-stack cards-stack-v3 crm-more-stack">
+              {hiddenItems.map((company) => (
+
+            <article key={company.id} className="entity-card entity-card-v3 company-card-v3 quiet-card">
+              <Link href={`/companies/${company.id}`} className="entity-card-main entity-card-main-link quiet-card">
+                <CompanyAvatar name={company.name} website={company.website} />
+                <div className="entity-card-copy stretch">
+                  <div className="entity-card-top">
+                    <div>
+                      <h3>{company.name}</h3>
+                      <p>{[company.city, company.province].filter(Boolean).join(', ') || 'Località non indicata'}</p>
+                    </div>
+                    <span className={`tone-badge ${badgeTone(company.status)}`}>{labelize(company.status)}</span>
+                  </div>
+
+                  <div className="entity-glance-grid">
+                    <div className="entity-glance-item"><span>Sito</span><strong>{company.website ? sanitizeWebsite(company.website) : 'Non indicato'}</strong></div>
+                    <div className="entity-glance-item"><span>Settore</span><strong>{company.industry || 'Non indicato'}</strong></div>
+                    <div className="entity-glance-item"><span>Email</span><strong>{company.email || 'Non indicata'}</strong></div>
+                    <div className="entity-glance-item"><span>Telefono</span><strong>{company.phone || 'Non indicato'}</strong></div>
+                  </div>
+                </div>
+              </Link>
+
+              <details className="entity-more-details">
+                <summary>Altri dettagli</summary>
+                <div className="entity-inline-meta wrap">
+                  {company.address_line1 ? <span>{company.address_line1}</span> : <span>Indirizzo non indicato</span>}
+                  {company.vat_number ? <span>P.IVA {company.vat_number}</span> : null}
+                  {company.notes_summary ? <span>{company.notes_summary}</span> : null}
+                </div>
+              </details>
+
+              <div className="entity-card-actions cleaner-actions">
+                <Link href={`/companies/${company.id}`} className="secondary-button">Apri scheda</Link>
+                <form action={updateCompanyStatus} className="inline-mini-form compact-inline-form">
+                  <input type="hidden" name="id" value={company.id} />
+                  <select name="status" defaultValue={company.status} className="field-control compact-control">
+                    {companyStatuses.map((item) => <option key={item} value={item}>{labelize(item)}</option>)}
+                  </select>
+                  <SaveButton idleLabel="Aggiorna" />
+                </form>
+                <form action={deleteCompany}>
+                  <input type="hidden" name="id" value={company.id} />
+                  <button className="ghost-button danger-ghost" type="submit">Elimina</button>
+                </form>
+              </div>
+            </article>
+          
+              ))}
+            </div>
+          </details>
+        ) : null}
       </section>
 
       {showCreate ? (

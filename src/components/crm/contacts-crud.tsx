@@ -103,7 +103,7 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
         </div>
 
         <div className="cards-stack cards-stack-v3">
-          {items.map((contact) => (
+          {visibleItems.map((contact) => (
             <article key={contact.id} className="entity-card entity-card-contact entity-card-v3 quiet-card">
               <Link href={`/contacts/${contact.id}`} className="entity-card-main entity-card-main-link quiet-card">
                 <ContactAvatar firstName={contact.first_name} lastName={contact.last_name} />
@@ -154,6 +154,64 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
           ))}
           {!items.length ? <div className="empty-state-box">Nessun contatto trovato.</div> : null}
         </div>
+        {hiddenItems.length ? (
+          <details className="crm-more-details">
+            <summary>Apri altre {hiddenItems.length} voci</summary>
+            <div className="cards-stack cards-stack-v3 crm-more-stack">
+              {hiddenItems.map((contact) => (
+
+            <article key={contact.id} className="entity-card entity-card-contact entity-card-v3 quiet-card">
+              <Link href={`/contacts/${contact.id}`} className="entity-card-main entity-card-main-link quiet-card">
+                <ContactAvatar firstName={contact.first_name} lastName={contact.last_name} />
+                <div className="entity-card-copy stretch">
+                  <div className="entity-card-top compact-gap">
+                    <div>
+                      <h3>{contact.first_name} {contact.last_name}</h3>
+                      <p>{contact.role || 'Ruolo non indicato'} · {contact.companies?.name || 'Nessuna azienda'}</p>
+                    </div>
+                    <span className="tone-badge neutral">{preferredChannel(contact)}</span>
+                  </div>
+                  <div className="entity-glance-grid entity-glance-grid-contacts">
+                    <div className="entity-glance-item"><span>Azienda</span><strong>{contact.companies?.name || 'Da collegare'}</strong></div>
+                    <div className="entity-glance-item"><span>Canale</span><strong>{preferredChannel(contact)}</strong></div>
+                    <div className="entity-glance-item"><span>Recapito</span><strong>{bestReach(contact)}</strong></div>
+                    <div className="entity-glance-item"><span>Ruolo</span><strong>{contact.role || 'Da indicare'}</strong></div>
+                  </div>
+                </div>
+              </Link>
+
+              <details className="entity-more-details">
+                <summary>Altri dettagli</summary>
+                <div className="entity-inline-meta wrap">
+                  {contact.email ? <span>{contact.email}</span> : null}
+                  {contact.phone ? <span>{contact.phone}</span> : null}
+                  {contact.whatsapp ? <span>{contact.whatsapp}</span> : null}
+                  {contact.notes_summary ? <span>{contact.notes_summary}</span> : <span>Nessuna nota rapida</span>}
+                </div>
+              </details>
+
+              <div className="entity-card-actions cleaner-actions">
+                <Link href={`/contacts/${contact.id}`} className="secondary-button">Apri scheda</Link>
+                <form action={updateContact} className="inline-mini-form compact-inline-form wide">
+                  <input type="hidden" name="id" value={contact.id} />
+                  <select name="company_id" defaultValue={contact.company_id ?? ''} className="field-control compact-control">
+                    <option value="">Nessuna</option>
+                    {sortedCompanies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
+                  </select>
+                  <input name="role" defaultValue={contact.role ?? ''} placeholder="Ruolo" className="field-control compact-control" />
+                  <button className="ghost-button" type="submit">Aggiorna</button>
+                </form>
+                <form action={deleteContact}>
+                  <input type="hidden" name="id" value={contact.id} />
+                  <button className="ghost-button danger-ghost" type="submit">Elimina</button>
+                </form>
+              </div>
+            </article>
+          
+              ))}
+            </div>
+          </details>
+        ) : null}
       </section>
 
       {showCreate ? (

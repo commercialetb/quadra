@@ -100,7 +100,7 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
         </div>
 
         <div className="cards-stack cards-stack-v3">
-          {items.map((item) => (
+          {visibleItems.map((item) => (
             <article key={item.id} className="entity-card opportunity-card entity-card-opportunity entity-card-v3 quiet-card">
               <Link href={`/opportunities/${item.id}`} className="entity-card-copy stretch entity-card-main-link quiet-card">
                 <div className="entity-card-top">
@@ -143,6 +143,56 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
           ))}
           {!items.length ? <div className="empty-state-box">Nessuna opportunità trovata.</div> : null}
         </div>
+        {hiddenItems.length ? (
+          <details className="crm-more-details">
+            <summary>Apri altre {hiddenItems.length} voci</summary>
+            <div className="cards-stack cards-stack-v3 crm-more-stack">
+              {hiddenItems.map((item) => (
+
+            <article key={item.id} className="entity-card opportunity-card entity-card-opportunity entity-card-v3 quiet-card">
+              <Link href={`/opportunities/${item.id}`} className="entity-card-copy stretch entity-card-main-link quiet-card">
+                <div className="entity-card-top">
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.companies?.name ?? 'Azienda non indicata'} · chiusura {formatDate(item.expected_close_date)}</p>
+                  </div>
+                  <span className={`tone-badge ${stageTone(item.stage)}`}>{stageLabel(item.stage)}</span>
+                </div>
+                <div className="entity-glance-grid">
+                  <div className="entity-glance-item"><span>Valore</span><strong>{formatCurrency(item.value_estimate)}</strong></div>
+                  <div className="entity-glance-item"><span>Probabilità</span><strong>{typeof item.probability === 'number' ? `${item.probability}%` : '—'}</strong></div>
+                  <div className="entity-glance-item"><span>Next action</span><strong>{item.next_action || 'Da definire'}</strong></div>
+                  <div className="entity-glance-item"><span>Entro</span><strong>{item.next_action_due_at ? formatDate(item.next_action_due_at) : 'Senza data'}</strong></div>
+                </div>
+              </Link>
+              <details className="entity-more-details">
+                <summary>Altri dettagli</summary>
+                <div className="entity-inline-meta wrap">
+                  {item.primary_contact?.full_name ? <span>{item.primary_contact.full_name}</span> : <span>Nessun contatto principale</span>}
+                  {item.source ? <span>Fonte: {item.source}</span> : null}
+                  {item.description ? <span>{item.description}</span> : null}
+                </div>
+              </details>
+              <div className="entity-card-actions cleaner-actions">
+                <Link href={`/opportunities/${item.id}`} className="secondary-button">Apri scheda</Link>
+                <form action={updateOpportunityStage} className="inline-mini-form compact-inline-form">
+                  <input type="hidden" name="id" value={item.id} />
+                  <select name="stage" defaultValue={item.stage} className="field-control compact-control">
+                    {stages.map((stage) => <option key={stage} value={stage}>{stageLabel(stage)}</option>)}
+                  </select>
+                  <SaveButton idleLabel="Aggiorna" />
+                </form>
+                <form action={deleteOpportunity}>
+                  <input type="hidden" name="id" value={item.id} />
+                  <button className="ghost-button danger-ghost" type="submit">Elimina</button>
+                </form>
+              </div>
+            </article>
+          
+              ))}
+            </div>
+          </details>
+        ) : null}
       </section>
 
       {showCreate ? (

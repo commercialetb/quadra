@@ -63,6 +63,27 @@ function signalTone(value: CompanyRow['signal']) {
   return ''
 }
 
+function InlineBars({ title, items, formatter = (value: number) => String(value) }: { title: string; items: SeriesItem[]; formatter?: (value: number) => string }) {
+  const rows = items.slice(0, 6)
+  const max = Math.max(...rows.map((item) => item.value), 1)
+  return (
+    <section className="panel-card analysis-chart-card">
+      <div className="dashboard-redesign-head"><h2>{title}</h2></div>
+      <div className="analysis-mini-bars">
+        {rows.length ? rows.map((item) => (
+          <div key={item.label} className="analysis-mini-bar-row">
+            <div className="analysis-mini-bar-head">
+              <span>{item.label}</span>
+              <strong>{formatter(item.value)}</strong>
+            </div>
+            <div className="analysis-mini-bar-track"><i style={{ width: `${Math.max(12, (item.value / max) * 100)}%` }} /></div>
+          </div>
+        )) : <div className="dashboard-widget-empty apple-empty">Nessun dato da mostrare.</div>}
+      </div>
+    </section>
+  )
+}
+
 export function AnalysisDashboard({
   data,
 }: {
@@ -124,7 +145,8 @@ export function AnalysisDashboard({
   const bestCompanies = [...filteredRows]
     .sort((a, b) => (b.priorityScore + b.importedValue) - (a.priorityScore + a.importedValue))
     .slice(0, 6)
-  const monitorCompanies = filteredRows.slice(0, 8)
+  const monitorCompanies = filteredRows.slice(0, 5)
+  const extraMonitorCompanies = filteredRows.slice(5, 12)
   const topHighlights = data.highlights.slice(0, 3)
 
   return (
@@ -137,10 +159,7 @@ export function AnalysisDashboard({
             Quadra qui deve battere la complessità, non aggiungerla: vedi cosa fare, con chi e perché. Tutto il resto resta annidato sotto.
           </p>
         </div>
-        <div className="cluster-wrap">
-          <a href="#analysis-import" className="primary-button">Importa CSV</a>
-          <Link href="/companies" className="ghost-button">Apri aziende</Link>
-        </div>
+
       </section>
 
       {!data.schemaReady ? (
@@ -186,7 +205,7 @@ export function AnalysisDashboard({
           <div className="dashboard-redesign-head">
             <div>
               <p className="page-eyebrow">Filtro</p>
-              <h2>Aziende da monitorare</h2>
+              <h2>Da monitorare</h2>
             </div>
           </div>
           <label className="analysis-industry-filter">
@@ -212,6 +231,25 @@ export function AnalysisDashboard({
               </Link>
             )) : <div className="dashboard-widget-empty apple-empty">Nessuna azienda per questo filtro.</div>}
           </div>
+          {extraMonitorCompanies.length ? (
+            <details className="crm-more-details">
+              <summary>Apri altre {extraMonitorCompanies.length} aziende</summary>
+              <div className="apple-list-stack">
+                {extraMonitorCompanies.map((row) => (
+                  <Link key={row.companyId} href={`/companies/${row.companyId}`} className="apple-best-row">
+                    <div>
+                      <strong>{row.companyName}</strong>
+                      <span>{row.insight}</span>
+                    </div>
+                    <div className="apple-best-meta">
+                      <span className={`dashboard-pill-badge ${signalTone(row.signal)}`}>{row.signal}</span>
+                      <strong>{row.priorityScore}/100</strong>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </details>
+          ) : null}
         </div>
       </section>
 
@@ -219,7 +257,7 @@ export function AnalysisDashboard({
         <div className="dashboard-redesign-head">
           <div>
             <p className="page-eyebrow">Report</p>
-            <h2>Chi sta andando meglio</h2>
+            <h2>Account da seguire</h2>
           </div>
         </div>
         <div className="analysis-company-table-wrap redesign-best-wrap">
@@ -266,7 +304,12 @@ export function AnalysisDashboard({
         ))}
       </section>
 
-      <details className="analysis-details-block redesigned-details" open={false}>
+      <section className="analysis-chart-grid">
+        <InlineBars title="Ordini per stato" items={data.statusSeries} />
+        <InlineBars title="Valore mensile" items={data.monthlySeries} formatter={formatCurrency} />
+      </section>
+
+      <details className="analysis-secondary-details analysis-details-block redesigned-details" open={false}>
         <summary>Apri follow-up suggeriti, ordini recenti e import</summary>
         <div className="analysis-details-redesign-grid">
           <section className="panel-card">

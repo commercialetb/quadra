@@ -44,6 +44,8 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
   const [filter, setFilter] = useState('all')
   const [priorityFilter, setPriorityFilter] = useState('all')
   const [showCreate, setShowCreate] = useState(false)
+  const [aiAnswer, setAiAnswer] = useState('')
+  const [aiBusy, setAiBusy] = useState<'now' | 'risk' | 'why' | ''>('')
 
   const sortedCompanies = useMemo(() => [...companies].sort((a, b) => a.name.localeCompare(b.name, 'it', { sensitivity: 'base' })), [companies])
   const sortedContacts = useMemo(() => [...contacts].sort((a, b) => `${a.first_name ?? ''} ${a.last_name ?? ''}`.trim().localeCompare(`${b.first_name ?? ''} ${b.last_name ?? ''}`.trim(), 'it', { sensitivity: 'base' })), [contacts])
@@ -73,6 +75,28 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
   const nextItem = items.find((item) => item.status !== 'completed')
 
   const companyMap = useMemo(() => new Map(companies.map((company) => [company.id, company.name])), [companies])
+
+  async function askAi(question: string, mode: 'now' | 'risk' | 'why') {
+    setAiBusy(mode)
+    try {
+      const response = await fetch('/api/ai/query-crm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question }),
+      })
+      const result = await response.json()
+      const answer = result.answer || result.error || 'Nessuna risposta disponibile.'
+      setAiAnswer(answer)
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(answer)
+        utterance.lang = 'it-IT'
+        window.speechSynthesis.cancel()
+        window.speechSynthesis.speak(utterance)
+      }
+    } finally {
+      setAiBusy('')
+    }
+  }
   const contactMap = useMemo(() => new Map(contacts.map((contact) => [contact.id, `${contact.first_name} ${contact.last_name}`.trim()])), [contacts])
   const opportunityMap = useMemo(() => new Map(opportunities.map((opportunity) => [opportunity.id, opportunity.title])), [opportunities])
 
@@ -99,17 +123,17 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
 
         <section className="crm-focus-strip" aria-label="Lettura rapida follow-up">
           <article className="crm-focus-card is-primary quiet-card">
-            <span>Cosa fare adesso</span>
+            <span>Da fare adesso</span>
             <strong>{nextItem?.title || 'Nessun follow-up aperto'}</strong>
             <p>{nextItem ? `Scade ${formatDateTime(nextItem.due_at)} · ${followupStatusLabel(nextItem.status)}` : 'La tua agenda è pulita nel filtro corrente.'}</p>
           </article>
           <article className="crm-focus-card quiet-card">
-            <span>Cosa rischia di bloccarti</span>
+            <span>Rischi</span>
             <strong>{urgentCount > 0 ? `${urgentCount} urgenti` : 'Nessuna urgenza alta'}</strong>
             <p>{urgentCount > 0 ? 'Chiudi prima questi follow-up per evitare attrito operativo.' : 'Puoi lavorare per priorità senza rincorrere emergenze.'}</p>
           </article>
           <article className="crm-focus-card quiet-card">
-            <span>Perché conta</span>
+            <span>Perché</span>
             <strong>{progressCount > overdueCount ? 'Pipeline in moto' : 'Serve pulizia agenda'}</strong>
             <p>{progressCount > overdueCount ? 'Hai più attività in avanzamento che attività fuori tempo.' : 'Vale la pena chiudere o ripianificare ciò che è rimasto indietro.'}</p>
           </article>
@@ -133,7 +157,7 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
         </div>
 
         <div className="cards-stack cards-stack-v3">
-          {items.map((item) => (
+          {visibleItems.map((item) => (
             <article key={item.id} className="entity-card entity-card-followup entity-card-v3 quiet-card">
               <div className="entity-card-copy stretch quiet-card">
                 <div className="entity-card-top">
@@ -186,6 +210,24 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
           ))}
           {!items.length ? <div className="empty-state-box">Nessun follow-up trovato.</div> : null}
         </div>
+        {hiddenItems.length ? (
+          <details className="crm-more-details crm-list-more-details">
+            <summary>Apri altre {hiddenItems.length} follow-up</summary>
+            <div className="cards-stack cards-stack-v3 crm-more-stack">
+              {hiddenItems.map((item) => (
+                <article className="entity-card quiet-card crm-list-card" key={item.id}>
+                  <div className="entity-card-copy stretch">
+                    <div className="entity-card-top compact-gap">
+                      <div>
+                        <h3>{item.name || item.title || 'Voce CRM'}</h3>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </details>
+        ) : null}
       </section>
 
       {showCreate ? (
