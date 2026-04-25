@@ -470,6 +470,7 @@ function CustomerActionTable({
 }
 
 export function AnalysisDashboard({ data }: {  AnalysisDashboardData }) {
+
   const [industryFilter, setIndustryFilter] = useState<string>('all')
 
   const industryOptions = useMemo(
