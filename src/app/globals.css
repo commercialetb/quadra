@@ -1664,7 +1664,7 @@ body::after {
   display: grid;
   grid-template-columns: minmax(0, 1.6fr) minmax(260px, .7fr);
   gap: 18px;
-  align-items: end;
+  align-items: flex-end;
   background:
     radial-gradient(circle at top left, rgba(171,147,255,.18), transparent 28%),
     radial-gradient(circle at bottom right, rgba(109,220,219,.18), transparent 32%),
@@ -2139,7 +2139,7 @@ body::after {
 .sidebar-pod-wave {
   display: flex;
   gap: 8px;
-  align-items: end;
+  align-items: flex-end;
   min-height: 28px;
 }
 
@@ -2201,7 +2201,7 @@ body::after {
 .topbar-voice-wave {
   display: inline-flex;
   gap: 5px;
-  align-items: end;
+  align-items: flex-end;
   min-height: 18px;
 }
 
@@ -2291,7 +2291,7 @@ body::after {
 
 .stage-voice-wave {
   display: inline-flex;
-  align-items: end;
+  align-items: flex-end;
   gap: 5px;
   min-height: 18px;
   flex: 1;
@@ -2438,7 +2438,7 @@ body::after {
 .fake-chart {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  align-items: end;
+  align-items: flex-end;
   gap: 10px;
   min-height: 116px;
 }
@@ -2841,7 +2841,7 @@ body {
 
 .voice-trigger-wave {
   display: inline-flex;
-  align-items: end;
+  align-items: flex-end;
   gap: 5px;
   min-height: 18px;
 }
@@ -7045,7 +7045,7 @@ input { min-height: 46px; }
 }
 
 .dashboard-hero-v6 {
-  align-items: end;
+  align-items: flex-end;
 }
 
 .dashboard-hero-v6 .page-title {
