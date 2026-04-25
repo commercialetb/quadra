@@ -2,16 +2,11 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { useAuth } from '@/lib/hooks/use-auth' // Utilizziamo il tuo hook esistente
 import './dashboard-home.css'
 
 export default function DashboardPage() {
-  const { user } = useAuth()
-  
-  // Estraiamo il nome: prova prima dal metadata, poi dalla mail, altrimenti "User"
-  const firstName = user?.user_metadata?.full_name?.split(' ')[0] || 
-                    user?.email?.split('@')[0] || 
-                    "Antonio"
+  // Hardcoded per il build, lo collegheremo a Supabase nel prossimo step
+  const firstName = "Antonio"
 
   const actions = [
     {
@@ -33,7 +28,7 @@ export default function DashboardPage() {
   return (
     <div className="home-container">
       
-      {/* 1. AI HEADER DINAMICO */}
+      {/* 1. AI HEADER */}
       <header className="ai-hero-card">
         <div className="ai-badge">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="mr-1">
@@ -50,7 +45,6 @@ export default function DashboardPage() {
       {/* 2. GRID PRINCIPALE */}
       <main className="home-grid">
         
-        {/* SEZIONE AZIONI */}
         <section className="home-card col-span-desktop-8">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-xl font-bold">Azioni immediate</h2>
@@ -89,7 +83,6 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        {/* SEZIONE MONITORAGGIO */}
         <aside className="home-card col-span-desktop-4">
           <div className="flex items-center gap-2 mb-6">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -115,7 +108,6 @@ export default function DashboardPage() {
 
       </main>
 
-      {/* 3. FAB IPHONE */}
       <button className="fab-apple">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
