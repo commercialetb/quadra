@@ -469,7 +469,7 @@ function CustomerActionTable({
   )
 }
 
-export function AnalysisDashboard({ data }: {  AnalysisDashboardData }) {
+export function AnalysisDashboard({ data }: {  AnalysisDashboardData  }) {
 
   const [industryFilter, setIndustryFilter] = useState<string>('all')
 
