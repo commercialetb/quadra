@@ -67,6 +67,9 @@ export function FollowupsCrud({ followups, companies, contacts, opportunities }:
       })
   }, [filter, followups, priorityFilter, query])
 
+  const visibleItems = items.slice(0, 5)
+  const hiddenItems = items.slice(5)
+
   const overdueCount = items.filter((item) => item.status === 'overdue').length
   const progressCount = items.filter((item) => item.status === 'in_progress').length
   const completedCount = items.filter((item) => item.status === 'completed').length

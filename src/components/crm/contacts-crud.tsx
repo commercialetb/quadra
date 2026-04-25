@@ -42,6 +42,9 @@ export function ContactsCrud({ contacts, companies }: { contacts: any[]; compani
     })
   }, [companyFilter, contacts, methodFilter, query])
 
+  const visibleItems = items.slice(0, 5)
+  const hiddenItems = items.slice(5)
+
   const linkedCount = items.filter((contact) => contact.companies?.name).length
   const emailCount = items.filter((contact) => contact.email).length
   const whatsappCount = items.filter((contact) => contact.whatsapp).length

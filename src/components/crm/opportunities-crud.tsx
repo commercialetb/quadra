@@ -44,6 +44,9 @@ export function OpportunitiesCrud({ opportunities, companies, contacts }: { oppo
     })
   }, [opportunities, query, filter])
 
+  const visibleItems = items.slice(0, 5)
+  const hiddenItems = items.slice(5)
+
   const openCount = items.filter((item) => !['won', 'lost'].includes(item.stage)).length
   const proposalCount = items.filter((item) => item.stage === 'proposal').length
   const pipelineValue = formatCurrency(items.reduce((sum, item) => sum + Number(item.value_estimate || 0), 0))
