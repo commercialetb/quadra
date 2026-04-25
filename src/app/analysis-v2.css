@@ -1,3 +1,4 @@
+
 .analysis-v2-page {
   gap: 20px;
 }
@@ -30,10 +31,31 @@
   justify-content: flex-end;
 }
 
+.analysis-industry-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.analysis-industry-filter span {
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.analysis-industry-filter select {
+  min-width: 180px;
+  max-width: 100%;
+}
+
 .analysis-kpi-grid {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 14px;
+  min-width: 0;
 }
 
 .analysis-kpi-card {
@@ -42,6 +64,7 @@
   background: linear-gradient(180deg, rgba(255,255,255,.96) 0%, rgba(255,255,255,.9) 100%);
   border: 1px solid rgba(15,23,42,.06);
   box-shadow: 0 10px 30px rgba(15,23,42,.05);
+  min-width: 0;
 }
 
 .analysis-kpi-label {
@@ -73,6 +96,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
+  min-width: 0;
 }
 
 .analysis-highlight-card {
@@ -81,6 +105,7 @@
   background: linear-gradient(180deg, rgba(234,242,255,.92) 0%, rgba(255,255,255,.92) 100%);
   border: 1px solid rgba(37,99,235,.08);
   box-shadow: 0 8px 24px rgba(37,99,235,.05);
+  min-width: 0;
 }
 
 .analysis-highlight-card span {
@@ -88,11 +113,13 @@
   font-weight: 600;
   line-height: 1.45;
   color: var(--text);
+  overflow-wrap: anywhere;
 }
 
 .analysis-grid {
   display: grid;
   gap: 18px;
+  min-width: 0;
 }
 
 .analysis-grid-top {
@@ -110,6 +137,8 @@
 .analysis-chart-card {
   padding: 22px;
   border-radius: 26px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .analysis-chart-card .dashboard-redesign-head {
@@ -118,6 +147,7 @@
   justify-content: space-between;
   gap: 14px;
   margin-bottom: 18px;
+  min-width: 0;
 }
 
 .analysis-chart-card h2 {
@@ -127,10 +157,13 @@
   letter-spacing: -0.03em;
 }
 
-.analysis-top-customers-list {
+.analysis-top-customers-list,
+.analysis-mini-bars,
+.apple-list-stack {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-width: 0;
 }
 
 .analysis-top-customer-row {
@@ -140,6 +173,7 @@
   align-items: center;
   padding: 14px 0;
   border-bottom: 1px solid rgba(15,23,42,.06);
+  min-width: 0;
 }
 
 .analysis-top-customer-row:last-child {
@@ -169,12 +203,14 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  min-width: 0;
 }
 
 .analysis-top-customer-head strong {
   min-width: 0;
   font-size: 1rem;
   line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .analysis-top-customer-sub {
@@ -184,6 +220,7 @@
   gap: 10px;
   color: var(--muted);
   font-size: .92rem;
+  min-width: 0;
 }
 
 .analysis-top-customer-value {
@@ -207,16 +244,11 @@
   background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
 }
 
-.analysis-mini-bars {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
 .analysis-mini-bar-row {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
 }
 
 .analysis-mini-bar-head {
@@ -224,11 +256,14 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  min-width: 0;
 }
 
 .analysis-mini-bar-head > span {
   font-weight: 600;
   color: var(--text);
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .analysis-mini-bar-values {
@@ -236,6 +271,7 @@
   align-items: baseline;
   gap: 10px;
   flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .analysis-mini-bar-values small {
@@ -265,6 +301,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 18px;
+  min-width: 0;
 }
 
 .analysis-movers-col {
@@ -285,6 +322,7 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
+  min-width: 0;
 }
 
 .analysis-ai-lane {
@@ -293,6 +331,7 @@
   border-radius: 22px;
   background: rgba(255,255,255,.62);
   border: 1px solid rgba(15,23,42,.06);
+  overflow: hidden;
 }
 
 .analysis-ai-lane-head {
@@ -301,6 +340,7 @@
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 14px;
+  min-width: 0;
 }
 
 .analysis-ai-lane-head h3 {
@@ -323,25 +363,30 @@
   color: var(--muted);
 }
 
-.analysis-ai-row {
+.analysis-ai-row,
+.apple-action-row,
+.apple-best-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 14px;
   padding: 14px 0;
   border-bottom: 1px solid rgba(15,23,42,.06);
+  min-width: 0;
 }
 
-.analysis-ai-row:last-child {
+.analysis-ai-row:last-child,
+.apple-action-row:last-child,
+.apple-best-row:last-child {
   border-bottom: none;
   padding-bottom: 0;
 }
 
-.analysis-ai-row > div:first-child {
+.analysis-ai-row > div:first-child,
+.apple-action-row > div:first-child,
+.apple-best-row > div:first-child {
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex: 1 1 auto;
 }
 
 .analysis-ai-row-head {
@@ -349,24 +394,37 @@
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+  min-width: 0;
 }
 
-.analysis-ai-row span {
+.analysis-ai-row strong,
+.apple-action-row strong,
+.apple-best-row strong {
+  overflow-wrap: anywhere;
+}
+
+.analysis-ai-row span,
+.analysis-ai-row small,
+.apple-action-row span,
+.apple-best-row span {
   color: var(--muted);
   line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 
 .analysis-ai-row small {
-  color: var(--soft);
   font-size: .85rem;
 }
 
-.analysis-ai-side {
+.analysis-ai-side,
+.apple-action-side,
+.apple-best-meta {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 8px;
-  flex-shrink: 0;
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .analysis-table-wrap {
@@ -399,6 +457,7 @@
 .analysis-table td {
   font-size: .96rem;
   color: var(--text);
+  overflow-wrap: anywhere;
 }
 
 .analysis-table tbody tr:hover td {
@@ -418,6 +477,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
+  min-width: 0;
 }
 
 .analysis-schema-warning {
@@ -486,6 +546,20 @@
   .analysis-kpi-card {
     border-radius: 22px;
   }
+
+  .analysis-ai-row,
+  .apple-action-row,
+  .apple-best-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .analysis-ai-side,
+  .apple-action-side,
+  .apple-best-meta {
+    align-items: flex-start;
+    white-space: normal;
+  }
 }
 
 @media (max-width: 640px) {
@@ -501,22 +575,11 @@
     padding: 18px;
   }
 
-  .analysis-top-customer-row {
-    grid-template-columns: 28px minmax(0, 1fr);
+  .analysis-ai-board {
+    grid-template-columns: 1fr;
   }
 
-  .analysis-top-customer-value {
-    grid-column: 2;
-  }
-
-  .analysis-ai-row,
-  .apple-action-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .analysis-ai-side,
-  .apple-action-side {
-    align-items: flex-start;
+  .analysis-table {
+    min-width: 560px;
   }
 }
