@@ -62,6 +62,60 @@ type Metric = {
   helper: string
 }
 
+type AnalysisDashboardData = {
+  crmKpis: {
+    companies: number
+    openOpportunities: number
+    pendingFollowups: number
+    companiesWithSignals: number
+  }
+  orderKpis: {
+    totalValue: number
+    completedValue: number
+    outstandingValue: number
+    orderCount: number
+    averageOrderValue: number
+    deliveredCount: number
+    cancelledCount: number
+  }
+  monthlySeries: SeriesItem[]
+  accountSeries: SeriesItem[]
+  statusSeries: SeriesItem[]
+  companyRows: CompanyRow[]
+  topCustomers: TopCustomerRow[]
+  concentrationMetrics: ConcentrationMetrics
+  regionSeries: RegionRevenueRow[]
+  growthLeaders: CustomerMoverRow[]
+  declineLeaders: CustomerMoverRow[]
+  aiCustomerActions: AiCustomerAction[]
+  imports: AnalysisImportRecord[]
+  recentOrders: OrderRow[]
+  highlights: string[]
+  companiesForImport: Array<{ id: string; name: string }>
+  suggestedFollowups: Array<{
+    companyId: string
+    companyName: string
+    title: string
+    description: string
+    priority: FollowupPriority
+  }>
+  actionPlan: Array<{
+    companyId: string
+    companyName: string
+    title: string
+    detail: string
+    priority: FollowupPriority
+    lane: 'agenda' | 'pipeline' | 'ordini' | 'copertura'
+  }>
+  priorityBuckets: {
+    callNow: Array<{ companyId: string; companyName: string; score: number; band: 'alta' | 'media' | 'base'; reason: string }>
+    reactivate: Array<{ companyId: string; companyName: string; score: number; band: 'alta' | 'media' | 'base'; reason: string }>
+    monitor: Array<{ companyId: string; companyName: string; score: number; band: 'alta' | 'media' | 'base'; reason: string }>
+  }
+  schemaReady: boolean
+  schemaError: string | null
+}
+
 function priorityTone(value: FollowupPriority) {
   if (value === 'urgent') return 'danger'
   if (value === 'high') return 'warning'
@@ -415,50 +469,7 @@ function CustomerActionTable({
   )
 }
 
-export function AnalysisDashboard({
-  data,
-}: {
-   {
-    crmKpis: {
-      companies: number
-      openOpportunities: number
-      pendingFollowups: number
-      companiesWithSignals: number
-    }
-    orderKpis: {
-      totalValue: number
-      completedValue: number
-      outstandingValue: number
-      orderCount: number
-      averageOrderValue: number
-      deliveredCount: number
-      cancelledCount: number
-    }
-    monthlySeries: SeriesItem[]
-    accountSeries: SeriesItem[]
-    statusSeries: SeriesItem[]
-    companyRows: CompanyRow[]
-    topCustomers: TopCustomerRow[]
-    concentrationMetrics: ConcentrationMetrics
-    regionSeries: RegionRevenueRow[]
-    growthLeaders: CustomerMoverRow[]
-    declineLeaders: CustomerMoverRow[]
-    aiCustomerActions: AiCustomerAction[]
-    imports: AnalysisImportRecord[]
-    recentOrders: OrderRow[]
-    highlights: string[]
-    companiesForImport: Array<{ id: string; name: string }>
-    suggestedFollowups: Array<{ companyId: string; companyName: string; title: string; description: string; priority: FollowupPriority }>
-    actionPlan: Array<{ companyId: string; companyName: string; title: string; detail: string; priority: FollowupPriority; lane: 'agenda' | 'pipeline' | 'ordini' | 'copertura' }>
-    priorityBuckets: {
-      callNow: Array<{ companyId: string; companyName: string; score: number; band: 'alta' | 'media' | 'base'; reason: string }>
-      reactivate: Array<{ companyId: string; companyName: string; score: number; band: 'alta' | 'media' | 'base'; reason: string }>
-      monitor: Array<{ companyId: string; companyName: string; score: number; band: 'alta' | 'media' | 'base'; reason: string }>
-    }
-    schemaReady: boolean
-    schemaError: string | null
-  }
-}) {
+export function AnalysisDashboard({ data }: { data: AnalysisDashboardData }) {
   const [industryFilter, setIndustryFilter] = useState<string>('all')
 
   const industryOptions = useMemo(
