@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import { useActionState, useEffect, useMemo, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import {
   createCompany,
@@ -13,6 +13,11 @@ import { SearchInput } from '@/components/ui/search-input'
 import { CompanyAvatar } from '@/components/ui/company-avatar'
 import { COMPANY_INDUSTRY_OPTIONS } from '@/lib/crm-options'
 import { labelize } from '@/lib/crm-labels'
+
+type EditFormState = {
+  ok: boolean
+  message?: string
+}
 
 const companyStatuses = ['lead', 'prospect', 'client', 'partner', 'inactive']
 
@@ -44,11 +49,20 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
   const [showCreate, setShowCreate] = useState(false)
   const [editingCompany, setEditingCompany] = useState<any | null>(null)
 
+  const [editState, editFormAction] = useActionState<EditFormState, FormData>(
+    updateCompanyDetailsAction,
+    { ok: false, message: '' },
+  )
+
+  useEffect(() => {
+    if (editState.ok) {
+      setEditingCompany(null)
+    }
+  }, [editState.ok])
+
   const items = useMemo(() => {
     return companies.filter((company) => {
-      const text = `${company.name} ${company.city ?? ''} ${company.website ?? ''} ${
-        company.status ?? ''
-      } ${company.industry ?? ''}`.toLowerCase()
+      const text = `${company.name} ${company.city ?? ''} ${company.website ?? ''} ${company.status ?? ''} ${company.industry ?? ''}`.toLowerCase()
       const matchesQuery = text.includes(query.toLowerCase())
       const matchesFilter = filter === 'all' ? true : company.status === filter
       const matchesIndustry = industryFilter === 'all' ? true : company.industry === industryFilter
@@ -465,7 +479,14 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                 Chiudi
               </button>
             </div>
-            <form action={updateCompanyDetailsAction} className="sheet-form">
+
+            {editState.message ? (
+              <div className={editState.ok ? 'notice-success' : 'notice-error'}>
+                {editState.message}
+              </div>
+            ) : null}
+
+            <form action={editFormAction} className="sheet-form">
               <input type="hidden" name="id" value={editingCompany.id} />
               <div className="form-grid two-col">
                 <label className="field-stack">
@@ -532,22 +553,6 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
                     className="field-control"
                     name="province"
                     defaultValue={editingCompany.province ?? ''}
-                  />
-                </label>
-                <label className="field-stack">
-                  <span>CAP</span>
-                  <input
-                    className="field-control"
-                    name="postal_code"
-                    defaultValue={editingCompany.postal_code ?? ''}
-                  />
-                </label>
-                <label className="field-stack">
-                  <span>Regione</span>
-                  <input
-                    className="field-control"
-                    name="region"
-                    defaultValue={editingCompany.region ?? ''}
                   />
                 </label>
                 <label className="field-stack">
