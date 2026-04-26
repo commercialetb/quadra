@@ -62,7 +62,9 @@ export function CompaniesCrud({ companies }: { companies: any[] }) {
 
   const items = useMemo(() => {
     return companies.filter((company) => {
-      const text = `${company.name} ${company.city ?? ''} ${company.website ?? ''} ${company.status ?? ''} ${company.industry ?? ''}`.toLowerCase()
+      const text = `${company.name} ${company.city ?? ''} ${company.website ?? ''} ${
+        company.status ?? ''
+      } ${company.industry ?? ''}`.toLowerCase()
       const matchesQuery = text.includes(query.toLowerCase())
       const matchesFilter = filter === 'all' ? true : company.status === filter
       const matchesIndustry = industryFilter === 'all' ? true : company.industry === industryFilter
