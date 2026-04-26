@@ -29,18 +29,29 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
   const priorityScore = analysis?.companyRow?.priorityScore ?? null
   const priorityBand = analysis?.companyRow?.priorityBand ?? null
   const signal = analysis?.companyRow?.signal ?? 'low'
-  const whyText = analysis?.companyRow?.insight || topAction?.detail || 'Serve tenere la relazione viva e proteggere la pipeline aperta.'
+  const whyText =
+    analysis?.companyRow?.insight ||
+    topAction?.detail ||
+    'Serve tenere la relazione viva e proteggere la pipeline aperta.'
   const whenText = activeFollowup?.due_at ? formatDate(activeFollowup.due_at) : 'Da pianificare'
   const contactMeta = [mainContact?.role, mainContact?.email].filter(Boolean).join(' · ')
 
   return (
-    <DetailShell title={company.name} subtitle={company.legal_name} backHref="/companies" backLabel="Aziende" eyebrow="Account">
+    <DetailShell
+      title={company.name}
+      subtitle={company.legal_name}
+      backHref="/companies"
+      backLabel="Aziende"
+      eyebrow="Account"
+    >
       <section className="panel-card company-decision-board company-v7-hero company-v8-hero">
         <div className="company-decision-board-head">
           <div>
             <p className="page-eyebrow">Account</p>
             <h2>La prossima mossa</h2>
-            <p className="page-subtitle compact">Una sola risposta sopra la piega: cosa fare, con chi, quando e perché.</p>
+            <p className="page-subtitle compact">
+              Una sola risposta sopra la piega: cosa fare, con chi, quando e perché.
+            </p>
           </div>
           {topAction ? (
             <CreateFollowupButton
@@ -59,7 +70,10 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           <article className="panel-card company-decision-focus-card company-v7-focus-card">
             <span className="company-focus-label">Cosa fare</span>
             <strong>{topAction?.title || 'Presidia questo account'}</strong>
-            <p>{topAction?.detail || 'Non c’è un’urgenza dominante: aggiorna la scheda e porta avanti il prossimo passo utile.'}</p>
+            <p>
+              {topAction?.detail ||
+                'Non c’è un’urgenza dominante: aggiorna la scheda e porta avanti il prossimo passo utile.'}
+            </p>
           </article>
 
           <div className="company-decision-metrics company-v7-metrics">
@@ -75,7 +89,13 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
             </article>
             <article className="panel-card company-decision-metric">
               <span>Motivo</span>
-              <strong>{signal === 'high' ? 'Segnale alto' : signal === 'medium' ? 'Segnale medio' : 'Presidio base'}</strong>
+              <strong>
+                {signal === 'high'
+                  ? 'Segnale alto'
+                  : signal === 'medium'
+                  ? 'Segnale medio'
+                  : 'Presidio base'}
+              </strong>
               <small>{whyText}</small>
             </article>
           </div>
@@ -87,7 +107,11 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           <h3>Essenziali</h3>
           <div className="entity-inline-meta wrap align-end">
             {priorityScore !== null ? (
-              <span className={`dashboard-pill-badge ${priorityBand === 'alta' ? 'danger' : priorityBand === 'media' ? 'warning' : ''}`}>
+              <span
+                className={`dashboard-pill-badge ${
+                  priorityBand === 'alta' ? 'danger' : priorityBand === 'media' ? 'warning' : ''
+                }`}
+              >
                 priorità {priorityScore}/100
               </span>
             ) : null}
@@ -95,13 +119,39 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           </div>
         </div>
         <div className="company-essentials-grid company-v7-essentials-grid">
-          <div className="company-essential-item"><span>Opportunità aperte</span><strong>{opportunityCount}</strong></div>
-          <div className="company-essential-item"><span>Ultimo ordine</span><strong>{lastOrderDate ? formatDate(lastOrderDate) : 'Nessun dato'}</strong></div>
-          <div className="company-essential-item"><span>Settore</span><strong>{company.industry || 'Non indicato'}</strong></div>
-          <div className="company-essential-item"><span>Sito</span><strong>{company.website ? <a href={company.website} target="_blank" rel="noreferrer">{company.website}</a> : '—'}</strong></div>
-          <div className="company-essential-item wide"><span>Nota rapida</span><strong>{recentNote?.title || company.notes_summary || 'Nessuna nota rapida'}</strong></div>
+          <div className="company-essential-item">
+            <span>Opportunità aperte</span>
+            <strong>{opportunityCount}</strong>
+          </div>
+          <div className="company-essential-item">
+            <span>Ultimo ordine</span>
+            <strong>{lastOrderDate ? formatDate(lastOrderDate) : 'Nessun dato'}</strong>
+          </div>
+          <div className="company-essential-item">
+            <span>Settore</span>
+            <strong>{company.industry || 'Non indicato'}</strong>
+          </div>
+          <div className="company-essential-item">
+            <span>Sito</span>
+            <strong>
+              {company.website ? (
+                <a href={company.website} target="_blank" rel="noreferrer">
+                  {company.website}
+                </a>
+              ) : (
+                '—'
+              )}
+            </strong>
+          </div>
+          <div className="company-essential-item wide">
+            <span>Nota rapida</span>
+            <strong>{recentNote?.title || company.notes_summary || 'Nessuna nota rapida'}</strong>
+          </div>
         </div>
       </section>
+
+      {/* Modifica dati azienda – sezione ben visibile */}
+      <CompanyEditCard company={company} />
 
       <div className="company-page-redesign-grid company-page-simplified-grid company-v7-grid company-v8-grid">
         <div className="stack-lg company-detail-main-col">
@@ -129,7 +179,12 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
                 items={opportunities.map((opportunity) => ({
                   id: opportunity.id,
                   label: opportunity.title,
-                  meta: [opportunity.stage, opportunity.value_estimate ? `€ ${Number(opportunity.value_estimate).toLocaleString('it-IT')}` : null]
+                  meta: [
+                    opportunity.stage,
+                    opportunity.value_estimate
+                      ? `€ ${Number(opportunity.value_estimate).toLocaleString('it-IT')}`
+                      : null,
+                  ]
                     .filter(Boolean)
                     .join(' · '),
                   href: `/opportunities/${opportunity.id}`,
@@ -139,7 +194,11 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
               <EntityListCard
                 title="Note"
                 empty="Nessuna nota collegata."
-                items={notes.map((note) => ({ id: note.id, label: note.title || 'Nota', meta: note.body }))}
+                items={notes.map((note) => ({
+                  id: note.id,
+                  label: note.title || 'Nota',
+                  meta: note.body,
+                }))}
               />
             </div>
           </details>
@@ -168,9 +227,6 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
                   description="Carichi il CSV dalla scheda azienda: prima fai anteprima, poi importi solo se il match opportunità è corretto."
                   submitLabel="Importa in questa azienda"
                 />
-              </div>
-              <div className="company-edit-drawer">
-                <CompanyEditCard company={company} />
               </div>
             </div>
           </details>
