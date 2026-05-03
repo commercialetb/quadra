@@ -23,6 +23,8 @@ const primaryNav: NavItem[] = [
   { href: '/analysis', label: 'Analisi', shortLabel: 'Anal.', tinyLabel: 'Anal', icon: 'analysis' },
 ]
 
+const mobilePrimaryNav = primaryNav.filter((item) => item.href !== '/analysis')
+
 function active(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`)
 }
@@ -103,7 +105,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isSettingsPage = pathname.startsWith('/settings')
   const [tabletNavOpen, setTabletNavOpen] = useState(false)
-  const [isTabletPortrait, setIsTabletPortrait] = useState(false)
+  const [isTabletViewport, setIsTabletViewport] = useState(false)
 
   useEffect(() => {
     setTabletNavOpen(false)
@@ -112,9 +114,9 @@ export default function Shell({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const syncViewport = () => {
       if (typeof window === 'undefined') return
-      const portraitLike = window.matchMedia('(min-width: 768px) and (max-width: 1100px) and (orientation: portrait)').matches
-      setIsTabletPortrait(portraitLike)
-      if (!portraitLike) setTabletNavOpen(false)
+      const tabletLike = window.matchMedia('(min-width: 768px) and (max-width: 1366px)').matches
+      setIsTabletViewport(tabletLike)
+      if (!tabletLike) setTabletNavOpen(false)
     }
 
     syncViewport()
@@ -128,13 +130,13 @@ export default function Shell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (typeof document === 'undefined') return
-    const shouldLockScroll = tabletNavOpen && isTabletPortrait
+    const shouldLockScroll = tabletNavOpen && isTabletViewport
     document.body.classList.toggle('tablet-nav-open', shouldLockScroll)
     return () => document.body.classList.remove('tablet-nav-open')
-  }, [tabletNavOpen, isTabletPortrait])
+  }, [tabletNavOpen, isTabletViewport])
 
   return (
-    <div className="app-shell quadra-shell-refresh quadra-shell-phase2" data-tablet-nav-open={tabletNavOpen && isTabletPortrait ? "true" : "false"}>
+    <div className="app-shell quadra-shell-refresh quadra-shell-phase2" data-tablet-nav-open={tabletNavOpen && isTabletViewport ? "true" : "false"}>
       <div className="quadra-ambient quadra-ambient-a" aria-hidden="true" />
       <div className="quadra-ambient quadra-ambient-b" aria-hidden="true" />
 
@@ -204,15 +206,15 @@ export default function Shell({ children }: { children: React.ReactNode }) {
       </aside>
 
       <div
-        className={`tablet-drawer-backdrop ${tabletNavOpen && isTabletPortrait ? 'is-open' : ''}`}
-        aria-hidden={!(tabletNavOpen && isTabletPortrait)}
+        className={`tablet-drawer-backdrop ${tabletNavOpen && isTabletViewport ? 'is-open' : ''}`}
+        aria-hidden={!(tabletNavOpen && isTabletViewport)}
         onClick={() => setTabletNavOpen(false)}
       />
 
       <aside
-        className={`tablet-drawer ${tabletNavOpen && isTabletPortrait ? 'is-open' : ''}`}
+        className={`tablet-drawer ${tabletNavOpen && isTabletViewport ? 'is-open' : ''}`}
         aria-label="Navigazione iPad"
-        aria-hidden={!(tabletNavOpen && isTabletPortrait)}
+        aria-hidden={!(tabletNavOpen && isTabletViewport)}
       >
         <div className="tablet-drawer-head">
           <div className="sidebar-brand sidebar-brand-phase2">
@@ -273,9 +275,9 @@ export default function Shell({ children }: { children: React.ReactNode }) {
               className="app-topbar-menu"
               onClick={() => setTabletNavOpen(true)}
               aria-label="Apri menu"
-              aria-expanded={tabletNavOpen && isTabletPortrait}
-              aria-hidden={!isTabletPortrait}
-              tabIndex={isTabletPortrait ? 0 : -1}
+              aria-expanded={tabletNavOpen && isTabletViewport}
+              aria-hidden={!isTabletViewport}
+              tabIndex={isTabletViewport ? 0 : -1}
             >
               <MenuIcon />
             </button>
@@ -314,7 +316,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
       </div>
 
       <nav className="mobile-nav" aria-label="Navigazione primaria">
-        {primaryNav.map((item) => {
+        {mobilePrimaryNav.map((item) => {
           const isActive = active(pathname, item.href)
           return (
             <Link

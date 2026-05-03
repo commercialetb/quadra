@@ -108,8 +108,10 @@ export function DashboardShell({ data }: { data: DashboardData }) {
   const overdueCount = data.kpis.overdueCount || 0
   const topAction = data.actionPlan?.[0]
   const topSignal = topSignals[0]
-  const bestCompanies = bestCompaniesAll.slice(0, 4)
+  const bestCompaniesAll = bestCompaniesAll.slice(0, 4)
   const extraBestCompanies = bestCompaniesAll.slice(4)
+  const bestCompanies = bestCompaniesAll.slice(0, 3)
+  const extraBestCompanies = bestCompaniesAll.slice(3)
   const nextCompany = bestCompanies[0]
 
   return (
@@ -122,8 +124,8 @@ export function DashboardShell({ data }: { data: DashboardData }) {
         <div className="dashboard-v8-stage-head">
           <div>
             <p className="page-eyebrow">Home</p>
-            <h1 className="page-title">Focus di oggi</h1>
-            <p className="page-subtitle">Una priorita chiara sopra la piega. Il resto sotto.</p>
+            <h1 className="page-title">Oggi</h1>
+            <p className="page-subtitle">Una priorità chiara. Il resto sotto.</p>
           </div>
           <div className="cluster-wrap dashboard-v8-stage-actions">
             <Link href="/followups" className="primary-button">Apri agenda</Link>
@@ -176,7 +178,7 @@ export function DashboardShell({ data }: { data: DashboardData }) {
         <div className="dashboard-redesign-head">
           <div>
             <p className="page-eyebrow">Operativo</p>
-            <h2>Solo l'essenziale</h2>
+            <h2>Essenziale</h2>
           </div>
         </div>
 
@@ -189,7 +191,7 @@ export function DashboardShell({ data }: { data: DashboardData }) {
         <div className="apple-dashboard-two-col apple-dashboard-two-col-v6">
           <div className="panel-card apple-subpanel">
             <div className="dashboard-redesign-head compact">
-              <h3>Da fare oggi</h3>
+              <h3>Da fare</h3>
               <span>{todayFollowups.length}</span>
             </div>
             <div className="apple-list-stack">
@@ -229,9 +231,9 @@ export function DashboardShell({ data }: { data: DashboardData }) {
         <div className="dashboard-redesign-head">
           <div>
             <p className="page-eyebrow">Account</p>
-            <h2>Un account da non perdere</h2>
+            <h2>Un account chiave</h2>
           </div>
-          <Link href="/analysis" className="ghost-button">Apri insight</Link>
+          <Link href="/analysis" className="ghost-button">Approfondimenti</Link>
         </div>
         <div className="apple-best-list apple-best-list-v6 apple-best-list-v8">
           {nextCompany ? (
@@ -250,7 +252,7 @@ export function DashboardShell({ data }: { data: DashboardData }) {
       </section>
 
       <details className="analysis-details-block redesigned-details dashboard-secondary-details">
-        <summary>Apri approfondimenti</summary>
+        <summary>Approfondimenti</summary>
         <div className="dashboard-secondary-stack">
           <section className="dashboard-redesign-block secondary-block">
             <div className="dashboard-redesign-head">
