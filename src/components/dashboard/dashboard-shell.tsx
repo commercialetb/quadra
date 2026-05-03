@@ -108,10 +108,8 @@ export function DashboardShell({ data }: { data: DashboardData }) {
   const overdueCount = data.kpis.overdueCount || 0
   const topAction = data.actionPlan?.[0]
   const topSignal = topSignals[0]
-  const bestCompaniesAll = bestCompaniesAll.slice(0, 4)
-  const extraBestCompanies = bestCompaniesAll.slice(4)
-  const bestCompanies = bestCompaniesAll.slice(0, 3)
   const extraBestCompanies = bestCompaniesAll.slice(3)
+  const bestCompanies = bestCompaniesAll.slice(0, 3)
   const nextCompany = bestCompanies[0]
 
   return (

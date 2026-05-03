@@ -15,6 +15,7 @@ import type {
 } from '@/lib/analysis/queries'
 
 type FollowupPriority = 'medium' | 'high' | 'urgent'
+type AnalysisLens = 'territorio' | 'canale' | 'tipo'
 
 type CompanyRow = {
   companyId: string
@@ -75,6 +76,19 @@ function shortLabel(value: string) {
   const cleaned = value.trim()
   if (cleaned.length <= 20) return cleaned
   return `${cleaned.slice(0, 17)}…`
+}
+
+function normalizeIndustry(value?: string | null) {
+  const raw = (value || '').toLowerCase()
+  if (!raw) return 'Altro'
+  if (raw.includes('rivend')) return 'Rivenditori'
+  if (raw.includes('architet')) return 'Architetti'
+  if (raw.includes('agenz')) return 'Agenzie'
+  if (raw.includes('contract')) return 'Contractor'
+  if (raw.includes('lighting')) return 'Lighting designer'
+  if (raw.includes('designer')) return 'Designer'
+  if (raw.includes('studio')) return 'Studi'
+  return value || 'Altro'
 }
 
 function InlineBars({ title, items, formatter = (value: number) => String(value) }: { title: string; items: Array<{ label: string; value: number }>; formatter?: (value: number) => string }) {
@@ -229,6 +243,7 @@ function InsightTableCard({
 
 export function AnalysisDashboard({ data }: AnalysisDashboardProps) {
   const [industryFilter, setIndustryFilter] = useState('all')
+  const [activeLens, setActiveLens] = useState<AnalysisLens>('territorio')
 
   const industryOptions = useMemo(
     () => Array.from(new Set(data.companyRows.map((r) => r.industry).filter(Boolean) as string[])).sort(),
@@ -250,7 +265,7 @@ export function AnalysisDashboard({ data }: AnalysisDashboardProps) {
     [data.topCustomers],
   )
 
-  const provinceRows = useMemo<RankedRow[]>(
+  const territoryRows = useMemo<RankedRow[]>(
     () => data.regionSeries.slice(0, 8).map((item, index) => ({
       rank: index + 1,
       label: item.region,
@@ -259,6 +274,48 @@ export function AnalysisDashboard({ data }: AnalysisDashboardProps) {
     })),
     [data.regionSeries],
   )
+
+  const groupedIndustryRows = useMemo<RankedRow[]>(() => {
+    const map = new Map<string, { value: number; clients: number; orders: number }>()
+    for (const row of filteredRows) {
+      const key = normalizeIndustry(row.industry)
+      const bucket = map.get(key) ?? { value: 0, clients: 0, orders: 0 }
+      bucket.value += Number(row.importedValue || 0)
+      bucket.clients += 1
+      bucket.orders += Number(row.importedOrders || 0)
+      map.set(key, bucket)
+    }
+    return Array.from(map.entries())
+      .sort((a, b) => b[1].value - a[1].value)
+      .slice(0, 8)
+      .map(([label, bucket], index) => ({
+        rank: index + 1,
+        label,
+        secondary: `${bucket.clients} clienti · ${bucket.orders} ordini`,
+        value: bucket.value,
+      }))
+  }, [filteredRows])
+
+  const channelRows = useMemo<RankedRow[]>(() => {
+    const preferred = ['Rivenditori', 'Architetti', 'Agenzie', 'Contractor', 'Lighting designer', 'Designer', 'Studi', 'Altro']
+    const map = new Map<string, { value: number; clients: number }>()
+    for (const row of filteredRows) {
+      const key = normalizeIndustry(row.industry)
+      const bucket = map.get(key) ?? { value: 0, clients: 0 }
+      bucket.value += Number(row.importedValue || 0)
+      bucket.clients += 1
+      map.set(key, bucket)
+    }
+    return preferred
+      .filter((label) => map.has(label))
+      .map((label, index) => ({
+        rank: index + 1,
+        label,
+        secondary: `${map.get(label)!.clients} clienti`,
+        value: map.get(label)!.value,
+      }))
+      .slice(0, 8)
+  }, [filteredRows])
 
   const outstandingRows = useMemo(
     () => [...filteredRows]
@@ -303,6 +360,14 @@ export function AnalysisDashboard({ data }: AnalysisDashboardProps) {
     [data.orderKpis],
   )
 
+  const lensTitle = activeLens === 'territorio' ? 'Fatturato per regione' : activeLens === 'canale' ? 'Fatturato per canale' : 'Fatturato per tipo cliente'
+  const lensSubtitle = activeLens === 'territorio'
+    ? 'Lettura territoriale per capire dove si concentra il valore.'
+    : activeLens === 'canale'
+      ? 'Confronto tra rivenditori, architetti, agenzie e altri canali.'
+      : 'Vista business per capire quali tipologie cliente generano più valore.'
+  const lensRows = activeLens === 'territorio' ? territoryRows : activeLens === 'canale' ? channelRows : groupedIndustryRows
+
   const monitorRows = filteredRows.slice(0, 5)
   const extraMonitorRows = filteredRows.slice(5, 12)
 
@@ -346,6 +411,20 @@ export function AnalysisDashboard({ data }: AnalysisDashboardProps) {
         <InlineBars title="Valori chiave" items={valueSeries} formatter={formatCurrency} />
       </section>
 
+      <section className="panel-card analysis-lens-card">
+        <div className="analysis-lens-head">
+          <div>
+            <p className="page-eyebrow">Business view</p>
+            <h2>Regione, canale o tipo cliente</h2>
+          </div>
+        </div>
+        <div className="analysis-lens-tabs" role="tablist" aria-label="Vista analisi">
+          <button type="button" className={`analysis-lens-tab ${activeLens === 'territorio' ? 'is-active' : ''}`} onClick={() => setActiveLens('territorio')}>Territorio</button>
+          <button type="button" className={`analysis-lens-tab ${activeLens === 'canale' ? 'is-active' : ''}`} onClick={() => setActiveLens('canale')}>Canale</button>
+          <button type="button" className={`analysis-lens-tab ${activeLens === 'tipo' ? 'is-active' : ''}`} onClick={() => setActiveLens('tipo')}>Tipo cliente</button>
+        </div>
+      </section>
+
       <section className="analysis-chart-grid analysis-chart-grid-rich">
         <RankedBarsCard
           title="Fatturato clienti"
@@ -353,9 +432,9 @@ export function AnalysisDashboard({ data }: AnalysisDashboardProps) {
           items={topClientRows}
         />
         <RankedBarsCard
-          title="Fatturato per provincia"
-          subtitle="Aggregato per area del CRM filtrato."
-          items={provinceRows}
+          title={lensTitle}
+          subtitle={lensSubtitle}
+          items={lensRows}
         />
       </section>
 
@@ -366,9 +445,14 @@ export function AnalysisDashboard({ data }: AnalysisDashboardProps) {
           rows={outstandingRows}
         />
         <InsightTableCard
-          title="Snapshot ordini"
-          subtitle="Lettura veloce dei numeri chiave."
-          rows={orderSnapshotRows}
+          title={activeLens === 'territorio' ? 'Dettaglio regione' : activeLens === 'canale' ? 'Dettaglio canale' : 'Dettaglio tipo cliente'}
+          subtitle="Tabella di supporto alla vista attiva."
+          rows={lensRows.map((row) => ({
+            label: row.label,
+            meta: row.secondary,
+            helper: `${percentOf(row.value, lensRows.reduce((sum, item) => sum + item.value, 0))} del totale`,
+            value: formatCurrency(row.value),
+          }))}
         />
       </section>
 
